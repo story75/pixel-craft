@@ -1,0 +1,11 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "check": {
+      "dependsOn": ["^check"],
+      "outputs": ["dist/**/*.d.ts"],
+      "outputMode": "errors-only"
+    }
+  },
+  "globalDependencies": ["package.json", "package-lock.json", "tsconfig.json"]
+}

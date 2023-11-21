@@ -1,0 +1,27 @@
+{
+  "name": "@pixel-forge/pixel-forge",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "module": "dist/esm.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "check": "tsc"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --config=../../prettier.config.js --ignore-path=../../.prettierignore --write"
+    ],
+    "*.{js,md,json,yml,yaml,html}": [
+      "prettier --config=../../prettier.config.js --ignore-path=../../.prettierignore --write"
+    ]
+  }
+}

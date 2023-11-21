@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "lib": ["ES2021", "DOM", "DOM.Iterable"],
+    "module": "esnext",
+    "strict": true,
+    "isolatedModules": true,
+    "composite": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "preserveConstEnums": true,
+    "moduleResolution": "bundler",
+    "target": "ES2021",
+    "esModuleInterop": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": true
+  }
+}

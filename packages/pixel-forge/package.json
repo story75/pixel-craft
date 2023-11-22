@@ -1,6 +1,9 @@
 {
   "name": "@pixel-forge/pixel-forge",
   "version": "0.1.0",
+  "trustedDependencies": [
+    "esbuild"
+  ],
   "private": true,
   "main": "dist/index.js",
   "module": "dist/esm.js",
@@ -13,10 +16,12 @@
     }
   },
   "scripts": {
-    "check": "tsc"
+    "check": "tsc",
+    "watch": "esbuild src/index.ts --outfile=public/dist/bundle.js --bundle --global-name=pixelForge --servedir=public --watch"
   },
   "devDependencies": {
-    "@webgpu/types": "^0.1.39"
+    "@webgpu/types": "^0.1.39",
+    "esbuild": "^0.19.7"
   },
   "lint-staged": {
     "*.ts": [

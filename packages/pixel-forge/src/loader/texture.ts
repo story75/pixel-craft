@@ -14,35 +14,35 @@ export type LoadTexture = (path: string) => Promise<GPUTexture>;
  * @param device - The GPUDevice to use. Textures are bound to the device they're created with
  */
 export function texture(device: GPUDevice): LoadTexture {
-    const cache = new Map<string, GPUTexture>();
+  const cache = new Map<string, GPUTexture>();
 
-    return async (path) => {
-        const cached = cache.get(path);
-        if (cached) {
-            return cached;
-        }
+  return async (path) => {
+    const cached = cache.get(path);
+    if (cached) {
+      return cached;
+    }
 
-        const response = await fetch(path);
-        const blob = await response.blob();
-        const imageBitmap = await createImageBitmap(blob);
+    const response = await fetch(path);
+    const blob = await response.blob();
+    const imageBitmap = await createImageBitmap(blob);
 
-        // createTexture just creates an empty buffer which has to be filled
-        const texture = device.createTexture({
-            size: [imageBitmap.width, imageBitmap.height, 1],
-            format: 'rgba8unorm',
-            usage:
-                GPUTextureUsage.TEXTURE_BINDING |
-                GPUTextureUsage.COPY_DST |
-                GPUTextureUsage.RENDER_ATTACHMENT,
-        });
+    // createTexture just creates an empty buffer which has to be filled
+    const texture = device.createTexture({
+      size: [imageBitmap.width, imageBitmap.height, 1],
+      format: 'rgba8unorm',
+      usage:
+        GPUTextureUsage.TEXTURE_BINDING |
+        GPUTextureUsage.COPY_DST |
+        GPUTextureUsage.RENDER_ATTACHMENT,
+    });
 
-        device.queue.copyExternalImageToTexture(
-            { source: imageBitmap },
-            { texture },
-            [imageBitmap.width, imageBitmap.height]
-        );
+    device.queue.copyExternalImageToTexture(
+      { source: imageBitmap },
+      { texture },
+      [imageBitmap.width, imageBitmap.height],
+    );
 
-        cache.set(path, texture);
-        return texture;
-    };
+    cache.set(path, texture);
+    return texture;
+  };
 }

@@ -30,74 +30,67 @@ export async function application(canvas: HTMLCanvasElement) {
     });
 
     const createVertexBuffer = (data: Float32Array) => {
-        const vertexBuffer = device.createBuffer({
+        const buffer = device.createBuffer({
             size: data.byteLength,
             usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
             mappedAtCreation: true,
         });
-        new Float32Array(vertexBuffer.getMappedRange()).set(data);
-        vertexBuffer.unmap();
-        return vertexBuffer;
+        new Float32Array(buffer.getMappedRange()).set(data);
+        buffer.unmap();
+        return buffer;
     };
 
-    const positionVertexBufferLayout: GPUVertexBufferLayout = {
-        arrayStride: 2 * Float32Array.BYTES_PER_ELEMENT, // x: f32, y: f32
-        attributes: [{
-            shaderLocation: 0,
-            offset: 0,
-            format: 'float32x2',
-        }],
+    const createIndexBuffer = (data: Uint16Array) => {
+        const buffer = device.createBuffer({
+            size: data.byteLength,
+            usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST,
+            mappedAtCreation: true,
+        });
+        new Uint16Array(buffer.getMappedRange()).set(data);
+        buffer.unmap();
+        return buffer;
+    };
+
+    const createUniformBuffer = (data: Float32Array) => {
+        return device.createBuffer({
+            size: data.byteLength,
+            usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+        });
+    };
+
+    const vertexBufferLayout: GPUVertexBufferLayout = {
+        arrayStride: 7 * Float32Array.BYTES_PER_ELEMENT, // x: f32, y: f32, u: f32, v: f32, r: f32, g: f32, b: f32
+        attributes: [
+            {
+                shaderLocation: 0,
+                offset: 0,
+                format: 'float32x2',
+            },
+            {
+                shaderLocation: 1,
+                offset: 2 * Float32Array.BYTES_PER_ELEMENT,
+                format: 'float32x2',
+            },
+            {
+                shaderLocation: 2,
+                offset: 4 * Float32Array.BYTES_PER_ELEMENT,
+                format: 'float32x3',
+            },
+        ],
         stepMode: 'vertex',
     };
 
-    const colorVertexBufferLayout: GPUVertexBufferLayout = {
-        arrayStride: 3 * Float32Array.BYTES_PER_ELEMENT, // r: f32, g: f32, b: f32
-        attributes: [{
-            shaderLocation: 1,
-            offset: 0,
-            format: 'float32x3',
-        }],
-        stepMode: 'vertex',
-    };
-
-    const uvVertexBufferLayout: GPUVertexBufferLayout = {
-        arrayStride: 2 * Float32Array.BYTES_PER_ELEMENT, // u: f32, v: f32
-        attributes: [{
-            shaderLocation: 2,
-            offset: 0,
-            format: 'float32x2',
-        }],
-        stepMode: 'vertex',
-    };
-
-    const position = createVertexBuffer(new Float32Array([
-        -0.5, -0.5, // x: f32, y: f32
-        0.5, -0.5,
-        -0.5, 0.5,
-
-        -0.5, 0.5,
-        0.5, 0.5,
-        0.5, -0.5,
+    const indices = createIndexBuffer(new Uint16Array([
+        0, 1, 2,
+        1, 2, 3,
     ]));
 
-    const color = createVertexBuffer(new Float32Array([
-        1.0, 1.0, 1.0, // r: f32, g: f32, b: f32
-        1.0, 1.0, 1.0,
-        1.0, 1.0, 1.0,
-
-        1.0, 1.0, 1.0,
-        1.0, 1.0, 1.0,
-        1.0, 1.0, 1.0,
-    ]));
-
-    const uv = createVertexBuffer(new Float32Array([
-        0.0, 1.0, // x: f32, y: f32
-        1.0, 1.0,
-        0.0, 0.0,
-
-        0.0, 0.0,
-        1.0, 0.0,
-        1.0, 1.0,
+    const vertexBuffer = createVertexBuffer(new Float32Array([
+        // x: f32, y: f32, u: f32, v: f32, r: f32, g: f32, b: f32
+        -0.5, -0.5, 0.0, 1.0, 1.0, 1.0, 1.0,
+        0.5, -0.5, 1.0, 1.0, 1.0, 1.0, 1.0,
+        -0.5, 0.5, 0.0, 0.0, 1.0, 1.0, 1.0,
+        0.5, 0.5, 1.0, 0.0, 1.0, 1.0, 1.0,
     ]));
 
     const textureLoader = texture(device);
@@ -118,8 +111,8 @@ var texture: texture_2d<f32>;
 @vertex
 fn vs_main(
   @location(0) position: vec2f, // x: f32, y: f32,
-  @location(1) color: vec3f, // r: f32, g: f32, b: f32
-  @location(2) uv: vec2f, // u: f32, v: f32
+  @location(1) uv: vec2f, // u: f32, v: f32
+  @location(2) color: vec3f, // r: f32, g: f32, b: f32
 ) -> VertexOutput {
   var output: VertexOutput;
   
@@ -177,9 +170,7 @@ fn fs_main(output: VertexOutput) -> @location(0) vec4f {
             }),
             entryPoint: 'vs_main',
             buffers: [
-                positionVertexBufferLayout,
-                colorVertexBufferLayout,
-                uvVertexBufferLayout,
+                vertexBufferLayout,
             ],
         },
         fragment: {
@@ -227,11 +218,10 @@ fn fs_main(output: VertexOutput) -> @location(0) vec4f {
 
     const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
     passEncoder.setPipeline(pipeline);
-    passEncoder.setVertexBuffer(0, position);
-    passEncoder.setVertexBuffer(1, color);
-    passEncoder.setVertexBuffer(2, uv);
+    passEncoder.setIndexBuffer(indices, "uint16");
+    passEncoder.setVertexBuffer(0, vertexBuffer);
     passEncoder.setBindGroup(0, textureBindGroup);
-    passEncoder.draw(6);
+    passEncoder.drawIndexed(6);
     passEncoder.end();
 
     device.queue.submit([commandEncoder.finish()]);

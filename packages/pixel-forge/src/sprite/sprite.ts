@@ -1,13 +1,13 @@
 /**
  * An instance of a sprite which can be rendered to a canvas
  */
-export type Sprite = {
+export interface Sprite {
   texture: GPUTexture;
   width: number;
   height: number;
   x: number;
   y: number;
-};
+}
 
 /**
  * Create a sprite from a texture.

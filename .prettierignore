@@ -21,3 +21,5 @@ coverage
 *.mpd
 *.vtt
 *.lockb
+
+!.eslintrc.js

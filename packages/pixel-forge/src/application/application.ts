@@ -1,7 +1,14 @@
 import { texture } from '../loader';
 import { lookAt, multiply, orthographic } from '../math';
+import {uniformBufferAllocator} from "../renderer/buffer/uniform-buffer-allocator";
+import {pipeline} from "../renderer/pipeline/2d-pixel/pipeline";
+import {Sprite, sprite} from "../sprite";
+import Stats from "stats.js";
 
 export async function application(canvas: HTMLCanvasElement) {
+  const stats = new Stats();
+  document.body.appendChild(stats.dom);
+
   const adapter = await navigator.gpu.requestAdapter();
   if (!adapter) {
     throw new Error('Could not request WebGPU adapter!');
@@ -16,47 +23,6 @@ export async function application(canvas: HTMLCanvasElement) {
   const devicePixelRatio = window.devicePixelRatio;
   canvas.width = window.innerWidth * devicePixelRatio;
   canvas.height = window.innerHeight * devicePixelRatio;
-  const presentationFormat = navigator.gpu.getPreferredCanvasFormat();
-
-  context.configure({
-    device,
-    format: presentationFormat,
-    alphaMode: 'premultiplied',
-  });
-
-  const sampler = device.createSampler({
-    magFilter: 'nearest',
-    minFilter: 'nearest',
-  });
-
-  const createVertexBuffer = (data: Float32Array) => {
-    const buffer = device.createBuffer({
-      size: data.byteLength,
-      usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST,
-      mappedAtCreation: true,
-    });
-    new Float32Array(buffer.getMappedRange()).set(data);
-    buffer.unmap();
-    return buffer;
-  };
-
-  const createIndexBuffer = (data: Uint16Array) => {
-    const buffer = device.createBuffer({
-      size: data.byteLength,
-      usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST,
-      mappedAtCreation: true,
-    });
-    new Uint16Array(buffer.getMappedRange()).set(data);
-    buffer.unmap();
-    return buffer;
-  };
-
-  const createUniformBuffer = (data: Float32Array) => {
-    return device.createBuffer({
-      size: data.byteLength,
-      usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-    });
-  };
 
   const projectionMatrix = orthographic(
       0,
@@ -69,198 +35,12 @@ export async function application(canvas: HTMLCanvasElement) {
   const viewMatrix = lookAt([0, 0, 1], [0, 0, 0], [0, 1, 0]);
   const projectionViewMatrix = multiply(viewMatrix, projectionMatrix);
 
-  const projectionViewMatrixUniformBuffer = createUniformBuffer(new Float32Array(16));
+  const projectionViewMatrixUniformBuffer = uniformBufferAllocator(device)(new Float32Array(16));
 
   const textureLoader = texture(device);
   const tex = await textureLoader('assets/pixel-prowlers.png');
 
-  // prettier-ignore
-  const indices = createIndexBuffer(new Uint16Array([
-    0, 1, 2,
-    2, 3, 0,
-  ]));
-
-  const x = 100;
-  const y = 100;
-  const width = tex.width;
-  const height = tex.height;
-
-  // prettier-ignore
-  const vertexBuffer = createVertexBuffer(new Float32Array([
-    // x: f32, y: f32,      u: f32, v: f32,       r: f32, g: f32, b: f32
-    x, y,                   0.0, 0.0,             1.0, 1.0, 1.0,
-    x + width, y,           1.0, 0.0,             1.0, 1.0, 1.0,
-    x + width, y + height,  1.0, 1.0,             1.0, 1.0, 1.0,
-    x, y + height,          0.0, 1.0,             1.0, 1.0, 1.0,
-  ]));
-
-  const shader = `struct VertexOutput {
-    @builtin(position) position: vec4f,
-    @location(0) color: vec4f,
-    @location(1) uv: vec2f,
-}
-
-@group(0) @binding(0)
-var<uniform> projection_view_matrix: mat4x4f;
-
-@group(1) @binding(0)
-var texture_sampler: sampler;
-
-@group(1) @binding(1)
-var texture: texture_2d<f32>;
-
-@vertex
-fn vs_main(
-  @location(0) position: vec2f, // x: f32, y: f32,
-  @location(1) uv: vec2f, // u: f32, v: f32
-  @location(2) color: vec3f, // r: f32, g: f32, b: f32
-) -> VertexOutput {
-  var output: VertexOutput;
-  
-  output.position = projection_view_matrix * vec4f(position, 0.0, 1.0);
-  output.color = vec4f(color, 1.0);
-  output.uv = uv;
-
-  return output;
-}
-
-@fragment
-fn fs_main(output: VertexOutput) -> @location(0) vec4f {
-  var texture_color = textureSample(texture, texture_sampler, output.uv);
-  return texture_color * output.color;
-}`;
-
-  const vertexBufferLayout: GPUVertexBufferLayout = {
-    arrayStride: 7 * Float32Array.BYTES_PER_ELEMENT, // x: f32, y: f32, u: f32, v: f32, r: f32, g: f32, b: f32
-    attributes: [
-      {
-        shaderLocation: 0,
-        offset: 0,
-        format: 'float32x2',
-      },
-      {
-        shaderLocation: 1,
-        offset: 2 * Float32Array.BYTES_PER_ELEMENT,
-        format: 'float32x2',
-      },
-      {
-        shaderLocation: 2,
-        offset: 4 * Float32Array.BYTES_PER_ELEMENT,
-        format: 'float32x3',
-      },
-    ],
-    stepMode: 'vertex',
-  };
-
-  const projectionViewMatrixLayout = device.createBindGroupLayout({
-    entries: [
-      {
-        binding: 0,
-        visibility: GPUShaderStage.VERTEX,
-        buffer: {
-          type: 'uniform',
-        },
-      },
-    ],
-  });
-
-  const projectionViewMatrixBindGroup = device.createBindGroup({
-    layout: projectionViewMatrixLayout,
-    entries: [
-      {
-        binding: 0,
-        resource: {
-          buffer: projectionViewMatrixUniformBuffer,
-        },
-      },
-    ],
-  });
-
-  const textureBindGroupLayout = device.createBindGroupLayout({
-    entries: [
-      {
-        binding: 0,
-        visibility: GPUShaderStage.FRAGMENT,
-        sampler: {},
-      },
-      {
-        binding: 1,
-        visibility: GPUShaderStage.FRAGMENT,
-        texture: {},
-      },
-    ],
-  });
-
-  const textureBindGroup = device.createBindGroup({
-    layout: textureBindGroupLayout,
-    entries: [
-      {
-        binding: 0,
-        resource: sampler,
-      },
-      {
-        binding: 1,
-        resource: tex.createView(),
-      },
-    ],
-  });
-
-  const pipelineLayout = device.createPipelineLayout({
-    bindGroupLayouts: [projectionViewMatrixLayout, textureBindGroupLayout],
-  });
-
-  const pipeline = device.createRenderPipeline({
-    layout: pipelineLayout,
-    vertex: {
-      module: device.createShaderModule({
-        code: shader,
-      }),
-      entryPoint: 'vs_main',
-      buffers: [vertexBufferLayout],
-    },
-    fragment: {
-      module: device.createShaderModule({
-        code: shader,
-      }),
-      entryPoint: 'fs_main',
-      targets: [
-        {
-          format: presentationFormat,
-          blend: {
-            color: {
-              srcFactor: 'one',
-              dstFactor: 'one-minus-src-alpha',
-              operation: 'add',
-            },
-            alpha: {
-              srcFactor: 'one',
-              dstFactor: 'one-minus-src-alpha',
-              operation: 'add',
-            },
-          },
-        },
-      ],
-    },
-    primitive: {
-      topology: 'triangle-list',
-    },
-  });
-
-  const commandEncoder = device.createCommandEncoder();
-  const textureView = context.getCurrentTexture().createView();
-
-  const renderPassDescriptor: GPURenderPassDescriptor = {
-    colorAttachments: [
-      {
-        view: textureView,
-        clearValue: { r: 0.8, g: 0.8, b: 0.8, a: 1.0 },
-        loadOp: 'clear',
-        storeOp: 'store',
-      },
-    ],
-  };
-
-  const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
+  const renderPass = pipeline(device, context, projectionViewMatrixUniformBuffer);
 
   device.queue.writeBuffer(
       projectionViewMatrixUniformBuffer,
@@ -268,13 +48,23 @@ fn fs_main(output: VertexOutput) -> @location(0) vec4f {
       new Float32Array(projectionViewMatrix),
   );
 
-  passEncoder.setPipeline(pipeline);
-  passEncoder.setIndexBuffer(indices, 'uint16');
-  passEncoder.setVertexBuffer(0, vertexBuffer);
-  passEncoder.setBindGroup(0, projectionViewMatrixBindGroup);
-  passEncoder.setBindGroup(1, textureBindGroup);
-  passEncoder.drawIndexed(6);
-  passEncoder.end();
+  const draw = function (time: number) {
+    stats.begin();
+    const sprites: Sprite[] = [];
 
-  device.queue.submit([commandEncoder.finish()]);
+    for (let i = 0; i < 60000; i++) {
+      sprites.push(sprite(
+          tex,
+          Math.random() * canvas.width,
+          Math.random() * canvas.height,
+      ));
+    }
+
+    renderPass(sprites);
+
+    stats.end();
+    requestAnimationFrame(draw);
+  };
+
+  draw(0);
 }

@@ -16,13 +16,15 @@ export interface Sprite {
  * The width and height will automatically be taken from the texture.
  *
  * @param texture - The texture to use
+ * @param x - X coordinate of the sprite. 0 by default
+ * @param y - Y coordinate of the sprite. 0 by default
  */
-export function sprite(texture: GPUTexture): Sprite {
+export function sprite(texture: GPUTexture, x = 0, y = 0): Sprite {
   return {
     texture,
     width: texture.width,
     height: texture.height,
-    x: 0,
-    y: 0,
+    x,
+    y,
   };
 }

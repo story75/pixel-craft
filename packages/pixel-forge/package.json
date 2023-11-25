@@ -17,11 +17,15 @@
   },
   "scripts": {
     "check": "tsc",
-    "watch": "esbuild src/index.ts --outfile=public/dist/bundle.js --bundle --global-name=pixelForge --servedir=public --watch"
+    "watch": "esbuild src/index.ts --loader:.wgsl=text --outfile=public/dist/bundle.js --bundle --global-name=pixelForge --servedir=public --watch"
+  },
+  "dependencies": {
+    "stats.js": "^0.17.0"
   },
   "devDependencies": {
     "@webgpu/types": "^0.1.39",
-    "esbuild": "^0.19.7"
+    "esbuild": "^0.19.7",
+    "@types/stats.js": "^0.17.3"
   },
   "lint-staged": {
     "*.ts": [

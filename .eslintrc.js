@@ -28,6 +28,7 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/member-ordering': 'error',
+    '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
     '@typescript-eslint/naming-convention': [
       'error',
       {
@@ -73,7 +74,7 @@ module.exports = {
         format: ['PascalCase'],
       },
     ],
-    '@typescript-eslint/array-type': ['error', { default: 'generic' }],
+    '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
     '@typescript-eslint/no-unused-vars': [
       'error',
       {

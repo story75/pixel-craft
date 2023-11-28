@@ -1,12 +1,14 @@
+import {Vec2} from "../math/vec2";
+import {Rect} from "../math/rect";
+
 /**
  * An instance of a sprite which can be rendered to a canvas
  */
-export interface Sprite {
+export type Sprite = Rect & {
   texture: GPUTexture;
-  width: number;
-  height: number;
-  x: number;
-  y: number;
+  frame: Rect;
+  rotation: number;
+  origin: Vec2;
 }
 
 /**
@@ -14,17 +16,16 @@ export interface Sprite {
  *
  * @remarks
  * The width and height will automatically be taken from the texture.
- *
- * @param texture - The texture to use
- * @param x - X coordinate of the sprite. 0 by default
- * @param y - Y coordinate of the sprite. 0 by default
  */
-export function sprite(texture: GPUTexture, x = 0, y = 0): Sprite {
+export function sprite(data: Pick<Sprite, 'texture'> & Omit<Partial<Sprite>, 'texture'>): Sprite {
   return {
-    texture,
-    width: texture.width,
-    height: texture.height,
-    x,
-    y,
+    texture: data.texture,
+    width: data.width ?? data.texture.width,
+    height: data.height ?? data.texture.height,
+    x: data.x ?? 0,
+    y: data.y ?? 0,
+    frame: data.frame ?? {x: 0, y: 0, width: data.texture.width, height: data.texture.height},
+    rotation: data.rotation ?? 0,
+    origin: data.origin ?? [0, 0],
   };
 }

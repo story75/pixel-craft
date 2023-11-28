@@ -2,6 +2,7 @@ import shader from './shader.wgsl';
 import {indexBufferAllocator} from "../../buffer/index-buffer-allocator";
 import {Sprite} from "../../../sprite";
 import {vertexBufferAllocator} from "../../buffer/vertex-buffer-allocator";
+import {rotate, Vec2} from "../../../math/vec2";
 
 type Batch = {
     instances: number;
@@ -9,7 +10,7 @@ type Batch = {
     texture: GPUTexture;
 };
 
-const MAX_SPRITES_PER_BATCH = 10000;
+const MAX_SPRITES_PER_BATCH = 10_000;
 const INIDICES_PER_SPRITE = 6; // one quad per sprite. A quad has 2 triangles, each with 3 vertices;
 const FLOATS_PER_VERTEX = 7; // x, y, u, v, r, g, b
 const FLOATS_PER_SPRITE = 4 * FLOATS_PER_VERTEX; // a quad has 4 unique vertices
@@ -192,39 +193,59 @@ export function pipeline(device: GPUDevice, context: GPUCanvasContext, projectio
                 batches.push(batch);
             }
 
+            let topLeft: Vec2 = [sprite.x, sprite.y];
+            let topRight: Vec2 = [sprite.x + sprite.width, sprite.y];
+            let bottomRight: Vec2 = [sprite.x + sprite.width, sprite.y + sprite.height];
+            let bottomLeft: Vec2 = [sprite.x, sprite.y + sprite.height];
+
+            if (sprite.rotation) {
+                const origin: Vec2 = [
+                    sprite.x + sprite.origin[0] * sprite.width,
+                    sprite.y + sprite.origin[1] * sprite.height,
+                ];
+
+                topLeft = rotate(topLeft, origin, sprite.rotation);
+                topRight = rotate(topRight, origin, sprite.rotation);
+                bottomRight = rotate(bottomRight, origin, sprite.rotation);
+                bottomLeft = rotate(bottomLeft, origin, sprite.rotation);
+            }
+
+            const u: Vec2 = [sprite.frame.x / sprite.texture.width, (sprite.frame.x + sprite.frame.width) / sprite.texture.width];
+            const v: Vec2 = [sprite.frame.y / sprite.texture.height, (sprite.frame.y + sprite.frame.height) / sprite.texture.height];
+
             const i = batch.instances * FLOATS_PER_SPRITE;
             // top left
-            batch.vertices[0 + i] = sprite.x;
-            batch.vertices[1 + i] = sprite.y;
-            batch.vertices[2 + i] = 0.0;
-            batch.vertices[3 + i] = 0.0;
+            batch.vertices[0 + i] = topLeft[0];
+            batch.vertices[1 + i] = topLeft[1];
+            batch.vertices[2 + i] = u[0];
+            batch.vertices[3 + i] = v[0];
             batch.vertices[4 + i] = 1.0;
             batch.vertices[5 + i] = 1.0;
             batch.vertices[6 + i] = 1.0;
 
             // top right
-            batch.vertices[7 + i] = sprite.x + sprite.width;
-            batch.vertices[8 + i] = sprite.y;
-            batch.vertices[9 + i] = 1.0;
-            batch.vertices[10 + i] = 0.0;
+            batch.vertices[7 + i] = topRight[0];
+            batch.vertices[8 + i] = topRight[1];
+            batch.vertices[9 + i] = u[1];
+            batch.vertices[10 + i] = v[0];
             batch.vertices[11 + i] = 1.0;
             batch.vertices[12 + i] = 1.0;
             batch.vertices[13 + i] = 1.0;
 
             // bottom right
-            batch.vertices[14 + i] = sprite.x + sprite.width;
-            batch.vertices[15 + i] = sprite.y + sprite.height;
-            batch.vertices[16 + i] = 1.0;
-            batch.vertices[17 + i] = 1.0;
+            batch.vertices[14 + i] = bottomRight[0];
+            batch.vertices[15 + i] = bottomRight[1];
+            batch.vertices[16 + i] = u[1];
+            batch.vertices[17 + i] = v[1];
             batch.vertices[18 + i] = 1.0;
             batch.vertices[19 + i] = 1.0;
             batch.vertices[20 + i] = 1.0;
 
             // bottom left
-            batch.vertices[21 + i] = sprite.x;
-            batch.vertices[22 + i] = sprite.y + sprite.height;
-            batch.vertices[23 + i] = 0.0;
-            batch.vertices[24 + i] = 1.0;
+            batch.vertices[21 + i] = bottomLeft[0];
+            batch.vertices[22 + i] = bottomLeft[1];
+            batch.vertices[23 + i] = u[0];
+            batch.vertices[24 + i] = v[1];
             batch.vertices[25 + i] = 1.0;
             batch.vertices[26 + i] = 1.0;
             batch.vertices[27 + i] = 1.0;

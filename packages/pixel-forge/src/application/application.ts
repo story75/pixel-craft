@@ -48,16 +48,44 @@ export async function application(canvas: HTMLCanvasElement) {
       new Float32Array(projectionViewMatrix),
   );
 
+  const sprites: Sprite[] = [];
+
+  sprites.push(sprite({
+    texture: tex,
+    x: 300,
+    y: 300,
+    origin: [0, 0],
+  }));
+  sprites.push(sprite({
+    texture: tex,
+    x: 300,
+    y: 300,
+    origin: [0, 1],
+  }));
+  sprites.push(sprite({
+    texture: tex,
+    x: 300,
+    y: 300,
+    origin: [1, 0],
+  }));
+  sprites.push(sprite({
+    texture: tex,
+    x: 300,
+    y: 300,
+    origin: [1, 1],
+  }));
+  sprites.push(sprite({
+    texture: tex,
+    x: 300,
+    y: 300,
+    origin: [0.5, 0.5],
+  }));
+
   const draw = function (time: number) {
     stats.begin();
-    const sprites: Sprite[] = [];
 
-    for (let i = 0; i < 60000; i++) {
-      sprites.push(sprite(
-          tex,
-          Math.random() * canvas.width,
-          Math.random() * canvas.height,
-      ));
+    for (const sprite of sprites) {
+      sprite.rotation += 0.01;
     }
 
     renderPass(sprites);

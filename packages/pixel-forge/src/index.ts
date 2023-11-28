@@ -3,6 +3,4 @@
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
 
-export * from './application';
-export * from './loader';
-export * from './sprite';
+export * from './application/application';

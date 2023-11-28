@@ -1,9 +1,9 @@
-import { texture } from '../loader';
-import { lookAt, multiply, orthographic } from '../math';
 import {uniformBufferAllocator} from "../renderer/buffer/uniform-buffer-allocator";
 import {pipeline} from "../renderer/pipeline/2d-pixel/pipeline";
-import {Sprite, sprite} from "../sprite";
 import Stats from "stats.js";
+import {lookAt, multiply, orthographic} from "../math/mat4";
+import {texture} from "../loader/texture";
+import {sprite, Sprite} from "../sprite/sprite";
 
 export async function application(canvas: HTMLCanvasElement) {
   const stats = new Stats();

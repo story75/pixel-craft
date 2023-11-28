@@ -1,0 +1,28 @@
+{
+  "name": "@pixel-forge/sample",
+  "version": "0.1.0",
+  "trustedDependencies": [
+    "esbuild"
+  ],
+  "private": true,
+  "scripts": {
+    "check": "tsc",
+    "watch": "esbuild src/index.ts --outfile=public/dist/bundle.js --bundle --global-name=pixelForge --servedir=public --watch"
+  },
+  "dependencies": {
+    "stats.js": "^0.17.0",
+    "@pixel-forge/pixel-forge": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/stats.js": "^0.17.3"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --config=../../prettier.config.js --ignore-path=../../.prettierignore --write"
+    ],
+    "*.{js,md,json,yml,yaml,html}": [
+      "prettier --config=../../prettier.config.js --ignore-path=../../.prettierignore --write"
+    ]
+  }
+}

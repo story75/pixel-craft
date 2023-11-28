@@ -5,6 +5,11 @@
       "dependsOn": ["^check"],
       "outputs": ["dist/**/*.d.ts"],
       "outputMode": "errors-only"
+    },
+    "build": {
+      "dependsOn": ["^build", "check"],
+      "outputs": ["dist/index.js", "dist/esm.js"],
+      "outputMode": "errors-only"
     }
   },
   "globalDependencies": ["package.json", "package-lock.json", "tsconfig.json"]

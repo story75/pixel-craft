@@ -8,9 +8,9 @@ export type Vec2 = [number, number] | Float32Array;
  * @param v
  */
 export function normalize(v: Readonly<Vec2>): Vec2 {
-    const [x, y] = v;
-    const l = length(v);
-    return [x / l, y / l];
+  const [x, y] = v;
+  const l = length(v);
+  return [x / l, y / l];
 }
 
 /**
@@ -20,8 +20,8 @@ export function normalize(v: Readonly<Vec2>): Vec2 {
  * @param v
  */
 export function length(v: Readonly<Vec2>): number {
-    const [x, y] = v;
-    return Math.sqrt(x * x + y * y);
+  const [x, y] = v;
+  return Math.sqrt(x * x + y * y);
 }
 
 /**
@@ -33,9 +33,9 @@ export function length(v: Readonly<Vec2>): number {
  * @param b
  */
 export function subtract(a: Readonly<Vec2>, b: Readonly<Vec2>): Vec2 {
-    const [ax, ay] = a;
-    const [bx, by] = b;
-    return [ax - bx, ay - by];
+  const [ax, ay] = a;
+  const [bx, by] = b;
+  return [ax - bx, ay - by];
 }
 
 /**
@@ -47,9 +47,9 @@ export function subtract(a: Readonly<Vec2>, b: Readonly<Vec2>): Vec2 {
  * @param b
  */
 export function cross(a: Readonly<Vec2>, b: Readonly<Vec2>): Vec2 {
-    const [ax, ay] = a;
-    const [bx, by] = b;
-    return [ay * bx - ax * by, ax * by - ay * bx];
+  const [ax, ay] = a;
+  const [bx, by] = b;
+  return [ay * bx - ax * by, ax * by - ay * bx];
 }
 
 /**
@@ -61,9 +61,9 @@ export function cross(a: Readonly<Vec2>, b: Readonly<Vec2>): Vec2 {
  * @param b
  */
 export function dot(a: Readonly<Vec2>, b: Readonly<Vec2>): number {
-    const [ax, ay] = a;
-    const [bx, by] = b;
-    return ax * bx + ay * by;
+  const [ax, ay] = a;
+  const [bx, by] = b;
+  return ax * bx + ay * by;
 }
 
 /**
@@ -75,10 +75,14 @@ export function dot(a: Readonly<Vec2>, b: Readonly<Vec2>): number {
  * @param origin
  * @param radians
  */
-export function rotate(v: Readonly<Vec2>, origin: Readonly<Vec2>, radians: number): Vec2 {
-    const x = v[0] - origin[0];
-    const y = v[1] - origin[1];
-    const cos = Math.cos(radians);
-    const sin = Math.sin(radians);
-    return [origin[0] + x * cos - y * sin, origin[1] + x * sin + y * cos];
+export function rotate(
+  v: Readonly<Vec2>,
+  origin: Readonly<Vec2>,
+  radians: number,
+): Vec2 {
+  const x = v[0] - origin[0];
+  const y = v[1] - origin[1];
+  const cos = Math.cos(radians);
+  const sin = Math.sin(radians);
+  return [origin[0] + x * cos - y * sin, origin[1] + x * sin + y * cos];
 }

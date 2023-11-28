@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import {lookAt, Mat4, multiply, orthographic} from './mat4';
+import { Mat4, lookAt, multiply, orthographic } from './mat4';
 
 describe('orthographic', () => {
   it('should project matrix', () => {

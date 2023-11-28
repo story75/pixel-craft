@@ -5,7 +5,9 @@
     "packages/*"
   ],
   "scripts": {
+    "sample": "bun --cwd packages/sample watch",
     "check": "turbo run check",
+    "build": "turbo run build",
     "format": "prettier --cache --cache-strategy metadata '**/*'",
     "format:fix": "prettier --cache --cache-strategy metadata --write '**/*'",
     "lint": "eslint --cache --ext .ts .",
@@ -26,7 +28,8 @@
     "@typescript-eslint/parser": "^6.12.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.1.0",
-    "turbo": "^1.10.16"
+    "turbo": "^1.10.16",
+    "esbuild": "^0.19.7"
   },
   "lint-staged": {
     "*.{ts,js,md,json,yml,yaml,html}": [

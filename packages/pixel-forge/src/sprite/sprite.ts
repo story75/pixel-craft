@@ -1,6 +1,6 @@
-import {Vec2} from "../math/vec2";
-import {Rect} from "../math/rect";
-import {Vec3} from "../math/vec3";
+import { Rect } from '../math/rect';
+import { Vec2 } from '../math/vec2';
+import { Vec3 } from '../math/vec3';
 
 /**
  * An instance of a sprite which can be rendered to a canvas
@@ -48,22 +48,31 @@ export type Sprite = Rect & {
    * If the alpha is 1, the sprite will be rendered normally.
    */
   alpha: number;
-}
+};
 
 /**
  * Create a sprite from a texture.
  *
  * @remarks
- * The width and height will automatically be taken from the texture.
+ * The width and height will automatically be taken from the texture, if not specified.
+ * The frame will automatically be set to the entire texture, if not specified.
+ * The origin will automatically be set to the top left corner of the sprite, if not specified.
  */
-export function sprite(data: Pick<Sprite, 'texture'> & Omit<Partial<Sprite>, 'texture'>): Sprite {
+export function sprite(
+  data: Pick<Sprite, 'texture'> & Omit<Partial<Sprite>, 'texture'>,
+): Sprite {
   return {
     texture: data.texture,
     width: data.width ?? data.texture.width,
     height: data.height ?? data.texture.height,
     x: data.x ?? 0,
     y: data.y ?? 0,
-    frame: data.frame ?? {x: 0, y: 0, width: data.texture.width, height: data.texture.height},
+    frame: data.frame ?? {
+      x: 0,
+      y: 0,
+      width: data.texture.width,
+      height: data.texture.height,
+    },
     rotation: data.rotation ?? 0,
     origin: data.origin ?? [0, 0],
     color: data.color ?? [1, 1, 1],

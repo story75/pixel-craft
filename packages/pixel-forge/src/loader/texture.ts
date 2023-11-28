@@ -1,19 +1,23 @@
 /**
  * Load a texture by path.
  *
+ * @remarks
+ * The loader will cache textures to avoid loading the same texture multiple times.
+ * The cache key is the path.
+ *
  * @param path - The path to load the asset from. Can either be relative from the host or a full url.
  */
-export type LoadTexture = (path: string) => Promise<GPUTexture>;
+export type TextureLoader = (path: string) => Promise<GPUTexture>;
 
 /**
  * Create a texture loader with a given GPUDevice.
  *
  * @remarks
- * The loader will cache textures to avoid loading the same texture multiple times.
+ * Textures are bound to the device they're created with.
  *
- * @param device - The GPUDevice to use. Textures are bound to the device they're created with
+ * @param device - The GPUDevice to use
  */
-export function texture(device: GPUDevice): LoadTexture {
+export function createTextureLoader(device: GPUDevice): TextureLoader {
   const cache = new Map<string, GPUTexture>();
 
   return async (path) => {

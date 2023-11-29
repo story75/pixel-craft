@@ -4,6 +4,10 @@
   "trustedDependencies": [
     "esbuild"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/story75/pixel-forge.git"
+  },
   "private": true,
   "main": "dist/index.js",
   "module": "dist/esm.js",

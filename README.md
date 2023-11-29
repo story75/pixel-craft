@@ -1,57 +1,50 @@
 # Pixel Forge
 
-This is the workspace for Pixel Forge. Pixel Forge is an attempt to create a code focused game engine that is
-specifically tailored to 2D pixel art RPG games.
+This is the workspace for Pixel Forge. It is an attempt to create a code focused game engine that is
+specifically tailored to 2D pixel art RPGs.
 
-Currently, this package is very much a work in progress. It is not recommended to use this package in production.
+Currently, this is very much a work in progress. It is not recommended to use this in production.
 If you're brave enough to try it out, continue ahead and please report any issues you find.
 
 ## Why?
 
 TL;DR:
 
-- specifically tailored to 2D pixel art RPG games
+- specifically tailored to 2D pixel art RPGs
 - WebGPU
 - easy to share games with others
 - Rapid prototyping
-- web technologies
 - code focused
 - fun and learning
 
 There are many rendering packages and game engines out there, and every single one has its own pros and cons.
 You should always use the right tool for the job, and Pixel Forge is not the right tool for every job.
-However, I believe that there is a niche for a game engine that is specifically tailored to 2D pixel art RPG games.
+However, I believe that there is a niche for a game engine that is specifically tailored to 2D pixel art RPGs.
 
 One aspect that makes Pixel Forge unique is that it is built on top of WebGPU. WebGPU is a new web standard that is
-currently in development, and it is the successor to WebGL.
-This means that Pixel Forge can employ new rendering techniques that are not possible with WebGL, like compute shaders
-for example. It also squeezes out every bit of performance that is possible on the web.
+currently in development, and it is the successor to WebGL. This means that Pixel Forge can employ new rendering techniques 
+that are not possible with WebGL, like compute shaders for example. It also squeezes out every bit of performance that is possible on the web.
 
 On the other hand most of the existing game engines are either UI focused like Construct, or still need additional
-tooling for game creation like PixiJS.
-Don't get me wrong, these are great tools, but they are more general purpose tools.
-I'm a developer at heart and I want to write code to create my games, not click together a game with a UI.
-I want to be able to see and reason about every change I make, and see it in version control.
+tooling for game creation like PixiJS. Don't get me wrong, these are great tools, but they are more general purpose tools. 
+I'm a developer at heart and I want to write code to create my games, not click together a game with a UI. 
+I want some building blocks that I can use to create my game, think easy to use physics, lighting, pathfinding, Tiled support, 
+sound, dialog systems, etc., be able to change them with my own to fit my needs, 
+but I don't want to be forced to jump through multiple interfaces to create my game.
 
 I also believe that developing a game with web technologies has the distinct advantage that you can easily share your
-game with others.
-This is especially true for 2D pixel art games, because they are usually not very resource intensive, so you can
-leverage the existing
-ecosystem of the web to quickly prototype your game and gather feedback from others.
-
-I want to go into more detail regarding PixiJS, because it is a great tool and also the main reason why I started this
-project.
-PixiJS is a rendering library that is specifically tailored to 2D rendering. It is very fast and has a lot of features.
-However, it is not a game engine. It is a rendering library. This means that you still need to write a lot of code to
-create a game.
-The goal of Pixel Forge is to provide a lot of the boilerplate code that is needed to create a game, so that you can
-focus on the game itself.
-Think easy to use physics, lighting, pathfinding, Tiled support, sound, dialog systems, etc.
+game with others. This is especially true for 2D games, because they are usually not very resource intensive, so you can
+instead trade performance for ease of use. This means that you can leverage the existing ecosystem of the web,
+to quickly prototype your game and gather feedback from others.
 
 Lastly, I want to mention that I'm doing this project for fun as well. I'm not trying to create the next big thing.
 I'm just trying to create something that I would enjoy using myself to create games and ease the development process.
 
 ## Getting Started
+
+Small disclaimer: This is not a tutorial on HTML, TypeScript, or JavaScript. If you're not familiar with these technologies
+I recommend you to read up on them first. This guide will also expect you to be able to use a package manager.
+You should also know how to spin up a local web server. I'd recommend bun, vite, or esbuild for this.
 
 I'm using [bun](https://bun.sh/) for this project, but you can use npm or yarn as well. Adjust the commands accordingly.
 

@@ -17,6 +17,29 @@ jobs:
           echo $RELEASE_NOTES >> "$GITHUB_ENV"
           echo 'EOF' >> "$GITHUB_ENV"
 
-      - uses: ncipollo/release-action@v1
+      - uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
           body: ${{ env.RELEASE_NOTES }}
+          draft: false
+          prerelease: false
+
+  publish:
+    name: Publish NPM package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+      # run scripts
+      - run: bun install
+      - run: bun run publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PUBLISH_VERSION: ${{ github.ref_name }}

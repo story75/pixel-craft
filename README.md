@@ -65,7 +65,7 @@ If you want to create your own project, continue reading.
 Use your favorite package manager to install Pixel Forge.
 
 ```bash
-bun install @pixel-forge/pixel-forge
+bun install @story75/pixel-forge
 ```
 
 ### Render a sprite
@@ -90,7 +90,7 @@ Then in your TypeScript, or JavaScript, file get a reference to the canvas and c
 ```ts
 import {
     createContext,
-} from '@pixel-forge/pixel-forge';
+} from '@story75/pixel-forge';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
     const canvas = document.getElementsByTagName('canvas')[0]!;
@@ -104,7 +104,7 @@ Once you have a `WebGPUContext` you can create a `projectionViewMatrix`. This is
 import {
     createContext,
     projectionViewMatrix, // Add this line
-} from '@pixel-forge/pixel-forge';
+} from '@story75/pixel-forge';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
     const canvas = document.getElementsByTagName('canvas')[0]!;
@@ -127,7 +127,7 @@ import {
     createContext,
     projectionViewMatrix,
     pipeline, // Add this line
-} from '@pixel-forge/pixel-forge';
+} from '@story75/pixel-forge';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
     const canvas = document.getElementsByTagName('canvas')[0]!;
@@ -159,7 +159,7 @@ import {
     createTextureLoader, // Add this line
     Sprite, // Add this line
     sprite, // Add this line
-} from '@pixel-forge/pixel-forge';
+} from '@story75/pixel-forge';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
     const canvas = document.getElementsByTagName('canvas')[0]!;

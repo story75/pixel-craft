@@ -5,7 +5,7 @@ import {
   pipeline,
   projectionViewMatrix,
   sprite,
-} from '@pixel-forge/pixel-forge';
+} from '@story75/pixel-forge';
 import Stats from 'stats.js';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {

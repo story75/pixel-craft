@@ -1,4 +1,4 @@
-# @pixel-forge/pixel-forge
+# @story75/pixel-forge
 
 This is the main package for Pixel Forge. It contains the core functionality to create 2D pixel art games.
 

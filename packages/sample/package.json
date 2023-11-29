@@ -1,5 +1,5 @@
 {
-  "name": "@pixel-forge/sample",
+  "name": "@story75/pixel-forge-sample",
   "version": "0.1.0",
   "trustedDependencies": [
     "esbuild"
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "stats.js": "^0.17.0",
-    "@pixel-forge/pixel-forge": "workspace:*"
+    "@story75/pixel-forge": "workspace:*"
   },
   "devDependencies": {
     "@types/stats.js": "^0.17.3"

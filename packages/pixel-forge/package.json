@@ -1,5 +1,5 @@
 {
-  "name": "@pixel-forge/pixel-forge",
+  "name": "@story75/pixel-forge",
   "version": "0.1.0",
   "trustedDependencies": [
     "esbuild"

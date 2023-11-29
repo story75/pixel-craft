@@ -1,0 +1,4 @@
+# We use pnpm for publishing packages, because bun does not support publishing packages and npm does not support the "workspace:*" syntax.
+# We must create this file to configure pnpm workspaces, because pnpm does not support "workspaces" in the package.json file.
+packages:
+  - 'packages/*'

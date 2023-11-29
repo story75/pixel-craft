@@ -17,4 +17,5 @@ if (fromPosition === -1) {
 const toPosition = content.indexOf(`## `, fromPosition + 1);
 const releaseNotes = content.substring(fromPosition, toPosition === -1 ? undefined : toPosition);
 
+// eslint-disable-next-line no-console
 console.log(releaseNotes);

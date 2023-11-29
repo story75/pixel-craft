@@ -8,7 +8,7 @@
     "sample": "bun --cwd packages/sample watch",
     "check": "turbo run check",
     "build": "turbo run build",
-    "format": "prettier --cache --cache-strategy metadata '**/*'",
+    "format": "prettier --cache --cache-strategy metadata --check '**/*'",
     "format:fix": "prettier --cache --cache-strategy metadata --write '**/*'",
     "lint": "eslint --cache --ext .ts .",
     "lint:fix": "eslint --cache --fix --ext .ts ."

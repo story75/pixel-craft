@@ -1,0 +1,34 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  test:
+    name: Format, Lint, Typecheck, and Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      # run scripts
+      - run: bun install
+      - run: bun lint
+      - run: bun format
+      - run: bun check
+      - run: bun test
+
+  build:
+    name: Build packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      # run scripts
+      - run: bun install
+      - run: bun check # we create the typescript declaration files here
+      - run: bun run build

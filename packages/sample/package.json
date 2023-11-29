@@ -1,9 +1,5 @@
 {
   "name": "@story75/pixel-forge-sample",
-  "version": "0.1.0",
-  "trustedDependencies": [
-    "esbuild"
-  ],
   "private": true,
   "scripts": {
     "check": "tsc",

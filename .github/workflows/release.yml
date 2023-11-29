@@ -1,0 +1,22 @@
+name: Release
+on:
+  push:
+    tags: ['*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install
+      - run: |
+          RELEASE_NOTES=$(bun run ./tools/extract-release-notes.ts "$GITHUB_REF_NAME")
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $RELEASE_NOTES
+
+      - uses: ncipollo/release-action@v1
+        with:
+          body: ${{ env.RELEASE_NOTES }}

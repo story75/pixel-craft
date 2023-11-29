@@ -1,14 +1,9 @@
 {
   "name": "@story75/pixel-forge",
-  "version": "0.1.0",
-  "trustedDependencies": [
-    "esbuild"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/story75/pixel-forge.git"
   },
-  "private": true,
   "main": "dist/index.js",
   "module": "dist/esm.js",
   "types": "dist/src/index.d.ts",
@@ -23,7 +18,8 @@
     "check": "tsc",
     "build": "bun build-cjs && bun build-esm",
     "build-cjs": "esbuild src/index.ts --loader:.wgsl=text --outfile=dist/index.js --bundle --platform=node --format=cjs --sourcemap",
-    "build-esm": "esbuild src/index.ts --loader:.wgsl=text --outfile=dist/esm.js --bundle --platform=node --format=esm --sourcemap"
+    "build-esm": "esbuild src/index.ts --loader:.wgsl=text --outfile=dist/esm.js --bundle --platform=node --format=esm --sourcemap",
+    "publish": "npm version --git-tag-version=false --allow-same-version \"${PUBLISH_VERSION}\" && npm publish"
   },
   "dependencies": {
     "@webgpu/types": "^0.1.39"

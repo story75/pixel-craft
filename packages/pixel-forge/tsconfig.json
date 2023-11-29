@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
-    "types": ["@webgpu/types", "bun-types"]
+    "types": ["bun-types", "@webgpu/types"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]

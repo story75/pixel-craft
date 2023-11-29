@@ -21,4 +21,4 @@ const releaseNotes = content.substring(
 );
 
 // eslint-disable-next-line no-console
-console.log(releaseNotes);
+console.log(releaseNotes.trim());

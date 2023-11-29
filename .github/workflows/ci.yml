@@ -17,9 +17,9 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       # run scripts
       - run: bun install
+      - run: bun check # type check must run before lint
       - run: bun lint
       - run: bun format
-      - run: bun check
       - run: bun test
 
   build:
@@ -30,5 +30,4 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       # run scripts
       - run: bun install
-      - run: bun check # we create the typescript declaration files here
       - run: bun run build

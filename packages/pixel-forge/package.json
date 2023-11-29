@@ -23,14 +23,5 @@
   },
   "dependencies": {
     "@webgpu/types": "^0.1.39"
-  },
-  "lint-staged": {
-    "*.ts": [
-      "eslint --fix",
-      "prettier --config=../../prettier.config.js --ignore-path=../../.prettierignore --write"
-    ],
-    "*.{js,md,json,yml,yaml,html}": [
-      "prettier --config=../../prettier.config.js --ignore-path=../../.prettierignore --write"
-    ]
   }
 }

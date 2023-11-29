@@ -8,6 +8,7 @@
     "packages/*"
   ],
   "scripts": {
+    "prepare": "husky install",
     "sample": "bun --cwd packages/sample watch",
     "check": "turbo run check",
     "build": "turbo run build",
@@ -38,11 +39,11 @@
   },
   "lint-staged": {
     "*.ts": [
-      "eslint --fix",
-      "prettier --config=../../prettier.config.js --ignore-path=../../.prettierignore --write"
+      "eslint --cache --fix",
+      "prettier --cache --cache-strategy metadata --write"
     ],
     "*.{js,md,json,yml,yaml,html}": [
-      "prettier --config=../../prettier.config.js --ignore-path=../../.prettierignore --write"
+      "prettier --cache --cache-strategy metadata --write"
     ]
   }
 }

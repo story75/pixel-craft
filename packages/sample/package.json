@@ -11,14 +11,5 @@
   },
   "devDependencies": {
     "@types/stats.js": "^0.17.3"
-  },
-  "lint-staged": {
-    "*.ts": [
-      "eslint --fix",
-      "prettier --config=../../prettier.config.js --ignore-path=../../.prettierignore --write"
-    ],
-    "*.{js,md,json,yml,yaml,html}": [
-      "prettier --config=../../prettier.config.js --ignore-path=../../.prettierignore --write"
-    ]
   }
 }

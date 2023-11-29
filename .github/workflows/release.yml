@@ -13,11 +13,9 @@ jobs:
       - run: bun install
       - run: |
           RELEASE_NOTES=$(bun run ./tools/extract-release-notes.ts "$GITHUB_REF_NAME")
-          {
-              echo 'RELEASE_NOTES<<EOF'
-              echo $RELEASE_NOTES
-              echo EOF
-          } >> "$GITHUB_ENV"
+          echo 'RELEASE_NOTES<<EOF' >> "$GITHUB_ENV"
+          echo $RELEASE_NOTES >> "$GITHUB_ENV"
+          echo 'EOF' >> "$GITHUB_ENV"
 
       - uses: ncipollo/release-action@v1
         with:

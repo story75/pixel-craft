@@ -1,5 +1,6 @@
 {
   "name": "pixel-forge",
+  "version": "0.1.0",
   "private": true,
   "trustedDependencies": [
     "esbuild"
@@ -12,7 +13,6 @@
     "sample": "bun --cwd packages/sample watch",
     "check": "turbo run check",
     "build": "turbo run build",
-    "publish": "turbo run publish",
     "format": "prettier --cache --cache-strategy metadata --check '**/*'",
     "format:fix": "prettier --cache --cache-strategy metadata --write '**/*'",
     "lint": "eslint --cache --ext .ts .",

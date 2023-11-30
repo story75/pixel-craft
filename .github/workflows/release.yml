@@ -39,7 +39,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       # run scripts
       - run: bun install
-      - run: bun run publish
+      - run: bun release
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           PUBLISH_VERSION: ${{ github.ref_name }}

@@ -2,8 +2,9 @@
   "name": "@story75/pixel-forge",
   "repository": {
     "type": "git",
-    "url": "https://github.com/story75/pixel-forge.git"
+    "url": "git+https://github.com/story75/pixel-forge.git"
   },
+  "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/esm.js",
   "types": "dist/src/index.d.ts",
@@ -19,10 +20,9 @@
     "build": "bun build-cjs && bun build-esm",
     "build-cjs": "esbuild src/index.ts --loader:.wgsl=text --outfile=dist/index.js --bundle --platform=node --format=cjs --sourcemap",
     "build-esm": "esbuild src/index.ts --loader:.wgsl=text --outfile=dist/esm.js --bundle --platform=node --format=esm --sourcemap",
-    "publish": "npm version --git-tag-version=false --allow-same-version \"${PUBLISH_VERSION}\" && echo 'npm publish'"
+    "release": "bun run ../../tools/release.ts \"${PUBLISH_VERSION}\""
   },
   "dependencies": {
     "@webgpu/types": "^0.1.39"
-  },
-  "version": "0.1.0"
+  }
 }

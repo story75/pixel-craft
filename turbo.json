@@ -11,7 +11,7 @@
       "outputs": ["dist/index.js", "dist/esm.js"],
       "outputMode": "errors-only"
     },
-    "publish": {
+    "release": {
       "dependsOn": ["build"],
       "cache": false,
       "outputMode": "errors-only"

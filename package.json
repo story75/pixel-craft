@@ -12,7 +12,7 @@
     "sample": "bun --cwd packages/sample watch",
     "check": "turbo run check",
     "build": "turbo run build",
-    "publish": "turbo run publish",
+    "release": "turbo run release",
     "format": "prettier --cache --cache-strategy metadata --check '**/*'",
     "format:fix": "prettier --cache --cache-strategy metadata --write '**/*'",
     "lint": "eslint --cache --ext .ts .",

@@ -32,7 +32,7 @@ const licenseInput = Bun.file(join(import.meta.dir, '..', 'LICENSE'));
 const licenseOutput = Bun.file(join(workingDirectory, 'LICENSE'));
 await Bun.write(licenseOutput, licenseInput);
 
-const npmPublish = Bun.spawn(['npm', 'publish', '--dry-run'], {
+const npmPublish = Bun.spawn(['npm', 'publish'], {
   cwd: workingDirectory,
   stdio: ['inherit', 'inherit', 'inherit'],
 });

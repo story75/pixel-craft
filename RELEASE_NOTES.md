@@ -2,7 +2,7 @@
 
 ## UNRELEASED
 
-## 0.1.0 (29.11.2023)
+## 0.1.0 (30.11.2023)
 
 This marks the first release of the project. Below is a list of the main features:
 

@@ -65,7 +65,7 @@ If you want to create your own project, continue reading.
 Use your favorite package manager to install Pixel Forge.
 
 ```bash
-bun install @story75/pixel-forge
+bun add @story75/pixel-forge
 ```
 
 ### Render a sprite

@@ -22,6 +22,17 @@ export type Sprite = Rect & {
   rotation: number;
 
   /**
+   * Options to flip the sprite
+   *
+   * @remarks
+   * The first value is whether to flip the sprite horizontally, and the second value is whether to flip the sprite vertically.
+   * If the value is true, the sprite will be flipped. If the value is false, the sprite will not be flipped.
+   * This is useful for rendering a sprite facing left or right, without having to create a separate texture.
+   * This will not affect the frame of the sprite, but just change the uv coordinates.
+   */
+  flip: [boolean, boolean];
+
+  /**
    * The origin of the sprite
    *
    * @remarks
@@ -73,6 +84,7 @@ export function sprite(
       width: data.texture.width,
       height: data.texture.height,
     },
+    flip: data.flip ?? [false, false],
     rotation: data.rotation ?? 0,
     origin: data.origin ?? [0, 0],
     color: data.color ?? [1, 1, 1],

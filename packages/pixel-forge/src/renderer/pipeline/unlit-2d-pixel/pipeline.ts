@@ -284,8 +284,8 @@ export function pipeline(
       // top left
       batch.vertices[0 + i] = topLeft[0];
       batch.vertices[1 + i] = topLeft[1];
-      batch.vertices[2 + i] = u[0];
-      batch.vertices[3 + i] = v[0];
+      batch.vertices[2 + i] = sprite.flip[0] ? 1 - u[0] : u[0];
+      batch.vertices[3 + i] = sprite.flip[1] ? 1 - v[0] : v[0];
       batch.vertices[4 + i] = sprite.color[0];
       batch.vertices[5 + i] = sprite.color[1];
       batch.vertices[6 + i] = sprite.color[2];
@@ -294,8 +294,8 @@ export function pipeline(
       // top right
       batch.vertices[8 + i] = topRight[0];
       batch.vertices[9 + i] = topRight[1];
-      batch.vertices[10 + i] = u[1];
-      batch.vertices[11 + i] = v[0];
+      batch.vertices[10 + i] = sprite.flip[0] ? 1 - u[1] : u[1];
+      batch.vertices[11 + i] = sprite.flip[1] ? 1 - v[0] : v[0];
       batch.vertices[12 + i] = sprite.color[0];
       batch.vertices[13 + i] = sprite.color[1];
       batch.vertices[14 + i] = sprite.color[2];
@@ -304,8 +304,8 @@ export function pipeline(
       // bottom right
       batch.vertices[16 + i] = bottomRight[0];
       batch.vertices[17 + i] = bottomRight[1];
-      batch.vertices[18 + i] = u[1];
-      batch.vertices[19 + i] = v[1];
+      batch.vertices[18 + i] = sprite.flip[0] ? 1 - u[1] : u[1];
+      batch.vertices[19 + i] = sprite.flip[1] ? 1 - v[1] : v[1];
       batch.vertices[20 + i] = sprite.color[0];
       batch.vertices[21 + i] = sprite.color[1];
       batch.vertices[22 + i] = sprite.color[2];
@@ -314,8 +314,8 @@ export function pipeline(
       // bottom left
       batch.vertices[24 + i] = bottomLeft[0];
       batch.vertices[25 + i] = bottomLeft[1];
-      batch.vertices[26 + i] = u[0];
-      batch.vertices[27 + i] = v[1];
+      batch.vertices[26 + i] = sprite.flip[0] ? 1 - u[0] : u[0];
+      batch.vertices[27 + i] = sprite.flip[1] ? 1 - v[1] : v[1];
       batch.vertices[28 + i] = sprite.color[0];
       batch.vertices[29 + i] = sprite.color[1];
       batch.vertices[30 + i] = sprite.color[2];

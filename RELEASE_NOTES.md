@@ -2,6 +2,28 @@
 
 ## UNRELEASED
 
+### Features
+
+- Sprite flipping
+
+  You can now flip sprites by providing a `flip` property to the `sprite` function like so:
+
+  ```ts
+  const sampleSprite = sprite({
+    texture,
+    x: 300,
+    y: 300,
+    flip: [true, false],
+  });
+  ```
+
+  This will flip the sprite horizontally.
+
+  The `flip` property is a tuple of two booleans, the first one controls horizontal flipping and the second one controls vertical flipping.
+  If the value is true, the sprite will be flipped. If the value is false, the sprite will not be flipped.
+  This is useful for rendering a sprite facing left or right, without having to create a separate texture.
+  This will not affect the frame of the sprite, but just change the uv coordinates.
+
 ## 0.1.0 (30.11.2023)
 
 This marks the first release of the project. Below is a list of the main features:

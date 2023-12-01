@@ -45,14 +45,13 @@ const FLOATS_PER_SPRITE = floatsPerSprite(FLOATS_PER_VERTEX);
  * can be replaced with a more advanced render pipeline later on.
  *
  * @param pipelineContext - The WebGPU context.
- * @param projectionViewMatrixUniformBuffer - The projection view matrix uniform buffer.
  */
-export function pipeline(
-  pipelineContext: WebGPUContext,
-  projectionViewMatrixUniformBuffer: GPUBuffer,
-): RenderPass {
-  const { device, context, presentationFormat } = pipelineContext;
-
+export function pipeline({
+  device,
+  context,
+  presentationFormat,
+  projectionViewMatrixUniformBuffer,
+}: WebGPUContext): RenderPass {
   const vertexBufferLayout: GPUVertexBufferLayout = {
     arrayStride: FLOATS_PER_VERTEX * Float32Array.BYTES_PER_ELEMENT, // x: f32, y: f32, u: f32, v: f32, r: f32, g: f32, b: f32, a: f32
     attributes: [

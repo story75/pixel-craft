@@ -3,7 +3,6 @@ import {
   createContext,
   createTextureLoader,
   pipeline,
-  projectionViewMatrix,
   sprite,
   tilingSprite,
 } from '@story75/pixel-forge';
@@ -15,16 +14,10 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   const context = await createContext(canvas);
 
-  const projectionViewMatrixUniformBuffer = projectionViewMatrix(
-    context.device,
-    canvas.width,
-    canvas.height,
-  );
-
   const textureLoader = createTextureLoader(context.device);
   const tex = await textureLoader('assets/pixel-prowlers.png');
 
-  const renderPass = pipeline(context, projectionViewMatrixUniformBuffer);
+  const renderPass = pipeline(context);
 
   const [x, y] = [
     canvas.width / 2 - tex.width / 2,

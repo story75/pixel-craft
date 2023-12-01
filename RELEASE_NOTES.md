@@ -1,12 +1,13 @@
 # Release Notes
 
-## UNRELEASED
+## 0.2.0 (02.12.2023)
 
 ### Breaking changes
 
-- `pipeline` now takes a `WebGPUContext` instead of a `GPUDevice` and a `GPUCanvasContext`.
+- `pipeline` now takes just a `WebGPUContext` instead of a `GPUDevice`,`GPUCanvasContext` and `projectionViewMatrixUniformBuffer`.
 
   This is to make it easier to create pipelines by providing the `WebGPUContext` that is returned by `createContext` instead of having to provide the `GPUDevice` and `GPUCanvasContext` separately.
+  The `projectionViewMatrixUniformBuffer` is now also created during the `createContext` call, so you don't have to create it yourself.
 
   ```ts
   // Before
@@ -26,12 +27,7 @@
   ```ts
   // After
   const context = await createContext(canvas);
-  const projectionViewMatrixUniformBuffer = projectionViewMatrix(
-    context.device,
-    canvas.width,
-    canvas.height,
-  );
-  const renderPass = pipeline(context, projectionViewMatrixUniformBuffer);
+  const renderPass = pipeline(context);
   ```
 
 ### Features

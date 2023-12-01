@@ -110,7 +110,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   // And this line
   const projectionViewMatrixUniformBuffer = projectionViewMatrix(
-    device,
+    context.device,
     canvas.width,
     canvas.height,
   );
@@ -132,17 +132,13 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const context = await createContext(canvas);
 
   const projectionViewMatrixUniformBuffer = projectionViewMatrix(
-    device,
+    context.device,
     canvas.width,
     canvas.height,
   );
 
   // And this line
-  const renderPass = pipeline(
-    device,
-    context,
-    projectionViewMatrixUniformBuffer,
-  );
+  const renderPass = pipeline(context, projectionViewMatrixUniformBuffer);
 }
 ```
 
@@ -164,19 +160,15 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const context = await createContext(canvas);
 
   const projectionViewMatrixUniformBuffer = projectionViewMatrix(
-    device,
+    context.device,
     canvas.width,
     canvas.height,
   );
 
-  const renderPass = pipeline(
-    device,
-    context,
-    projectionViewMatrixUniformBuffer,
-  );
+  const renderPass = pipeline(context, projectionViewMatrixUniformBuffer);
 
   // this will create a texture loader
-  const textureLoader = createTextureLoader(device); // Add this line
+  const textureLoader = createTextureLoader(context.device); // Add this line
   // this will load the image and return a texture
   const texture = await textureLoader('assets/pixel-prowlers.png'); // Add this line
 

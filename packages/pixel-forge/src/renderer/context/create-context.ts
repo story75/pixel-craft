@@ -4,6 +4,7 @@
 export type WebGPUContext = {
   device: GPUDevice;
   context: GPUCanvasContext;
+  presentationFormat: GPUTextureFormat;
 };
 
 /**
@@ -35,5 +36,13 @@ export async function createContext(
   canvas.width = window.innerWidth * devicePixelRatio;
   canvas.height = window.innerHeight * devicePixelRatio;
 
-  return { device, context };
+  const presentationFormat = navigator.gpu.getPreferredCanvasFormat();
+
+  context.configure({
+    device,
+    format: presentationFormat,
+    alphaMode: 'premultiplied',
+  });
+
+  return { device, context, presentationFormat };
 }

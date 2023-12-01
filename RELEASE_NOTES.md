@@ -2,6 +2,38 @@
 
 ## UNRELEASED
 
+### Breaking changes
+
+- `pipeline` now takes a `WebGPUContext` instead of a `GPUDevice` and a `GPUCanvasContext`.
+
+  This is to make it easier to create pipelines by providing the `WebGPUContext` that is returned by `createContext` instead of having to provide the `GPUDevice` and `GPUCanvasContext` separately.
+
+  ```ts
+  // Before
+  const { device, context } = await createContext(canvas);
+  const projectionViewMatrixUniformBuffer = projectionViewMatrix(
+    device,
+    canvas.width,
+    canvas.height,
+  );
+  const renderPass = pipeline(
+    device,
+    context,
+    projectionViewMatrixUniformBuffer,
+  );
+  ```
+
+  ```ts
+  // After
+  const context = await createContext(canvas);
+  const projectionViewMatrixUniformBuffer = projectionViewMatrix(
+    context.device,
+    canvas.width,
+    canvas.height,
+  );
+  const renderPass = pipeline(context, projectionViewMatrixUniformBuffer);
+  ```
+
 ### Features
 
 - Sprite flipping
@@ -23,6 +55,33 @@
   If the value is true, the sprite will be flipped. If the value is false, the sprite will not be flipped.
   This is useful for rendering a sprite facing left or right, without having to create a separate texture.
   This will not affect the frame of the sprite, but just change the uv coordinates.
+
+- Tiling sprites
+
+  You can now render tiling sprites with the `tilingSprite` function like so:
+
+  ```ts
+  const parallax = tilingSprite({
+    texture,
+    width: canvas.width,
+    height: canvas.height,
+  });
+  ```
+
+  This will create a full screen sprite and the texture will repeat in every direction. You can change the offset of the texture by providing an `offset` property like so:
+
+  ```ts
+  const parallax = tilingSprite({
+    texture,
+    width: canvas.width,
+    height: canvas.height,
+    offset: [0.5, 0.5],
+  });
+  ```
+
+  This will offset the texture by half the width and height of the texture. You can use this to create parallax effects.
+  This will not affect the frame of the sprite, but just change the uv coordinates.
+  Internally, this will use a different pipeline with a different fragment shader that supports tiling.
 
 ## 0.1.0 (30.11.2023)
 

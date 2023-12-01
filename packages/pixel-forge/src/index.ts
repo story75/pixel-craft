@@ -18,8 +18,11 @@ export {
   createContext,
   type WebGPUContext,
 } from './renderer/context/create-context';
+export { pipeline } from './renderer/pipeline/default/pipeline';
+export { type RenderPass } from './renderer/pipeline/shared/render-pass';
 export {
-  pipeline,
-  type RenderPass,
-} from './renderer/pipeline/unlit-2d-pixel/pipeline';
-export { sprite, type Sprite } from './sprite/sprite';
+  sprite,
+  tilingSprite,
+  type Sprite,
+  type TilingSprite,
+} from './sprite/sprite';

@@ -62,6 +62,31 @@ export type Sprite = Rect & {
 };
 
 /**
+ * A sprite which will be rendered with a repeating texture.
+ */
+export type TilingSprite = Sprite & {
+  /**
+   * The mode to repeat the texture.
+   *
+   * @remarks
+   * Only 'repeat' is supported at the moment.
+   * This is useful for rendering a parallax background. The texture will be repeated in the x and y direction.
+   * This property will indicate to the renderer to use a different pipeline to render the sprite.
+   */
+  mode: 'repeat';
+
+  /**
+   * The offset of the texture.
+   *
+   * @remarks
+   * The offset indicates how much to offset the texture in the x and y direction. The value is a percentage value, with 0 being no offset, and 1 being the full width or height of the texture.
+   * The offset value is relative to the texture size. If the texture is 100px wide, and the offset is 0.5, the texture will be offset by 50px.
+   * If the value is greater than 1, the texture will be offset by the remainder. For example, if the texture is 100px wide, and the offset is 1.5, the texture will be offset by 50px.
+   */
+  offset: Vec2;
+};
+
+/**
  * Create a sprite from a texture.
  *
  * @remarks
@@ -89,5 +114,23 @@ export function sprite(
     origin: data.origin ?? [0, 0],
     color: data.color ?? [1, 1, 1],
     alpha: data.alpha ?? 1,
+  };
+}
+
+/**
+ * Create a tiling sprite from a texture.
+ *
+ * @remarks
+ * The width and height will automatically be taken from the texture, if not specified.
+ * The frame will automatically be set to the entire texture, if not specified.
+ * The origin will automatically be set to the top left corner of the sprite, if not specified.
+ */
+export function tilingSprite(
+  data: Pick<TilingSprite, 'texture'> & Omit<Partial<TilingSprite>, 'texture'>,
+): TilingSprite {
+  return {
+    ...sprite(data),
+    mode: 'repeat',
+    offset: data.offset ?? [0, 0],
   };
 }

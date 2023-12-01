@@ -1,13 +1,19 @@
 import { rotate, Vec2 } from '../../../math/vec2';
-import { Sprite } from '../../../sprite/sprite';
 import { indexBufferAllocator } from '../../buffer/index-buffer-allocator';
 import { vertexBufferAllocator } from '../../buffer/vertex-buffer-allocator';
+import { WebGPUContext } from '../../context/create-context';
+import { floatsPerSprite } from '../shared/constants';
+import { createIndices } from '../shared/create-indices';
+import { RenderPass } from '../shared/render-pass';
+import { projectionViewMatrix } from '../shared/uniforms/projection-view-matrix';
+import { texture } from '../shared/uniforms/texture';
 import shader from './shader.wgsl';
 
 /**
  * A batch of sprites that share the same texture.
  */
 type Batch = {
+  pipeline: GPURenderPipeline;
   instances: number;
   vertices: Float32Array;
   texture: GPUTexture;
@@ -20,11 +26,6 @@ type Batch = {
 const MAX_SPRITES_PER_BATCH = 10_000;
 
 /**
- * The number of indices per sprite. Each sprite is a quad, which has 2 triangles, each with 3 vertices.
- */
-const INDICES_PER_SPRITE = 6;
-
-/**
  * The number of floats per vertex.
  * Each vertex has a position (x, y), a texture coordinate (u, v), a color (r, g, b) and an alpha (a).
  */
@@ -34,23 +35,7 @@ const FLOATS_PER_VERTEX = 8;
  * The number of floats per sprite.
  * Each sprite is a quad, which has 4 unique vertices.
  */
-const FLOATS_PER_SPRITE = 4 * FLOATS_PER_VERTEX;
-
-/**
- * A render pass that renders a list of sprites.
- *
- * @remarks
- * The render pass will render the sprites in batches, where each batch contains sprites that share the same texture.
- * This is done for performance reasons, as it allows us to minimize the number of texture bind group switches and draw calls.
- *
- * The render pass will also reuse index buffers, which are pre-allocated and shared between all batches.
- * Texture bind groups are also reused, but they are allocated on demand, as needed.
- * Vertex buffers are also reused, but they are also allocated on demand, as needed.
- * This is done to minimize the number of GPU memory allocations, which are expensive.
- *
- * The render pass is expected to be called once per frame.
- */
-export type RenderPass = (sprites: Sprite[]) => void;
+const FLOATS_PER_SPRITE = floatsPerSprite(FLOATS_PER_VERTEX);
 
 /**
  * Create a render pipeline that returns a render pass, which can be used to render a list of sprites.
@@ -59,22 +44,14 @@ export type RenderPass = (sprites: Sprite[]) => void;
  * This is a very simple forward render pipeline that renders unlit sprites. It's intended to be used as a starting point and
  * can be replaced with a more advanced render pipeline later on.
  *
- * @param device - The GPU device.
- * @param context - The canvas WebGPU context.
+ * @param pipelineContext - The WebGPU context.
  * @param projectionViewMatrixUniformBuffer - The projection view matrix uniform buffer.
  */
 export function pipeline(
-  device: GPUDevice,
-  context: GPUCanvasContext,
+  pipelineContext: WebGPUContext,
   projectionViewMatrixUniformBuffer: GPUBuffer,
 ): RenderPass {
-  const presentationFormat = navigator.gpu.getPreferredCanvasFormat();
-
-  context.configure({
-    device,
-    format: presentationFormat,
-    alphaMode: 'premultiplied',
-  });
+  const { device, context, presentationFormat } = pipelineContext;
 
   const vertexBufferLayout: GPUVertexBufferLayout = {
     arrayStride: FLOATS_PER_VERTEX * Float32Array.BYTES_PER_ELEMENT, // x: f32, y: f32, u: f32, v: f32, r: f32, g: f32, b: f32, a: f32
@@ -98,110 +75,66 @@ export function pipeline(
     stepMode: 'vertex',
   };
 
-  const projectionViewMatrixLayout = device.createBindGroupLayout({
-    entries: [
-      {
-        binding: 0,
-        visibility: GPUShaderStage.VERTEX,
-        buffer: {
-          type: 'uniform',
-        },
-      },
-    ],
-  });
-
-  const textureBindGroupLayout = device.createBindGroupLayout({
-    entries: [
-      {
-        binding: 0,
-        visibility: GPUShaderStage.FRAGMENT,
-        sampler: {},
-      },
-      {
-        binding: 1,
-        visibility: GPUShaderStage.FRAGMENT,
-        texture: {},
-      },
-    ],
-  });
-
-  const sampler = device.createSampler({
-    magFilter: 'nearest',
-    minFilter: 'nearest',
-  });
+  const projectionViewMatrixUniform = projectionViewMatrix(
+    device,
+    projectionViewMatrixUniformBuffer,
+  );
+  const textureUniform = texture(device);
 
   const pipelineLayout = device.createPipelineLayout({
-    bindGroupLayouts: [projectionViewMatrixLayout, textureBindGroupLayout],
+    bindGroupLayouts: [
+      projectionViewMatrixUniform.layout,
+      textureUniform.layout,
+    ],
   });
 
-  const pipeline = device.createRenderPipeline({
-    layout: pipelineLayout,
-    vertex: {
-      module: device.createShaderModule({
-        // ESLint doesn't recognize the `wgsl` extension as a string, even though we defined the module as string in `wgsl.d.ts`.
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        code: shader,
-      }),
-      entryPoint: 'vs_main',
-      buffers: [vertexBufferLayout],
-    },
-    fragment: {
-      module: device.createShaderModule({
-        // ESLint doesn't recognize the `wgsl` extension as a string, even though we defined the module as string in `wgsl.d.ts`.
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        code: shader,
-      }),
-      entryPoint: 'fs_main',
-      targets: [
-        {
-          format: presentationFormat,
-          blend: {
-            color: {
-              srcFactor: 'one',
-              dstFactor: 'one-minus-src-alpha',
-              operation: 'add',
-            },
-            alpha: {
-              srcFactor: 'one',
-              dstFactor: 'one-minus-src-alpha',
-              operation: 'add',
+  const shaderModule = device.createShaderModule({
+    // ESLint doesn't recognize the `wgsl` extension as a string, even though we defined the module as string in `wgsl.d.ts`.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    code: shader,
+  });
+
+  const pipeline = (vertex = 'vs_main', fragment = 'fs_main') =>
+    device.createRenderPipeline({
+      layout: pipelineLayout,
+      vertex: {
+        module: shaderModule,
+        entryPoint: vertex,
+        buffers: [vertexBufferLayout],
+      },
+      fragment: {
+        module: shaderModule,
+        entryPoint: fragment,
+        targets: [
+          {
+            format: presentationFormat,
+            blend: {
+              color: {
+                srcFactor: 'one',
+                dstFactor: 'one-minus-src-alpha',
+                operation: 'add',
+              },
+              alpha: {
+                srcFactor: 'one',
+                dstFactor: 'one-minus-src-alpha',
+                operation: 'add',
+              },
             },
           },
-        },
-      ],
-    },
-    primitive: {
-      topology: 'triangle-list',
-    },
-  });
+        ],
+      },
+      primitive: {
+        topology: 'triangle-list',
+      },
+    });
 
-  const indices = new Uint16Array(MAX_SPRITES_PER_BATCH * INDICES_PER_SPRITE);
-  for (let i = 0; i < MAX_SPRITES_PER_BATCH; i++) {
-    // first triangle: 0, 1, 2
-    indices[i * INDICES_PER_SPRITE + 0] = i * 4 + 0;
-    indices[i * INDICES_PER_SPRITE + 1] = i * 4 + 1;
-    indices[i * INDICES_PER_SPRITE + 2] = i * 4 + 2;
+  const spritePipeline = pipeline('vs_main', 'fs_main');
+  const parallaxPipeline = pipeline('vs_main', 'fs_repeating');
 
-    // second triangle: 2, 3, 0
-    indices[i * INDICES_PER_SPRITE + 3] = i * 4 + 2;
-    indices[i * INDICES_PER_SPRITE + 4] = i * 4 + 3;
-    indices[i * INDICES_PER_SPRITE + 5] = i * 4 + 0;
-  }
+  const indices = createIndices(MAX_SPRITES_PER_BATCH);
 
   const vertexBufferAlloc = vertexBufferAllocator(device);
   const indexBuffer = indexBufferAllocator(device)(indices);
-
-  const projectionViewMatrixBindGroup = device.createBindGroup({
-    layout: projectionViewMatrixLayout,
-    entries: [
-      {
-        binding: 0,
-        resource: {
-          buffer: projectionViewMatrixUniformBuffer,
-        },
-      },
-    ],
-  });
 
   const vertexBuffers = [
     vertexBufferAlloc(
@@ -219,19 +152,7 @@ export function pipeline(
 
       let textureBindGroup = textureBindGroups.get(texture);
       if (!textureBindGroup) {
-        textureBindGroup = textureBindGroup = device.createBindGroup({
-          layout: textureBindGroupLayout,
-          entries: [
-            {
-              binding: 0,
-              resource: sampler,
-            },
-            {
-              binding: 1,
-              resource: texture.createView(),
-            },
-          ],
-        });
+        textureBindGroup = textureUniform.bindGroup(sprite.texture);
         textureBindGroups.set(texture, textureBindGroup);
       }
 
@@ -244,6 +165,7 @@ export function pipeline(
       let batch = batches.at(-1);
       if (!batch || batch.instances === MAX_SPRITES_PER_BATCH) {
         batch = {
+          pipeline: 'mode' in sprite ? parallaxPipeline : spritePipeline,
           instances: 0,
           vertices: new Float32Array(MAX_SPRITES_PER_BATCH * FLOATS_PER_SPRITE),
           texture: sprite.texture,
@@ -280,12 +202,29 @@ export function pipeline(
         (sprite.frame.y + sprite.frame.height) / sprite.texture.height,
       ];
 
+      if (sprite.flip[0]) {
+        u[0] = 1 - u[0];
+        u[1] = 1 - u[1];
+      }
+
+      if (sprite.flip[1]) {
+        v[0] = 1 - v[0];
+        v[1] = 1 - v[1];
+      }
+
+      if ('offset' in sprite) {
+        u[0] += sprite.offset[0];
+        u[1] += sprite.offset[0];
+        v[0] += sprite.offset[1];
+        v[1] += sprite.offset[1];
+      }
+
       const i = batch.instances * FLOATS_PER_SPRITE;
       // top left
       batch.vertices[0 + i] = topLeft[0];
       batch.vertices[1 + i] = topLeft[1];
-      batch.vertices[2 + i] = sprite.flip[0] ? 1 - u[0] : u[0];
-      batch.vertices[3 + i] = sprite.flip[1] ? 1 - v[0] : v[0];
+      batch.vertices[2 + i] = u[0];
+      batch.vertices[3 + i] = v[0];
       batch.vertices[4 + i] = sprite.color[0];
       batch.vertices[5 + i] = sprite.color[1];
       batch.vertices[6 + i] = sprite.color[2];
@@ -294,8 +233,8 @@ export function pipeline(
       // top right
       batch.vertices[8 + i] = topRight[0];
       batch.vertices[9 + i] = topRight[1];
-      batch.vertices[10 + i] = sprite.flip[0] ? 1 - u[1] : u[1];
-      batch.vertices[11 + i] = sprite.flip[1] ? 1 - v[0] : v[0];
+      batch.vertices[10 + i] = u[1];
+      batch.vertices[11 + i] = v[0];
       batch.vertices[12 + i] = sprite.color[0];
       batch.vertices[13 + i] = sprite.color[1];
       batch.vertices[14 + i] = sprite.color[2];
@@ -304,8 +243,8 @@ export function pipeline(
       // bottom right
       batch.vertices[16 + i] = bottomRight[0];
       batch.vertices[17 + i] = bottomRight[1];
-      batch.vertices[18 + i] = sprite.flip[0] ? 1 - u[1] : u[1];
-      batch.vertices[19 + i] = sprite.flip[1] ? 1 - v[1] : v[1];
+      batch.vertices[18 + i] = u[1];
+      batch.vertices[19 + i] = v[1];
       batch.vertices[20 + i] = sprite.color[0];
       batch.vertices[21 + i] = sprite.color[1];
       batch.vertices[22 + i] = sprite.color[2];
@@ -314,8 +253,8 @@ export function pipeline(
       // bottom left
       batch.vertices[24 + i] = bottomLeft[0];
       batch.vertices[25 + i] = bottomLeft[1];
-      batch.vertices[26 + i] = sprite.flip[0] ? 1 - u[0] : u[0];
-      batch.vertices[27 + i] = sprite.flip[1] ? 1 - v[1] : v[1];
+      batch.vertices[26 + i] = u[0];
+      batch.vertices[27 + i] = v[1];
       batch.vertices[28 + i] = sprite.color[0];
       batch.vertices[29 + i] = sprite.color[1];
       batch.vertices[30 + i] = sprite.color[2];
@@ -358,10 +297,10 @@ export function pipeline(
           throw new Error('Texture bind group not found!');
         }
 
-        passEncoder.setPipeline(pipeline);
+        passEncoder.setPipeline(batch.pipeline);
         passEncoder.setIndexBuffer(indexBuffer, 'uint16');
         passEncoder.setVertexBuffer(0, vertexBuffer);
-        passEncoder.setBindGroup(0, projectionViewMatrixBindGroup);
+        passEncoder.setBindGroup(0, projectionViewMatrixUniform.bindGroup);
         passEncoder.setBindGroup(1, textureBindGroup);
         passEncoder.drawIndexed(6 * batch.instances);
       }

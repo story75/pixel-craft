@@ -3,6 +3,7 @@
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
 
+export { createFontLoader } from './loader/font';
 export { createTextureLoader } from './loader/texture';
 export { type Rect } from './math/rect';
 // TODO: export the math modules as separate packages

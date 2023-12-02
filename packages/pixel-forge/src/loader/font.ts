@@ -15,7 +15,7 @@ export type FontLoader = (name: string, path: string) => Promise<FontFace>;
 /**
  * Create a font loader.
  */
-export function createTextureLoader(): FontLoader {
+export function createFontLoader(): FontLoader {
   const cache = new Map<string, FontFace>();
 
   return async (name, path) => {

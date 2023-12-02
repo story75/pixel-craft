@@ -1,5 +1,26 @@
 # Release Notes
 
+## UNRELEASED
+
+### Features
+
+- Font loader
+
+  You can create a font loader with `createFontLoader` like so:
+
+  ```ts
+  const fontLoader = createFontLoader();
+  ```
+
+  This will create a font loader that you can use to load fonts from URLs like so:
+
+  ```ts
+  await fontLoader('vendor/monocraft/Monocraft.otf');
+  ```
+
+  The function will return a promise that resolves to a `FontFace`. The font is bound to the document and cached, so subsequent calls to the function with the same name will return the same font.
+  You do not need the font face after loading it, so it is safe to ignore the return value, but keep in mind that the font will not be available until the promise resolves.
+
 ## 0.2.0 (02.12.2023)
 
 ### Breaking changes

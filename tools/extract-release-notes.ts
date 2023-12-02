@@ -14,10 +14,12 @@ if (fromPosition === -1) {
   throw new Error(`Version ${version} not found in RELEASE_NOTES.md`);
 }
 
-const toPosition = content.indexOf(`## `, fromPosition + 1);
+const toPosition = content
+  .substring(fromPosition + 1)
+  .search(/## \d+\.\d+\.\d+/);
 const releaseNotes = content.substring(
   fromPosition,
-  toPosition === -1 ? undefined : toPosition,
+  toPosition === -1 ? undefined : fromPosition + 1 + toPosition,
 );
 
 // eslint-disable-next-line no-console

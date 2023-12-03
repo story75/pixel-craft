@@ -1,6 +1,6 @@
 # Release Notes
 
-## UNRELEASED
+## 0.2.1 (03.12.2023)
 
 ### Features
 

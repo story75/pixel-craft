@@ -6,6 +6,8 @@
  * The cache key is the name.
  *
  * This will automatically add the font to the document once the font is loaded.
+ * You do not need the font face after loading it, so it is safe to ignore the return value,
+ * but keep in mind that the font will not be available until the promise resolves.
  *
  * @param name - The name to load the font as.
  * @param path - The path to load the font from. Can either be relative from the host or a full url.

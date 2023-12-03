@@ -4,6 +4,24 @@
 
 ### Features
 
+- Linear sampling
+
+  You can now use linear sampling by providing a `sampler` property to the `sprite` function like so:
+
+  ```ts
+  const sampleSprite = sprite({
+    texture,
+    x: 300,
+    y: 300,
+    sampler: 'linear',
+  });
+  ```
+
+  This will use linear sampling for the sprite. This is not useful for rendering pixel art, but rather for rendering textures like text.
+
+  The `sampler` property is a string that can be either `nearest` or `linear`. If the value is `nearest`, the sprite will use nearest neighbor sampling. If the value is `linear`, the sprite will use linear sampling.
+  The default value is `nearest`, which was the only option before this change.
+
 - Font loader
 
   You can create a font loader with `createFontLoader` like so:
@@ -20,6 +38,33 @@
 
   The function will return a promise that resolves to a `FontFace`. The font is bound to the document and cached, so subsequent calls to the function with the same name will return the same font.
   You do not need the font face after loading it, so it is safe to ignore the return value, but keep in mind that the font will not be available until the promise resolves.
+
+- CanvasText
+
+  You can create text with `canvasText` like so:
+
+  ```ts
+  const text = canvasText(
+    {
+      text: 'Hello World!',
+      font: '42px Monocraft',
+      color: [0, 0, 0],
+    },
+    context.device,
+  );
+  ```
+
+  This will create a `CanvasText` that you can use to render text to the canvas via a render pass. Except for the text and font, all other properties are optional.
+  This will render the text using a canvas 2d context and then upload the result to a texture.
+
+  Under the hood, this will still use the sprite renderer. Keep in mind that this is not the most efficient way to render text,
+  and should only be used for small amounts of text. Text generated this way will not be able to be batched with other sprites,
+  and thus result in more draw calls.
+
+  Once the text is created you can access the texture by using the `texture` property on the returned object.
+  Once the texture is available you can also use the width and height properties to get the size of the text.
+  The texture will be updated whenever the text or font properties change.
+  Canvas text will use linear filter sampling by default. This will make the text look crisp, but may result in blurry text when the text is scaled.
 
 ## 0.2.0 (02.12.2023)
 

@@ -1,8 +1,6 @@
-import { nearestSampler } from '../sampler/nearest-sampler';
-
 type Uniform = {
   layout: GPUBindGroupLayout;
-  bindGroup: (texture: GPUTexture) => GPUBindGroup;
+  bindGroup: (texture: GPUTexture, sampler: GPUSampler) => GPUBindGroup;
 };
 
 /**
@@ -30,11 +28,9 @@ export function texture(device: GPUDevice): Uniform {
     ],
   });
 
-  const sampler = nearestSampler(device);
-
   return {
     layout: textureBindGroupLayout,
-    bindGroup: (texture: GPUTexture) =>
+    bindGroup: (texture: GPUTexture, sampler: GPUSampler) =>
       device.createBindGroup({
         layout: textureBindGroupLayout,
         entries: [

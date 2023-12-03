@@ -1,3 +1,5 @@
+import { textureAllocator } from '../renderer/buffer/texture-allocator';
+
 /**
  * Load a texture by path.
  *
@@ -19,6 +21,7 @@ export type TextureLoader = (path: string) => Promise<GPUTexture>;
  */
 export function createTextureLoader(device: GPUDevice): TextureLoader {
   const cache = new Map<string, GPUTexture>();
+  const allocator = textureAllocator(device);
 
   return async (path) => {
     const cached = cache.get(path);
@@ -29,22 +32,7 @@ export function createTextureLoader(device: GPUDevice): TextureLoader {
     const response = await fetch(path);
     const blob = await response.blob();
     const imageBitmap = await createImageBitmap(blob);
-
-    // createTexture just creates an empty buffer which has to be filled
-    const texture = device.createTexture({
-      size: [imageBitmap.width, imageBitmap.height, 1],
-      format: 'rgba8unorm',
-      usage:
-        GPUTextureUsage.TEXTURE_BINDING |
-        GPUTextureUsage.COPY_DST |
-        GPUTextureUsage.RENDER_ATTACHMENT,
-    });
-
-    device.queue.copyExternalImageToTexture(
-      { source: imageBitmap },
-      { texture },
-      [imageBitmap.width, imageBitmap.height],
-    );
+    const texture = allocator(imageBitmap);
 
     cache.set(path, texture);
     return texture;

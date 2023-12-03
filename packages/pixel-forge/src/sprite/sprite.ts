@@ -59,6 +59,17 @@ export type Sprite = Rect & {
    * If the alpha is 1, the sprite will be rendered normally.
    */
   alpha: number;
+
+  /**
+   * The sampler to use when rendering the sprite
+   *
+   * @remarks
+   * This is useful for rendering a sprite with a different sampler than the default sampler.
+   * The default sampler is 'nearest'.
+   *
+   * Because the sampler is part of the bind group layout, all sprites in a batch will use the same sampler.
+   */
+  sampler: 'linear' | 'nearest';
 };
 
 /**
@@ -114,6 +125,7 @@ export function sprite(
     origin: data.origin ?? [0, 0],
     color: data.color ?? [1, 1, 1],
     alpha: data.alpha ?? 1,
+    sampler: data.sampler ?? 'nearest',
   };
 }
 

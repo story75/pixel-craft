@@ -1,6 +1,8 @@
 import {
   Sprite,
+  canvasText,
   createContext,
+  createFontLoader,
   createTextureLoader,
   pipeline,
   sprite,
@@ -57,14 +59,29 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     }),
   ];
 
-  const parallax = tilingSprite({
+  const tiledSprite = tilingSprite({
     texture: tex,
     width: canvas.width,
     height: canvas.height,
   });
 
-  parallax.offset[0] = 1.5;
-  parallax.offset[1] = 1.5;
+  tiledSprite.offset[0] = 1.5;
+  tiledSprite.offset[1] = 1.5;
+
+  const fontLoader = createFontLoader();
+  await fontLoader('Monocraft', 'vendor/monocraft/Monocraft.otf');
+  const text = canvasText(
+    {
+      text: 'Hello World!',
+      font: '42px Monocraft',
+      color: [0, 0, 0],
+    },
+    context.device,
+  );
+
+  // after the text is created, we know its width and height
+  text.x = canvas.width / 2 - text.width / 2;
+  text.y = 250;
 
   const draw = function () {
     stats.begin();
@@ -73,7 +90,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       sprite.rotation += 0.01;
     }
 
-    renderPass([parallax, ...rotatingSprites]);
+    renderPass([tiledSprite, ...rotatingSprites, text]);
 
     stats.end();
     requestAnimationFrame(draw);

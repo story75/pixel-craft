@@ -5,6 +5,8 @@ import { WebGPUContext } from '../../context/create-context';
 import { floatsPerSprite } from '../shared/constants';
 import { createIndices } from '../shared/create-indices';
 import { RenderPass } from '../shared/render-pass';
+import { linearSampler } from '../shared/sampler/linear-sampler';
+import { nearestSampler } from '../shared/sampler/nearest-sampler';
 import { projectionViewMatrix } from '../shared/uniforms/projection-view-matrix';
 import { texture } from '../shared/uniforms/texture';
 import shader from './shader.wgsl';
@@ -142,6 +144,8 @@ export function pipeline({
   ];
 
   const textureBindGroups = new Map<GPUTexture, GPUBindGroup>();
+  const defaultSampler = nearestSampler(device);
+  const textSampler = linearSampler(device);
 
   return (sprites) => {
     const batchMap = new Map<GPUTexture, Batch[]>();
@@ -151,7 +155,10 @@ export function pipeline({
 
       let textureBindGroup = textureBindGroups.get(texture);
       if (!textureBindGroup) {
-        textureBindGroup = textureUniform.bindGroup(sprite.texture);
+        textureBindGroup = textureUniform.bindGroup(
+          sprite.texture,
+          sprite.sampler === 'nearest' ? defaultSampler : textSampler,
+        );
         textureBindGroups.set(texture, textureBindGroup);
       }
 

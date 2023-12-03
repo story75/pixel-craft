@@ -27,3 +27,4 @@ export {
   type Sprite,
   type TilingSprite,
 } from './sprite/sprite';
+export { canvasText, type CanvasText } from './text/canvas-text';

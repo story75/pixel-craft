@@ -35,7 +35,7 @@
     "husky": "^9.0.0",
     "lint-staged": "^15.1.0",
     "turbo": "^1.10.16",
-    "esbuild": "^0.19.7",
+    "esbuild": "^0.20.0",
     "@webgpu/types": "^0.1.39"
   },
   "lint-staged": {

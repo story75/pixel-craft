@@ -22,5 +22,9 @@ coverage
 *.vtt
 *.lockb
 *.wgsl
+*.svg
+*.webp
+*.otf
+*.ttf
 
 !.eslintrc.js

@@ -20,12 +20,14 @@ jobs:
     steps:
       - name: Checkout your repository using git
         uses: actions/checkout@v4
+      # Normally you would use withastro/action@v2 instead, but it does not properly work with mono repos and bun
+      # https://github.com/withastro/action/issues/32
       - uses: oven-sh/setup-bun@v1
-      - name: Install, build, and upload your site
-        uses: withastro/action@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+      - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./apps/docs
-          package-manager: bun
+          path: apps/docs/dist/
 
   deploy:
     needs: build

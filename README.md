@@ -1,7 +1,7 @@
 # Pixel Forge
 
-This is the workspace for Pixel Forge. It is an attempt to create a code focused game engine that is
-specifically tailored to 2D pixel art RPGs.
+This is the workspace for Pixel Forge. It is an attempt to create a code-focused game engine that is
+specifically for 2D pixel art RPGs.
 
-Currently, this is very much a work in progress. It is not recommended to use this in production.
-If you're brave enough to try it out, continue ahead into the [documentation](https://story75.github.io/pixel-forge/) and please report any issues you find.
+It is currently a work in progress. It is not recommended for production use.
+If you're brave enough to give it a try, please read the [documentation](https://story75.github.io/pixel-forge/) and report any problems you find.

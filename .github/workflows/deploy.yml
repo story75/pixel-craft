@@ -18,8 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout your repository using git
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       # Normally you would use withastro/action@v2 instead, but it does not properly work with mono repos and bun
       # https://github.com/withastro/action/issues/32
       - uses: oven-sh/setup-bun@v1

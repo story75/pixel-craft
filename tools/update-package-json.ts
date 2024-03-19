@@ -24,7 +24,7 @@ if (!version) {
 
 const workingDirectory = cwd();
 const file = Bun.file(join(workingDirectory, 'package.json'));
-const content = await file.json<PackageJson>();
+const content = (await file.json()) as PackageJson;
 
 content.version = version;
 

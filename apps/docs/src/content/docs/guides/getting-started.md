@@ -125,7 +125,7 @@ export async function application(): Promise<void> {
 We're almost there. Now we need to add the sprite to the render pass. To do this we need a render loop. A render loop is a function that is called every frame.
 This is done with `requestAnimationFrame`. Inside the render loop we need to call the `renderPass` function and pass in the sprites we want to render.
 
-```ts collapse={9-24} ins={26-31}
+```ts collapse={9-20} ins={22-27}
 import {
   createContext,
   pipeline,
@@ -164,3 +164,5 @@ You can play around with the code and see what happens. To make it easier for yo
 
 You could change the position of the sprite to, say, 150,150, or add another sprite. You could also change the texture to something else.
 You might try rotating the sprite in the render loop with `sampleSprite.rotation += 0.01`.
+
+<iframe width="100%" style="height: 400px !important" src="https://stackblitz.com/edit/vitejs-vite-5tbqtd?ctl=1&embed=1&file=src%2Fmain.ts"></iframe>

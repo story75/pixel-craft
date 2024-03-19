@@ -1,5 +1,16 @@
 # Release Notes
 
+## UNRELEASED
+
+### Features
+
+#### Astro Starlight Documentation
+
+You can now access the documentation for Pixel Forge by visiting [https://story75.github.io/pixel-forge/](https://story75.github.io/pixel-forge/).
+The documentation is generated using [Astro Starlight](https://starlight.astro.build/) for those curious.
+
+It is still a work in progress, but will receive more updates along with the library.
+
 ## 0.2.1 (03.12.2023)
 
 ### Features

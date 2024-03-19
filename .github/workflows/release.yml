@@ -10,11 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          registry-url: 'https://registry.npmjs.org'
-      - run: bun install
+      - run: bun install --frozen-lockfile
       - run: |
           RELEASE_NOTES=$(bun run ./tools/extract-release-notes.ts "$GITHUB_REF_NAME")
           echo 'RELEASE_NOTES<<EOF' >> "$GITHUB_ENV"
@@ -41,6 +37,7 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
+      # run scripts
       - run: bun install --frozen-lockfile
       - run: bun release
         env:

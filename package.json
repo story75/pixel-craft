@@ -2,7 +2,8 @@
   "name": "pixel-forge",
   "private": true,
   "trustedDependencies": [
-    "esbuild"
+    "esbuild",
+    "sharp"
   ],
   "workspaces": [
     "packages/*",
@@ -39,6 +40,9 @@
     "turbo": "^1.12.5",
     "esbuild": "^0.20.2",
     "@webgpu/types": "^0.1.40"
+  },
+  "overrides": {
+    "sharp": "^0.33.2"
   },
   "lint-staged": {
     "*.ts": [

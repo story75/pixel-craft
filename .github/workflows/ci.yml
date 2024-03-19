@@ -13,10 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          registry-url: 'https://registry.npmjs.org'
+      # run scripts
       - run: bun install --frozen-lockfile
       - run: bun check # type check must run before lint
       - run: bun lint
@@ -29,9 +26,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          registry-url: 'https://registry.npmjs.org'
+      # run scripts
       - run: bun install --frozen-lockfile
       - run: bun run build

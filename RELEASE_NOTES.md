@@ -11,6 +11,13 @@ The documentation is generated using [Astro Starlight](https://starlight.astro.b
 
 It is still a work in progress, but will receive more updates along with the library.
 
+### Fixes and improvements
+
+#### New space for demos
+
+There is now a dedicated directory for demos in the repository. You can find it at `demos/` in the root of the repository.
+The sample project has been moved to this directory for better organization.
+
 ## 0.2.1 (03.12.2023)
 
 ### Features

@@ -1,5 +1,7 @@
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
+import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers';
+import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections';
 
 export default defineConfig({
   site: 'https://story75.github.io',
@@ -7,6 +9,9 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Pixel Forge',
+      expressiveCode: {
+        plugins: [pluginLineNumbers(), pluginCollapsibleSections()],
+      },
       social: {
         github: 'https://github.com/story75/pixel-forge',
       },

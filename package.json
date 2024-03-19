@@ -7,12 +7,13 @@
   ],
   "workspaces": [
     "packages/*",
+    "demos/*",
     "apps/*"
   ],
   "scripts": {
     "prepare": "husky",
     "watch": "bun --cwd packages/pixel-forge watch",
-    "sample": "bun --cwd packages/sample watch",
+    "sample": "bun --cwd demos/sample watch",
     "docs": "bun --cwd apps/docs dev",
     "check": "turbo run check",
     "build": "turbo run build",

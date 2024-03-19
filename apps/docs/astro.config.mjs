@@ -1,7 +1,7 @@
 import starlight from '@astrojs/starlight';
-import { defineConfig } from 'astro/config';
-import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers';
 import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-sections';
+import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers';
+import { defineConfig } from 'astro/config';
 
 export default defineConfig({
   site: 'https://story75.github.io',

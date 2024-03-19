@@ -24,6 +24,6 @@
     "release": "bun run ../../tools/release.ts \"${PUBLISH_VERSION}\""
   },
   "dependencies": {
-    "@webgpu/types": "^0.1.39"
+    "@webgpu/types": "^0.1.40"
   }
 }

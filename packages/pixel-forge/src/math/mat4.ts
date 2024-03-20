@@ -120,3 +120,20 @@ export function multiply(a: Readonly<Mat4>, b: Readonly<Mat4>): Mat4 {
         a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33,
     ];
 }
+
+/**
+ * Translate a matrix.
+ */
+export function translate(
+  matrix: Readonly<Mat4>,
+  translation: Readonly<Vec3>,
+): Mat4 {
+  const [x, y, z] = translation;
+  // prettier-ignore
+  return multiply(matrix, [
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    x, y, z, 1,
+  ]);
+}

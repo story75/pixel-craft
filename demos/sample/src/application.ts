@@ -59,6 +59,29 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     }),
   ];
 
+  const offscreenSprites = [
+    sprite({
+      texture: tex,
+      x: canvas.width + 10,
+      y,
+    }),
+    sprite({
+      texture: tex,
+      x: -10 - tex.width,
+      y,
+    }),
+    sprite({
+      texture: tex,
+      x,
+      y: canvas.height + 10,
+    }),
+    sprite({
+      texture: tex,
+      x,
+      y: -10 - tex.height,
+    }),
+  ];
+
   const tiledSprite = tilingSprite({
     texture: tex,
     width: canvas.width,
@@ -83,6 +106,35 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   text.x = canvas.width / 2 - text.width / 2;
   text.y = 250;
 
+  let cameraX = 0;
+  let cameraY = 0;
+
+  document.addEventListener('keydown', (event) => {
+    let x = 0;
+    let y = 0;
+
+    if (['ArrowRight', 'KeyD'].includes(event.code)) {
+      x += 10;
+    }
+
+    if (['ArrowLeft', 'KeyA'].includes(event.code)) {
+      x -= 10;
+    }
+
+    if (['ArrowUp', 'KeyW'].includes(event.code)) {
+      y -= 10;
+    }
+
+    if (['ArrowDown', 'KeyS'].includes(event.code)) {
+      y += 10;
+    }
+
+    cameraX += x;
+    cameraY += y;
+
+    context.observe([cameraX, cameraY]);
+  });
+
   const draw = function () {
     stats.begin();
 
@@ -90,7 +142,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       sprite.rotation += 0.01;
     }
 
-    renderPass([tiledSprite, ...rotatingSprites, text]);
+    renderPass([tiledSprite, ...rotatingSprites, text, ...offscreenSprites]);
 
     stats.end();
     requestAnimationFrame(draw);

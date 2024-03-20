@@ -4,19 +4,32 @@
 
 ### Features
 
+#### Camera movement
+
+You can now set a camera position to observe the scene by calling the `observe` function attached to the `context` like this
+
+```ts
+context.observe([200, 0]); // move the camera 200 pixels to the right
+```
+
+This API is likely to change in the future, but for now it is an easy way to move the camera.
+
+You can check out the sample project for an example of how to use this feature, with four hidden sprites that are revealed as the camera moves.
+The camera can be moved using the arrow keys or WASD.
+
 #### Astro Starlight Documentation
 
-You can now access the documentation for Pixel Forge by visiting [https://story75.github.io/pixel-forge/](https://story75.github.io/pixel-forge/).
-The documentation is generated using [Astro Starlight](https://starlight.astro.build/) for those curious.
+You can now access the documentation for Pixel Forge at [https://story75.github.io/pixel-forge/](https://story75.github.io/pixel-forge/).
+The documentation is created with [Astro Starlight](https://starlight.astro.build/) for those who are curious.
 
-It is still a work in progress, but will receive more updates along with the library.
+It is still a work in progress, but will be updated along with the library.
 
 ### Fixes and improvements
 
-#### New space for demos
+#### New place for demos
 
-There is now a dedicated directory for demos in the repository. You can find it at `demos/` in the root of the repository.
-The sample project has been moved to this directory for better organization.
+There is now a separate directory for demos in the repository. You can find it under `demos/` in the root of the repository.
+The demo project has been moved to this directory for better organization.
 
 ## 0.2.1 (03.12.2023)
 

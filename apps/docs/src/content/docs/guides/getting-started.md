@@ -90,7 +90,7 @@ export async function application(): Promise<void> {
 ### Creating a Sprite
 
 Now you are ready to create a sprite. A sprite is a 2D image that you can display on the screen. You can either find an image yourself or use the one I provided in the example project.
-A sprite is created with the `sprite' function. It takes a mandatory `texture`parameter. To get the texture you need to load the image with a`TextureLoader`.
+A sprite is created with the `sprite` function. It takes a mandatory `texture` parameter. To get the texture you need to load the image with a `TextureLoader`.
 
 ```ts ins={4-5,14-24}
 import {

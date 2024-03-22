@@ -1,5 +1,5 @@
 {
-  "name": "@story75/pixel-forge-sample",
+  "name": "@story75/pixel-forge-demo-sample",
   "private": true,
   "scripts": {
     "check": "tsc",

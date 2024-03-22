@@ -31,12 +31,6 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     );
   }
 
-  // sprites.push(sprite({
-  //   texture,
-  //   x: 300,
-  //   y: 300,
-  // }));
-
   const draw = function () {
     stats.begin();
 

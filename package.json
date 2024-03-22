@@ -15,6 +15,7 @@
     "watch": "bun --cwd packages/pixel-forge watch",
     "sample": "bun --cwd demos/sample watch",
     "bench": "bun --cwd demos/bench watch",
+    "parallax": "bun --cwd demos/parallax watch",
     "docs": "bun --cwd apps/docs dev",
     "check": "turbo run check",
     "build": "turbo run build",

@@ -1,6 +1,5 @@
-# Sample App
+# Bench Demo
 
-This is a sample app to demonstrate the use of the `@story75/pixel-forge` package.
-The goal is to show how to use the package to create render sprites on a canvas and show some of the features of the package.
+This is a benchmark to test the rendering performance of the `@story75/pixel-forge` package.
 
-You can run the sample via `bun watch`.
+You can run the demo via `bun watch`.

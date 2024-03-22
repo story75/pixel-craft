@@ -1,6 +1,6 @@
 # Release Notes
 
-## UNRELEASED
+## 0.3.0 (23.03.2024)
 
 ### Features
 
@@ -30,6 +30,10 @@ It is still a work in progress, but will be updated along with the library.
 
 There is now a separate directory for demos in the repository. You can find it under `demos/` in the root of the repository.
 The demo project has been moved to this directory for better organization.
+
+#### Parallax demo
+
+There is a new parallax demo in the demo directory. This demo shows how to create a parallax effect with multiple layers of sprites.
 
 ## 0.2.1 (03.12.2023)
 

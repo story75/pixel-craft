@@ -1,5 +1,5 @@
 {
-  "name": "@story75/pixel-forge-demo-bench",
+  "name": "@story75/pixel-forge-demo-parallax",
   "private": true,
   "scripts": {
     "check": "tsc",

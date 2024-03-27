@@ -16,7 +16,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const textureLoader = createTextureLoader(context.device);
 
   const atlas = await textureLoader(
-    'assets/generic-rpg-pack_v0.4_(alpha-release)_vacaroxa/rpg-pack/atlas.png',
+    'assets/0x72_DungeonTilesetII_v1.7/atlas_floor-16x16.png',
   );
 
   const tileSize = 16;
@@ -27,16 +27,9 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const renderPass = pipeline(context);
   const sprites: Sprite[] = [];
 
-  const grassTileFrame = {
-    x: tileSize * 1,
-    y: tileSize * 19,
-    width: tileSize,
-    height: tileSize,
-  };
-
   const groundTileFrame = {
-    x: tileSize * 2,
-    y: tileSize * 17,
+    x: 0,
+    y: 0,
     width: tileSize,
     height: tileSize,
   };
@@ -50,7 +43,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
           y: y * tileSize,
           width: tileSize,
           height: tileSize,
-          frame: Math.random() < 0.5 ? grassTileFrame : groundTileFrame,
+          frame: groundTileFrame,
         }),
       );
     }

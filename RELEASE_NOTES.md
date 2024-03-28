@@ -1,5 +1,67 @@
 # Release Notes
 
+## 0.4.0 (29.03.2024)
+
+### Features
+
+#### Timer
+
+You can now create a timer with `createTimer`. This will calculate the time since the last frame and delta time.
+To use the timer with a render loop, you can look at the following example:
+
+```ts
+const timer = createTimer();
+
+const draw = function (now: number) {
+  timer.update(now);
+  renderPass(sprites);
+  requestAnimationFrame(draw);
+};
+
+draw(performance.now());
+```
+
+Now you can use `timer.deltaTime` to multiply with the speed of your objects to make them move at a constant speed regardless of the frame rate.
+
+#### Keyboard input
+
+You can now create an input tracker for keyboard input with `createInput`. This will track the state of the keys and provide a way to check if a key is pressed.
+Additionally, you can query the x and y-axis of the arrow keys or WASD keys. You can use the input tracker like so:
+
+```ts
+const input = createInput();
+
+// inside your game loop to move a sprite
+sprite.x += input.x * speed * timer.deltaTime;
+sprite.y += input.y * speed * timer.deltaTime;
+```
+
+#### Input controlled camera
+
+You can now create an input controlled camera with `inputControlledCamera`. This will create a camera that can be moved with the arrow keys or WASD keys through the input tracker.
+You can use the camera like so:
+
+```ts
+const input = createInput();
+const timer = createTimer();
+const camera = inputControlledCamera(input, timer, context);
+
+const draw = function (now: number) {
+  timer.update(now);
+  camera.update();
+  stats.begin();
+
+  renderPass(sprites);
+
+  stats.end();
+  requestAnimationFrame(draw);
+};
+
+draw(performance.now());
+```
+
+The camera is integrated in the sample and tileset demo, feel free to try it out.
+
 ## 0.3.0 (23.03.2024)
 
 ### Features

@@ -12,4 +12,3 @@ of 8, some of them -2 (you'll figure which one is which, you can use
 different values is the difference is 10). Some tiles are meant to be
 drawn on a layer above (so they modify the one below). The tile size is
 bigger than the grid that they are supposed to be placed on (16x16).
-

@@ -2,6 +2,7 @@ import {
   Sprite,
   createContext,
   createTextureLoader,
+  createTimer,
   pipeline,
   sprite,
   tilingSprite,
@@ -73,16 +74,18 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     logoSprite,
   ];
 
+  const timer = createTimer();
   const backgroundSpeed = 0.001;
-  const delta = 1;
 
-  const draw = function () {
+  const draw = function (now: number) {
+    timer.update(now);
     stats.begin();
 
-    skyBackgroundSprite.offset[0] += (backgroundSpeed / 4) * delta;
-    skyMoonSprite.offset[0] += (backgroundSpeed / 8) * delta;
-    skyCloudsBackgroundSprite.offset[0] += (backgroundSpeed / 2) * delta;
-    skyCloudsForegroundSprite.offset[0] += backgroundSpeed * delta;
+    skyBackgroundSprite.offset[0] += (backgroundSpeed / 4) * timer.deltaTime;
+    skyMoonSprite.offset[0] += (backgroundSpeed / 8) * timer.deltaTime;
+    skyCloudsBackgroundSprite.offset[0] +=
+      (backgroundSpeed / 2) * timer.deltaTime;
+    skyCloudsForegroundSprite.offset[0] += backgroundSpeed * timer.deltaTime;
 
     renderPass(sprites);
 
@@ -90,5 +93,5 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     requestAnimationFrame(draw);
   };
 
-  draw();
+  draw(performance.now());
 }

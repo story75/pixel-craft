@@ -10,6 +10,11 @@ export { type Rect } from './math/rect';
 // we export the math modules normally, because the symbols are not unique.
 // instead we export them with a new name, but this breaks tree shaking.
 // since the modules are small, this is a good enough solution for now.
+export {
+  inputControlledCamera,
+  type InputControlledCamera,
+} from './camera/input-controlled-camera';
+export { createInput, type Input } from './input/input';
 export * as Mat4 from './math/mat4';
 export * as Vec2 from './math/vec2';
 export * as Vec3 from './math/vec3';
@@ -28,3 +33,4 @@ export {
   type TilingSprite,
 } from './sprite/sprite';
 export { canvasText, type CanvasText } from './text/canvas-text';
+export { createTimer, type Timer } from './timer/timer';

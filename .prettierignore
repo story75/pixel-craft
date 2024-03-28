@@ -3,6 +3,7 @@ Makefile
 LICENSE
 dist
 coverage
+public
 
 .*
 *.xml

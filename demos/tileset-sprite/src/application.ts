@@ -1,7 +1,10 @@
 import {
   Sprite,
   createContext,
+  createInput,
   createTextureLoader,
+  createTimer,
+  inputControlledCamera,
   pipeline,
   sprite,
 } from '@story75/pixel-forge';
@@ -49,36 +52,13 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     }
   }
 
-  let cameraX = 0;
-  let cameraY = 0;
+  const input = createInput();
+  const timer = createTimer();
+  const camera = inputControlledCamera(input, timer, context);
 
-  document.addEventListener('keydown', (event) => {
-    let x = 0;
-    let y = 0;
-
-    if (['ArrowRight', 'KeyD'].includes(event.code)) {
-      x += 10;
-    }
-
-    if (['ArrowLeft', 'KeyA'].includes(event.code)) {
-      x -= 10;
-    }
-
-    if (['ArrowUp', 'KeyW'].includes(event.code)) {
-      y -= 10;
-    }
-
-    if (['ArrowDown', 'KeyS'].includes(event.code)) {
-      y += 10;
-    }
-
-    cameraX += x;
-    cameraY += y;
-
-    context.observe([cameraX, cameraY]);
-  });
-
-  const draw = function () {
+  const draw = function (now: number) {
+    timer.update(now);
+    camera.update();
     stats.begin();
 
     renderPass(sprites);
@@ -87,5 +67,5 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     requestAnimationFrame(draw);
   };
 
-  draw();
+  draw(performance.now());
 }

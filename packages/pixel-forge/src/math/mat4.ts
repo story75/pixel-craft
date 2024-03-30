@@ -35,11 +35,11 @@ export function orthographic(
 ): Mat4 {
   // prettier-ignore
   return [
-   2 / (right - left), 0, 0, 0,
-   0, 2 / (top - bottom), 0, 0,
-   0, 0, -2 / (far - near), 0,
-   -(right + left) / (right - left), -(top + bottom) / (top - bottom), -(far + near) / (far - near), 1
- ];
+    2 / (right - left), 0, 0, 0,
+    0, 2 / (top - bottom), 0, 0,
+    0, 0, -2 / (far - near), 0,
+    -(right + left) / (right - left), -(top + bottom) / (top - bottom), -(far + near) / (far - near), 1
+  ];
 }
 
 /**
@@ -99,26 +99,26 @@ export function multiply(a: Readonly<Mat4>, b: Readonly<Mat4>): Mat4 {
 
   // prettier-ignore
   return [
-        a00 * b00 + a01 * b10 + a02 * b20 + a03 * b30,
-        a00 * b01 + a01 * b11 + a02 * b21 + a03 * b31,
-        a00 * b02 + a01 * b12 + a02 * b22 + a03 * b32,
-        a00 * b03 + a01 * b13 + a02 * b23 + a03 * b33,
+    a00 * b00 + a01 * b10 + a02 * b20 + a03 * b30,
+    a00 * b01 + a01 * b11 + a02 * b21 + a03 * b31,
+    a00 * b02 + a01 * b12 + a02 * b22 + a03 * b32,
+    a00 * b03 + a01 * b13 + a02 * b23 + a03 * b33,
 
-        a10 * b00 + a11 * b10 + a12 * b20 + a13 * b30,
-        a10 * b01 + a11 * b11 + a12 * b21 + a13 * b31,
-        a10 * b02 + a11 * b12 + a12 * b22 + a13 * b32,
-        a10 * b03 + a11 * b13 + a12 * b23 + a13 * b33,
+    a10 * b00 + a11 * b10 + a12 * b20 + a13 * b30,
+    a10 * b01 + a11 * b11 + a12 * b21 + a13 * b31,
+    a10 * b02 + a11 * b12 + a12 * b22 + a13 * b32,
+    a10 * b03 + a11 * b13 + a12 * b23 + a13 * b33,
 
-        a20 * b00 + a21 * b10 + a22 * b20 + a23 * b30,
-        a20 * b01 + a21 * b11 + a22 * b21 + a23 * b31,
-        a20 * b02 + a21 * b12 + a22 * b22 + a23 * b32,
-        a20 * b03 + a21 * b13 + a22 * b23 + a23 * b33,
+    a20 * b00 + a21 * b10 + a22 * b20 + a23 * b30,
+    a20 * b01 + a21 * b11 + a22 * b21 + a23 * b31,
+    a20 * b02 + a21 * b12 + a22 * b22 + a23 * b32,
+    a20 * b03 + a21 * b13 + a22 * b23 + a23 * b33,
 
-        a30 * b00 + a31 * b10 + a32 * b20 + a33 * b30,
-        a30 * b01 + a31 * b11 + a32 * b21 + a33 * b31,
-        a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32,
-        a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33,
-    ];
+    a30 * b00 + a31 * b10 + a32 * b20 + a33 * b30,
+    a30 * b01 + a31 * b11 + a32 * b21 + a33 * b31,
+    a30 * b02 + a31 * b12 + a32 * b22 + a33 * b32,
+    a30 * b03 + a31 * b13 + a32 * b23 + a33 * b33,
+  ];
 }
 
 /**
@@ -136,4 +136,18 @@ export function translate(
     0, 0, 1, 0,
     x, y, z, 1,
   ]);
+}
+
+/**
+ * Scale a matrix.
+ */
+export function scale(matrix: Readonly<Mat4>, scaling: Readonly<Vec3>): Mat4 {
+  const [x, y, z] = scaling;
+  // prettier-ignore
+  return [
+    matrix[0] * x, matrix[1] * x, matrix[2] * x, matrix[3] * x,
+    matrix[4] * y, matrix[5] * y, matrix[6] * y, matrix[7] * y,
+    matrix[8] * z, matrix[9] * z, matrix[10] * z, matrix[11] * z,
+    matrix[12], matrix[13], matrix[14], matrix[15],
+  ];
 }

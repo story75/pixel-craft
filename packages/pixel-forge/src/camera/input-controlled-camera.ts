@@ -1,5 +1,5 @@
 import { Input } from '../input/input';
-import { WebGPUContext } from '../renderer/context/create-context';
+import { Camera } from '../renderer/camera/camera';
 import { Timer } from '../timer/timer';
 
 export type InputControlledCamera = {
@@ -13,7 +13,7 @@ export type InputControlledCamera = {
 export function inputControlledCamera(
   input: Input,
   timer: Timer,
-  context: WebGPUContext,
+  camera: Camera,
 ): InputControlledCamera {
   return {
     x: 0,
@@ -24,7 +24,7 @@ export function inputControlledCamera(
       this.x += input.x * this.speed * timer.deltaTime;
       this.y += input.y * this.speed * timer.deltaTime;
 
-      context.observe([this.x, this.y]);
+      camera.observe([this.x, this.y]);
     },
   };
 }

@@ -52,7 +52,7 @@ export function pipeline({
   device,
   context,
   presentationFormat,
-  projectionViewMatrixUniformBuffer,
+  camera,
 }: WebGPUContext): RenderPass {
   const vertexBufferLayout: GPUVertexBufferLayout = {
     arrayStride: FLOATS_PER_VERTEX * Float32Array.BYTES_PER_ELEMENT, // x: f32, y: f32, u: f32, v: f32, r: f32, g: f32, b: f32, a: f32
@@ -78,7 +78,7 @@ export function pipeline({
 
   const projectionViewMatrixUniform = projectionViewMatrix(
     device,
-    projectionViewMatrixUniformBuffer,
+    camera.projectionViewMatrixUniformBuffer,
   );
   const textureUniform = texture(device);
 

@@ -1,5 +1,27 @@
 # Release Notes
 
+## UNRELEASED
+
+### Breaking changes
+
+#### `createContext` now returns a `Camera` object instead of a `projectionViewMatrixUniformBuffer` property and `observe` function
+
+The camera is starting to receive more features, like zooming in this release, so it makes sense to return it from the `createContext` function.
+This avoids bloating the context object with camera related properties and functions.
+
+### Features
+
+#### Camera zoom
+
+You can now zoom the camera in and out with the `zoom` property on the camera like so:
+
+```ts
+const context = await createContext(canvas);
+context.camera.zoom([4, 4]);
+```
+
+This will zoom the camera in by a factor of 4. You can also zoom out by providing a value less than 1.
+
 ## 0.4.0 (29.03.2024)
 
 ### Features

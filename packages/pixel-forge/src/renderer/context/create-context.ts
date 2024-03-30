@@ -1,4 +1,4 @@
-import { Camera, projectionViewMatrix } from '../camera/projection-view-matrix';
+import { Camera, createCamera } from '../camera/camera';
 
 /**
  * Defines a WebGPU context.
@@ -7,8 +7,7 @@ export type WebGPUContext = {
   device: GPUDevice;
   context: GPUCanvasContext;
   presentationFormat: GPUTextureFormat;
-  projectionViewMatrixUniformBuffer: GPUBuffer;
-  observe: Camera['observe'];
+  camera: Camera;
 };
 
 /**
@@ -48,17 +47,12 @@ export async function createContext(
     alphaMode: 'premultiplied',
   });
 
-  const { projectionViewMatrixUniformBuffer, observe } = projectionViewMatrix(
-    device,
-    canvas.width,
-    canvas.height,
-  );
+  const camera = createCamera(device, canvas.width, canvas.height);
 
   return {
     device,
     context,
     presentationFormat,
-    projectionViewMatrixUniformBuffer,
-    observe,
+    camera,
   };
 }

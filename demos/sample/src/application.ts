@@ -111,7 +111,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   const input = createInput();
   const timer = createTimer();
-  const camera = inputControlledCamera(input, timer, context);
+  const camera = inputControlledCamera(input, timer, context.camera);
 
   const draw = function (now: number) {
     timer.update(now);

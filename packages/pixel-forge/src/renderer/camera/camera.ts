@@ -1,11 +1,19 @@
-import { lookAt, multiply, orthographic, translate } from '../../math/mat4';
+import {
+  lookAt,
+  multiply,
+  orthographic,
+  scale,
+  translate,
+} from '../../math/mat4';
 import { Vec2 } from '../../math/vec2';
+import { Vec3 } from '../../math/vec3';
 import { multiply as multiplyVec4 } from '../../math/vec4';
 import { uniformBufferAllocator } from '../buffer/uniform-buffer-allocator';
 
 export type Camera = {
   projectionViewMatrixUniformBuffer: GPUBuffer;
   observe: (position: Vec2) => void;
+  zoom: (scaling: Vec2) => void;
 };
 
 /**
@@ -20,7 +28,7 @@ export type Camera = {
  * @param width
  * @param height
  */
-export function projectionViewMatrix(
+export function createCamera(
   device: GPUDevice,
   width: number,
   height: number,
@@ -29,25 +37,40 @@ export function projectionViewMatrix(
     new Float32Array(16),
   );
 
+  let scaling: Vec3 = [1, 1, 1];
+  let position: Vec2 = [0, 0];
   const projectionMatrix = orthographic(0, width, height, 0, -1, 1);
   const viewMatrix = lookAt([0, 0, 1], [0, 0, 0], [0, 1, 0]);
   const projectionViewMatrix = multiply(viewMatrix, projectionMatrix);
 
   const observe = ([x, y]: Vec2) => {
+    position = [x, y];
+    update();
+  };
+
+  const zoom = ([x, y]: Vec2) => {
+    scaling = [x, y, 1];
+    update();
+  };
+
+  const update = () => {
+    const [x, y] = position;
     const [t0, t1, t2] = multiplyVec4(projectionMatrix, [-x, -y, 0, 1]);
     const translated = translate(projectionViewMatrix, [t0, t1, t2]);
+    const scaled = scale(translated, scaling);
 
     device.queue.writeBuffer(
       projectionViewMatrixUniformBuffer,
       0,
-      new Float32Array(translated),
+      new Float32Array(scaled),
     );
   };
 
-  observe([0, 0]);
+  update();
 
   return {
     projectionViewMatrixUniformBuffer,
     observe,
+    zoom,
   };
 }

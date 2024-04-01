@@ -1,13 +1,13 @@
 {
-  "name": "@story75/pixel-forge-demo-sample",
+  "name": "@pixel-craft/engine-demo-sample",
   "private": true,
   "scripts": {
     "check": "tsc",
-    "watch": "esbuild src/index.ts --outfile=public/dist/bundle.js --bundle --global-name=pixelForge --servedir=public --watch"
+    "watch": "esbuild src/index.ts --outfile=public/dist/bundle.js --bundle --global-name=pixelCraft --servedir=public --watch"
   },
   "dependencies": {
     "stats.js": "^0.17.0",
-    "@story75/pixel-forge": "workspace:*"
+    "@pixel-craft/engine": "workspace:*"
   },
   "devDependencies": {
     "@types/stats.js": "^0.17.3"

@@ -1,5 +1,5 @@
 {
-  "name": "pixel-forge",
+  "name": "pixel-craft",
   "private": true,
   "trustedDependencies": [
     "esbuild",
@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "prepare": "husky",
-    "watch": "bun --cwd packages/pixel-forge watch",
+    "watch": "bun --cwd packages/pixel-craft watch",
     "sample": "bun --cwd demos/sample watch",
     "bench": "bun --cwd demos/bench watch",
     "parallax": "bun --cwd demos/parallax watch",

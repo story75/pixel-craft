@@ -1,8 +1,20 @@
 # Release Notes
 
-## UNRELEASED
+## 0.5.0 (01.04.2024)
 
 ### Breaking changes
+
+#### Change project name and npm scope to `@pixel-craft`
+
+The project name has been changed from `@story75/pixel-forge` to `@pixel-craft/engine`. The main driver was to reserve the `@pixel-craft` npm scope for future packages.
+This change will require you to update your imports to use the new package name.
+
+Going forward, the plan is to keep low level engine features in the `@pixel-craft/engine` package and create higher level features in separate packages under the `@pixel-craft` scope.
+This will allow the engine parts to focus more on the low level features and keep the higher level features and abstractions separate.
+I expect most people to use the higher level packages, but the engine package will still be available for those who want to build their own abstractions.
+
+The actual version scheme is still under consideration, but for now all packages will have the same version number.
+To highlight where a change was made, the release notes will include the package name.
 
 #### `createContext` now returns a `Camera` object instead of a `projectionViewMatrixUniformBuffer` property and `observe` function
 
@@ -103,7 +115,7 @@ The camera can be moved using the arrow keys or WASD.
 
 #### Astro Starlight Documentation
 
-You can now access the documentation for Pixel Forge at [https://story75.github.io/pixel-forge/](https://story75.github.io/pixel-forge/).
+You can now access the documentation for Pixel Craft at [https://story75.github.io/pixel-craft/](https://story75.github.io/pixel-craft/).
 The documentation is created with [Astro Starlight](https://starlight.astro.build/) for those who are curious.
 
 It is still a work in progress, but will be updated along with the library.

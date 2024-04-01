@@ -4,7 +4,7 @@ import {
   createTextureLoader,
   pipeline,
   sprite,
-} from '@story75/pixel-forge';
+} from '@pixel-craft/engine';
 import Stats from 'stats.js';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {

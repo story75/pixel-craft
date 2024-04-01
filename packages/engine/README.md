@@ -1,6 +1,6 @@
-# @story75/pixel-forge
+# @story75/pixel-craft
 
-This is the main package for Pixel Forge. It contains the core functionality to create 2D pixel art games.
+This is the main package for Pixel Craft. It contains the core functionality to create 2D pixel art games.
 
 This package contains the following:
 

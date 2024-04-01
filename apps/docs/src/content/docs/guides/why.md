@@ -1,6 +1,6 @@
 ---
-title: Why Pixel Forge?
-description: Why does Pixel Forge exist? What problems does it solve?
+title: Why Pixel Craft?
+description: Why does Pixel Craft exist? What problems does it solve?
 ---
 
 ## TL;DR:
@@ -14,11 +14,11 @@ description: Why does Pixel Forge exist? What problems does it solve?
 
 ## Let's dive deeper
 
-There are many rendering packages and game engines out there, so why create another one? I set out to create Pixel Forge for my own needs,
+There are many rendering packages and game engines out there, so why create another one? I set out to create Pixel Craft for my own needs,
 after trying many different game engines and rendering packages. I found that none of them really fit my needs.
 
 :::caution
-You should try different game engines and rendering packages to find the right tool for your needs. Pixel Forge is not the right tool for every job!
+You should try different game engines and rendering packages to find the right tool for your needs. Pixel Craft is not the right tool for every job!
 :::
 
 I believe there is a niche for a game engine specifically tailored for 2D pixel art RPGs, and I want to check the following boxes
@@ -62,12 +62,12 @@ There are others like Construct, GameMaker, Cocos and many others, but none of t
 Okay, let's rule out ThreeJS and Babylon.js for now. They focus on 3D rendering. You could use them for 2D games, but why not use something focused on 2D games instead?
 In those cases, I would also recommend using one of the above game engines instead.
 
-I used PixiJS before working on Pixel Forge, but why didn't I use Phaser? Phaser is solid and has been around for a long time, but it also shows its age.
+I used PixiJS before working on Pixel Craft, but why didn't I use Phaser? Phaser is solid and has been around for a long time, but it also shows its age.
 Many of the examples and tutorials were either broken or outdated, and the documentation was unhelpful for similar reasons.
 As of this writing, Phaser 3.80.1 is the latest version, and the examples seem to be fixed, but the website is still a mess to navigate and shows that they are working on a new version.
 
 Many of the APIs still use callbacks where I would prefer to use promises or async/await for setup code. It was also written before ES modules were a thing, so the game code is not easily optimized by tree-shaking.
-Pixel Forge will probably borrow some features from Phaser, or at least take inspiration from it, to capture the good parts with a more modern stack.
+Pixel Craft will probably borrow some features from Phaser, or at least take inspiration from it, to capture the good parts with a more modern stack.
 
 This leaves us with PixiJS. PixiJS is a great rendering package, but it is not a game engine. It has received many updates and is still actively maintained.
 PixiJS just released v8 two weeks ago, adding WebGPU support and a ton of other improvements.
@@ -77,19 +77,19 @@ You need to add a physics engine, a sound engine, a dialog system, lighting supp
 In particular, lighting support is lacking, and I'd like to have a lighting system that's easy to use and looks good out of the box, but that's out of the scope of PixiJS at the moment.
 
 After exploring other options, I ended up learning WebGPU. This was a fun learning experience and gave me a lot of insight into how rendering works.
-It was also the spark that ignited the idea for Pixel Forge.
+It was also the spark that ignited the idea for Pixel Craft.
 
-## How will Pixel Forge be different?
+## How will Pixel Craft be different?
 
 ![Just like standards, frameworks proliferate the same way, I guess.](https://imgs.xkcd.com/comics/standards.png)
 _Just like standards, frameworks proliferate the same way, I guess._
 
-Pixel Forge will be built on top of TypeScript and WebGPU, with modern web technologies in mind.
+Pixel Craft will be built on top of TypeScript and WebGPU, with modern web technologies in mind.
 The goal is to be as easy to use as RPG Maker, but with the flexibility of Phaser and the power of PixiJS.
 You as a developer should be able to create a game with building blocks or even a template project and then modify it to fit your needs.
 
 :::caution
-With all this in mind, Pixel Forge is mainly being developed by one person, and I'm working on this project in my spare time. I'm not trying to create the next big thing.
+With all this in mind, Pixel Craft is mainly being developed by one person, and I'm working on this project in my spare time. I'm not trying to create the next big thing.
 I'm just trying to create something that I would like to use myself to create games and make the development process easier.
 :::
 
@@ -109,7 +109,7 @@ Ideally, this should be as simple as telling the CLI to share your game, and the
 ### Rapid Prototyping
 
 For web developers, it is almost expected to see changes in the browser immediately when you save a file. Game development should be no different.
-Pixel Forge will use a modern bundler to make this possible, and the CLI should be able to start a local web server with live reload.
+Pixel Craft will use a modern bundler to make this possible, and the CLI should be able to start a local web server with live reload.
 This should also include some kind of state management to keep the game state between reloads, so you do not have to start from scratch every time.
 
 Another big part is using the existing ecosystem of web and packages, so you do not have to reinvent the wheel for everything.
@@ -117,13 +117,13 @@ There should be extensive support for common tools like Tiled, and many of the b
 
 ### Code focus
 
-This may be a personal preference or even controversial, but I do not want to create an editor UI for Pixel Forge.
+This may be a personal preference or even controversial, but I do not want to create an editor UI for Pixel Craft.
 This may conflict with the ease-of-use principle, but I believe that the editor is just another abstraction layer that you have to learn.
 I'd rather have some development tools to inspect the game state or move around objects, but that can be done without a full-blown editor.
 
 ### Fast enough for 2D pixel art RPGs
 
-The engine is built on top of WebGPU, the successor to WebGL. This means that Pixel Forge can use new rendering techniques that are not possible with WebGL, such as compute shaders.
+The engine is built on top of WebGPU, the successor to WebGL. This means that Pixel Craft can use new rendering techniques that are not possible with WebGL, such as compute shaders.
 This will be very fast for 2D pixel art RPGs while offering a lot of flexibility and possibilities.
 
 It should be easy to reason about the pipeline, but the early versions will probably not offer much customization at first.
@@ -144,5 +144,5 @@ Obviously, parts like the rendering pipeline will be much harder to replace than
 
 ### TypeScript
 
-Rust won't be possible with the direction and limitations of WASM and access to the web APIs, but TypeScript will be the main language for Pixel Forge.
+Rust won't be possible with the direction and limitations of WASM and access to the web APIs, but TypeScript will be the main language for Pixel Craft.
 So expect types with code completion and all the other goodies that TypeScript provides.

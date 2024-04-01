@@ -1,6 +1,6 @@
 ---
 title: Getting Started
-description: A guide to get you started with Pixel Forge
+description: A guide to get you started with Pixel Craft
 ---
 
 ## Before we start
@@ -15,7 +15,7 @@ This will be part of the CLI later, but for now you should be comfortable doing 
 
 I'm using [Bun](https://bun.sh/) for this project, but you can use npm or yarn. Adapt the commands accordingly.
 
-With that out of the way, you can either jump right into the [Sample Project](https://github.com/story75/pixel-forge/tree/main/demos/sample) or create your own
+With that out of the way, you can either jump right into the [Sample Project](https://github.com/story75/pixel-craft/tree/main/demos/sample) or create your own
 project from scratch.
 
 To run the example, check out this repository and run the following commands:
@@ -30,10 +30,10 @@ If you want to create your own project, read on.
 
 ## Installation
 
-Use your favorite package manager to install Pixel Forge.
+Use your favorite package manager to install Pixel Craft.
 
 ```bash
-bun add @story75/pixel-forge
+bun add @pixel-craft/engine
 ```
 
 ## Render a sprite
@@ -49,7 +49,7 @@ For example, if you create an example with [Vite](https://vitejs.dev/), your `in
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello Pixel Forge</title>
+    <title>Hello Pixel Craft</title>
   </head>
   <body style="margin: unset; overflow: hidden">
     <canvas></canvas>
@@ -63,7 +63,7 @@ For example, if you create an example with [Vite](https://vitejs.dev/), your `in
 Then in your TypeScript, or JavaScript, file get a reference to the canvas and create a new `WebGPUContext`.
 
 ```ts
-import { createContext } from '@story75/pixel-forge';
+import { createContext } from '@pixel-craft/engine';
 
 export async function application(): Promise<void> {
   const canvas = document.getElementsByTagName('canvas')[0]!;
@@ -77,7 +77,7 @@ Now you can create your render pipeline. This is basically a set of instructions
 your sprites. It will return a `RenderPass` that you can use to render your sprites.
 
 ```ts ins={3,10}
-import { createContext, pipeline } from '@story75/pixel-forge';
+import { createContext, pipeline } from '@pixel-craft/engine';
 
 export async function application(): Promise<void> {
   const canvas = document.getElementsByTagName('canvas')[0]!;
@@ -98,7 +98,7 @@ import {
   pipeline,
   createTextureLoader,
   sprite,
-} from '@story75/pixel-forge';
+} from '@pixel-craft/engine';
 
 export async function application(): Promise<void> {
   const canvas = document.getElementsByTagName('canvas')[0]!;
@@ -131,7 +131,7 @@ import {
   pipeline,
   createTextureLoader,
   sprite,
-} from '@story75/pixel-forge';
+} from '@pixel-craft/engine';
 
 export async function application(): Promise<void> {
   const canvas = document.getElementsByTagName('canvas')[0]!;

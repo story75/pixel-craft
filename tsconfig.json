@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "types": ["bun-types"],
+    "lib": ["esnext", "dom", "dom.iterable"],
     "module": "esnext",
     "strict": true,
     "isolatedModules": true,
@@ -9,6 +9,8 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "preserveConstEnums": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
     "moduleResolution": "bundler",
     "target": "ES2021",
     "esModuleInterop": true,

@@ -1,30 +1,16 @@
 #!/usr/bin/env bun
-import { cancel, intro, isCancel, outro, select } from '@clack/prompts';
-import color from 'picocolors';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
+import { buildLibrary } from './command/build-library';
 
-// const interactive = !Bun.env['CI'];
+const cli = yargs(hideBin(Bun.argv))
+  .scriptName('pixel-craft')
+  .wrap(120)
+  .strict()
+  .version(false)
+  .help(true);
 
-intro(color.cyan(color.bold(`Good to see you! Let's get started.`)));
+const commands = [buildLibrary];
 
-const commands: Array<{
-  command: string;
-  label: string;
-  execute: () => Promise<void>;
-}> = [];
-
-const command = await select({
-  message: 'What do you want to do?',
-  options: commands.map(({ command, label }) => ({ value: command, label })),
-  initialValue: commands[0].command,
-});
-
-if (isCancel(command)) {
-  cancel('Fair enough. See you later!');
-  process.exit(0);
-}
-
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const { execute } = commands.find((c) => c.command === command)!;
-await execute();
-
-outro(`You're all set!`);
+commands.forEach((command) => command(cli));
+await cli.demandCommand().parse();

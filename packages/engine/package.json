@@ -17,10 +17,8 @@
   },
   "scripts": {
     "check": "tsc",
-    "watch": "bun build-esm --watch",
-    "build": "bun build-cjs && bun build-esm",
-    "build-cjs": "esbuild src/index.ts --loader:.wgsl=text --outfile=dist/index.js --bundle --platform=node --format=cjs --sourcemap",
-    "build-esm": "esbuild src/index.ts --loader:.wgsl=text --outfile=dist/esm.js --bundle --platform=node --format=esm --sourcemap",
+    "watch": "pixel-craft build-library -w",
+    "build": "pixel-craft build-library",
     "release": "pixel-craft-tooling release-package \"${PUBLISH_VERSION}\""
   },
   "dependencies": {

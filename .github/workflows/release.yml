@@ -12,7 +12,7 @@ jobs:
       - uses: oven-sh/setup-bun@v1
       - run: bun install --frozen-lockfile
       - run: |
-          RELEASE_NOTES=$(bun run ./tools/extract-release-notes.ts "$GITHUB_REF_NAME")
+          RELEASE_NOTES=$(bunx pixel-craft-tooling extract-release-notes "$GITHUB_REF_NAME")
           echo 'RELEASE_NOTES<<EOF' >> "$GITHUB_ENV"
           echo "$RELEASE_NOTES" >> "$GITHUB_ENV"
           echo 'EOF' >> "$GITHUB_ENV"

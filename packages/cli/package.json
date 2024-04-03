@@ -1,0 +1,22 @@
+{
+  "name": "@pixel-craft/cli",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/story75/pixel-forge.git"
+  },
+  "license": "MIT",
+  "bin": {
+    "pixel-craft": "./src/index.ts"
+  },
+  "scripts": {
+    "check": "tsc"
+  },
+  "dependencies": {
+    "yargs": "^17.7.2",
+    "@clack/prompts": "^0.7.0",
+    "picocolors": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/yargs": "^17.0.32"
+  }
+}

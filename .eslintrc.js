@@ -87,6 +87,7 @@ module.exports = {
     ],
     '@typescript-eslint/prefer-readonly': 'error',
     '@typescript-eslint/explicit-module-boundary-types': 'error',
+    '@typescript-eslint/no-confusing-void-expression': 'off',
     'import/no-deprecated': 'error',
     'import/no-extraneous-dependencies': [
       'error',

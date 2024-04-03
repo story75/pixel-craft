@@ -1,0 +1,21 @@
+{
+  "name": "@pixel-craft/tooling",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/story75/pixel-forge.git"
+  },
+  "license": "MIT",
+  "bin": {
+    "pixel-craft-tooling": "./src/index.ts"
+  },
+  "scripts": {
+    "check": "tsc"
+  },
+  "dependencies": {
+    "yargs": "^17.7.2",
+    "find-up": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/yargs": "^17.0.32"
+  }
+}

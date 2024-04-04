@@ -3,13 +3,14 @@
   "private": true,
   "scripts": {
     "check": "tsc",
-    "watch": "esbuild src/index.ts --outfile=public/dist/bundle.js --bundle --global-name=pixelCraft --servedir=public --watch"
+    "watch": "pixel-craft bundle --watch"
   },
   "dependencies": {
     "stats.js": "^0.17.0",
     "@pixel-craft/engine": "workspace:*"
   },
   "devDependencies": {
-    "@types/stats.js": "^0.17.3"
+    "@types/stats.js": "^0.17.3",
+    "@pixel-craft/cli": "workspace:*"
   }
 }

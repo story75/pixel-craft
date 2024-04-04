@@ -1,5 +1,16 @@
 # Release Notes
 
+## UNRELEASED
+
+### Features
+
+#### @pixel-craft/cli
+
+Introducing the `@pixel-craft/cli` package. This package provides a command line interface for creating new Pixel Craft projects and managing them.
+Right now, the CLI can be used to build libraries and applications, as well as running watch tasks for development.
+
+Future versions will include more features like creating new projects from templates and more.
+
 ## 0.5.0 (01.04.2024)
 
 ### Breaking changes

@@ -17,6 +17,8 @@ type PublishConfig = {
 type PackageJson = PublishConfig & {
   version: string;
   publishConfig?: PublishConfig;
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
 };
 
 export function releasePackage(cli: ReturnType<typeof yargs>): void {
@@ -59,6 +61,22 @@ export function releasePackage(cli: ReturnType<typeof yargs>): void {
         if (content.publishConfig.exports) {
           content.exports = content.publishConfig.exports;
         }
+      }
+
+      const replaceWorkspaceDependencies = (root: Record<string, string>) => {
+        const dependencies = Object.keys(root);
+        for (const dependency of dependencies) {
+          const value = root[dependency];
+          root[dependency] = value === 'workspace:*' ? version : value;
+        }
+      };
+
+      if (content.dependencies) {
+        replaceWorkspaceDependencies(content.dependencies);
+      }
+
+      if (content.devDependencies) {
+        replaceWorkspaceDependencies(content.devDependencies);
       }
 
       await Bun.write(file, JSON.stringify(content, null, 2));

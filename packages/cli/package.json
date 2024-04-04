@@ -2,7 +2,7 @@
   "name": "@pixel-craft/cli",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/story75/pixel-forge.git"
+    "url": "git+https://github.com/story75/pixel-craft.git"
   },
   "license": "MIT",
   "bin": {

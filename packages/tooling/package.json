@@ -1,5 +1,6 @@
 {
   "name": "@pixel-craft/tooling",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/story75/pixel-forge.git"

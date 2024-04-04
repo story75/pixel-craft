@@ -9,7 +9,8 @@
     "pixel-craft": "./src/index.ts"
   },
   "scripts": {
-    "check": "tsc"
+    "check": "tsc",
+    "release": "pixel-craft-tooling release-package \"${PUBLISH_VERSION}\""
   },
   "dependencies": {
     "yargs": "^17.7.2",

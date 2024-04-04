@@ -1,3 +1,4 @@
+import { $ } from 'bun';
 import { findUp } from 'find-up';
 import { join } from 'node:path';
 import { cwd } from 'node:process';
@@ -16,17 +17,6 @@ type PublishConfig = {
 type PackageJson = PublishConfig & {
   version: string;
   publishConfig?: PublishConfig;
-};
-
-const sh = async (command: string) => {
-  const process = Bun.spawn(command.split(' '), {
-    stdio: ['inherit', 'inherit', 'inherit'],
-  });
-
-  await process.exited;
-  if (process.exitCode !== 0) {
-    throw new Error(`Could not update package.json!`);
-  }
 };
 
 export function releasePackage(cli: ReturnType<typeof yargs>): void {
@@ -82,7 +72,7 @@ export function releasePackage(cli: ReturnType<typeof yargs>): void {
       const licenseOutput = Bun.file(join(workingDirectory, 'LICENSE'));
       await Bun.write(licenseOutput, licenseInput);
 
-      await sh('npm publish --access public');
+      await $`npm publish --access public`;
     },
   );
 }

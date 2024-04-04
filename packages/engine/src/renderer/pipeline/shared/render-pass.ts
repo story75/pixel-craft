@@ -14,4 +14,4 @@ import { Sprite, TilingSprite } from '../../../sprite/sprite';
  *
  * The render pass is expected to be called once per frame.
  */
-export type RenderPass = (sprites: Array<Sprite | TilingSprite>) => void;
+export type RenderPass = (sprites: Iterable<Sprite | TilingSprite>) => void;

@@ -2,11 +2,11 @@ import {
   Sprite,
   createContext,
   createTextureLoader,
-  createTimer,
   pipeline,
   sprite,
   tilingSprite,
 } from '@pixel-craft/engine';
+import { TimerSystem } from '@pixel-craft/pixel-craft';
 import Stats from 'stats.js';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
@@ -74,7 +74,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     logoSprite,
   ];
 
-  const timer = createTimer();
+  const timer = new TimerSystem();
   const backgroundSpeed = 0.001;
 
   const draw = function (now: number) {

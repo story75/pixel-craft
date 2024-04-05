@@ -1,28 +1,31 @@
 import {
   Sprite,
   canvasText,
-  createContext,
   createFontLoader,
-  createInput,
   createTextureLoader,
-  createTimer,
-  inputControlledCamera,
-  pipeline,
   sprite,
   tilingSprite,
 } from '@pixel-craft/engine';
-import Stats from 'stats.js';
+import {
+  AnimatorSystem,
+  Application,
+  InputCameraSystem,
+  InputSystem,
+  RenderSystem,
+  TimerSystem,
+} from '@pixel-craft/pixel-craft';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
-  const stats = new Stats();
-  document.body.appendChild(stats.dom);
+  const app = await Application.create(canvas);
+  const renderer = new RenderSystem();
+  const input = new InputSystem();
+  const timer = new TimerSystem();
+  const camera = new InputCameraSystem(input, timer);
+  const animator = new AnimatorSystem(timer);
+  await app.addSystems(renderer, input, timer, camera, animator);
 
-  const context = await createContext(canvas);
-
-  const textureLoader = createTextureLoader(context.device);
+  const textureLoader = createTextureLoader(app.context.device);
   const tex = await textureLoader('assets/pixel-prowlers.png');
-
-  const renderPass = pipeline(context);
 
   const [x, y] = [
     canvas.width / 2 - tex.width / 2,
@@ -102,31 +105,25 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       font: '42px Monocraft',
       color: [0, 0, 0],
     },
-    context.device,
+    app.context.device,
   );
 
   // after the text is created, we know its width and height
   text.x = canvas.width / 2 - text.width / 2;
   text.y = 250;
 
-  const input = createInput();
-  const timer = createTimer();
-  const camera = inputControlledCamera(input, timer, context.camera);
-
-  const draw = function (now: number) {
-    timer.update(now);
-    camera.update();
-    stats.begin();
-
-    for (const sprite of rotatingSprites) {
-      sprite.rotation += 0.01;
-    }
-
-    renderPass([tiledSprite, ...rotatingSprites, text, ...offscreenSprites]);
-
-    stats.end();
-    requestAnimationFrame(draw);
+  const sceneSystem = {
+    update: () => {
+      for (const sprite of rotatingSprites) {
+        sprite.rotation += 0.01;
+      }
+    },
   };
-
-  draw(performance.now());
+  await app.addSystems(sceneSystem);
+  app.addGameObjects(
+    tiledSprite,
+    ...rotatingSprites,
+    text,
+    ...offscreenSprites,
+  );
 }

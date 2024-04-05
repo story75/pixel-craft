@@ -6,7 +6,7 @@
     "watch": "pixel-craft bundle --watch"
   },
   "dependencies": {
-    "stats.js": "^0.17.0",
+    "@pixel-craft/pixel-craft": "workspace:*",
     "@pixel-craft/engine": "workspace:*"
   },
   "devDependencies": {

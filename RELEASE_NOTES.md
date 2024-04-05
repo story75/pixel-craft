@@ -1,6 +1,6 @@
 # Release Notes
 
-## UNRELEASED
+## 0.6.0 (06.04.2024)
 
 ### Features
 
@@ -10,6 +10,30 @@ Introducing the `@pixel-craft/cli` package. This package provides a command line
 Right now, the CLI can be used to build libraries and applications, as well as running watch tasks for development.
 
 Future versions will include more features like creating new projects from templates and more.
+
+#### @pixel-craft/pixel-craft
+
+Introducing the `@pixel-craft/pixel-craft` package. This package provides an application framework for creating Pixel Craft applications.
+It is a simple ECS-like framework that allows you to create game objects and systems to apply logic to them.
+
+The main idea is to keep the application as slim as possible and implement everything with composable systems.
+This is also the way you should use Pixel Craft in general, instead of using the engine directly.
+There will still be a few changes until the API is stable and complete enough until breaking changes are avoided.
+
+Currently implemented systems out of the box are:
+
+- `RenderSystem`: Renders sprites to the screen
+- `InputSystem`: Handles keyboard input
+- `CameraSystem`: Moves the camera with the arrow keys or WASD
+- `TimerSystem`: Handles delta time calculation
+- `AnimatorSystem`: Animates sprites
+
+#### AnimatorSystem
+
+The `AnimatorSystem` is a new system that allows you to animate sprites. It was already possible to roll your own animation system, but it was not straightforward.
+To animate a sprite it has to implement the `Animated` interface. This will allow your sprite to loop through a single animation consisting of multiple frames.
+
+Going forward, the plan is to add more features to the `AnimatorSystem` like playing multiple animations, pausing, and stopping animations.
 
 ## 0.5.0 (01.04.2024)
 

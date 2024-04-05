@@ -2,6 +2,15 @@
 
 ## 0.6.0 (06.04.2024)
 
+### Breaking changes
+
+#### Remove `inputControlledCamera`, `createInput`, `createTimer` and `createCamera`
+
+The above-mentioned functions have been removed in favor of the new `InputCameraSystem`, `InputSystem` and `TimerSystem` respectively,
+that are part of the `@pixel-craft/pixel-craft` package.
+
+`createCamera` was removed because it was not part of the public API and is called internally by the `createContext` function.
+
 ### Features
 
 #### @pixel-craft/cli
@@ -24,7 +33,7 @@ Currently implemented systems out of the box are:
 
 - `RenderSystem`: Renders sprites to the screen
 - `InputSystem`: Handles keyboard input
-- `CameraSystem`: Moves the camera with the arrow keys or WASD
+- `InputCameraSystem`: Moves the camera with the arrow keys or WASD
 - `TimerSystem`: Handles delta time calculation
 - `AnimatorSystem`: Animates sprites
 

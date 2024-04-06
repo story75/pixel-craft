@@ -24,7 +24,10 @@ export default defineConfig({
             {
               label: 'Advanced',
               items: [
-                { label: 'Raw engine integration', link: '/guides/advanced/raw-integration' },
+                {
+                  label: 'Raw engine integration',
+                  link: '/guides/advanced/raw-integration',
+                },
               ],
             },
           ],

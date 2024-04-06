@@ -21,6 +21,12 @@ export default defineConfig({
           items: [
             { label: 'Why Pixel Craft?', link: '/guides/why/' },
             { label: 'Getting started', link: '/guides/getting-started/' },
+            {
+              label: 'Advanced',
+              items: [
+                { label: 'Raw engine integration', link: '/guides/advanced/raw-integration' },
+              ],
+            },
           ],
         },
       ],

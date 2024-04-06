@@ -7,152 +7,148 @@ description: A guide to get you started with Pixel Craft
 
 :::caution
 This is not a tutorial on HTML, TypeScript or JavaScript. If you're not familiar with those technologies
-I recommend that you read up on them first. This guide also assumes that you can use a package manager.
-
-You should also know how to start a local web server. I'd recommend bun, vite or esbuild for this.
-This will be part of the CLI later, but for now you should be comfortable doing it manually.
+I recommend that you read up on them first. This guide assumes your familiar with modern web development and know how to use and configure your tools.
 :::
 
-I'm using [Bun](https://bun.sh/) for this project, but you can use npm or yarn. Adapt the commands accordingly.
-
-With that out of the way, you can either jump right into the [Sample Project](https://github.com/story75/pixel-craft/tree/main/demos/sample) or create your own
-project from scratch.
-
-To run the example, check out this repository and run the following commands:
-
-```bash
-bun install
-bun run build
-bun sample
-```
-
-If you want to create your own project, read on.
+The CLI uses [Bun](https://bun.sh/) internally. You can use npm or yarn instead, but then you're required to handle bundling and the development server yourself.
+The guide will assume you use the CLI.
 
 ## Installation
 
-Use your favorite package manager to install Pixel Craft.
+First create a new project in a new directory. Inside you need the general boilerplate files like in any other web project.
+In the future the CLI will provide a command to create a new project, but for now you need to do it manually.
 
 ```bash
-bun add @pixel-craft/engine
+mkdir my-pixel-craft-project
+cd my-pixel-craft-project
+bun init
+bun add -d @pixel-craft/cli
+bun add @pixel-craft/pixel-craft @pixel-craft/engine
 ```
 
-## Render a sprite
+## HTML Setup
 
-### HTML Setup
+You need a basic HTML file with a canvas element. This is where the game will be rendered.
+The CLI will assume your main file is `src/index.ts` and the HTML file is `public/index.html`.
+When the project is built the output will be in the `dist` folder as `bundle.js`.
 
-First you need to create a canvas element in your HTML file.
-For example, if you create an example with [Vite](https://vitejs.dev/), your `index.html` file should look something like this:
+Your index.html file should thus look like this:
 
-```html
+```html title="public/index.html"
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello Pixel Craft</title>
+    <meta charset="utf-8" />
+    <title>Pixel Craft Demo</title>
   </head>
   <body style="margin: unset; overflow: hidden">
     <canvas></canvas>
-    <script type="module" src="/src/main.ts"></script>
+    <script src="dist/bundle.js"></script>
   </body>
 </html>
 ```
 
-### Creating a context
+### Configuring your entry point
 
-Then in your TypeScript, or JavaScript, file get a reference to the canvas and create a new `WebGPUContext`.
+This is very much a personal preference, but I like to keep my entry point as clean as possible.
+I usually create a separate file for the application logic and import it in the entry point.
 
-```ts
-import { createContext } from '@pixel-craft/engine';
+You can do it however you like as long as your entry point is the `src/index.ts`, but this is how I would do it:
 
-export async function application(): Promise<void> {
-  const canvas = document.getElementsByTagName('canvas')[0]!;
-  const context = await createContext(canvas);
-}
+```ts title="src/index.ts"
+import { application } from './application';
+
+const canvas = document.getElementsByTagName('canvas')[0];
+application(canvas).catch((e: unknown) => console.error(e));
 ```
 
-### Creating a Pipeline
+### Creating your application
 
-Now you can create your render pipeline. This is basically a set of instructions to the GPU on how to render your sprites.
-your sprites. It will return a `RenderPass` that you can use to render your sprites.
+In Pixel Craft you create an application. This will tie everything together and be the backbone of your game.
 
-```ts ins={3,10}
-import { createContext, pipeline } from '@pixel-craft/engine';
+All your game logic will reside in so-called "systems" that you add to the application. This is very similar to the Entity Component System pattern,
+but without explicit entities and components, but instead the systems operate on "game objects" which are just plain objects with various properties.
 
-export async function application(): Promise<void> {
-  const canvas = document.getElementsByTagName('canvas')[0]!;
-  const context = await createContext(canvas);
+The systems will check which game objects they should operate on and then do their thing. This is a very powerful pattern that allows for a lot of flexibility.
 
-  const renderPass = pipeline(context);
-}
-```
+The engine offers built-in systems to get you started, but you can create your own systems as well. A default setup could look like this:
 
-### Creating a Sprite
-
-Now you are ready to create a sprite. A sprite is a 2D image that you can display on the screen. You can either find an image yourself or use the one I provided in the example project.
-A sprite is created with the `sprite` function. It takes a mandatory `texture` parameter. To get the texture you need to load the image with a `TextureLoader`.
-
-```ts ins={4-5,14-24}
+```ts title="src/application.ts"
 import {
-  createContext,
-  pipeline,
-  createTextureLoader,
-  sprite,
-} from '@pixel-craft/engine';
+  AnimatorSystem,
+  Application,
+  InputCameraSystem,
+  InputSystem,
+  RenderSystem,
+  TimerSystem,
+} from '@pixel-craft/pixel-craft';
 
-export async function application(): Promise<void> {
-  const canvas = document.getElementsByTagName('canvas')[0]!;
-  const context = await createContext(canvas);
+export async function application(canvas: HTMLCanvasElement): Promise<void> {
+  // create the application
+  const app = await Application.create(canvas);
+  // create the systems
+  const renderer = new RenderSystem();
+  const input = new InputSystem();
+  const timer = new TimerSystem();
+  const camera = new InputCameraSystem(input, timer);
+  const animator = new AnimatorSystem(timer);
+  // add the systems to the application
+  await app.addSystems(renderer, input, timer, camera, animator);
+}
+```
 
-  const renderPass = pipeline(context);
+Notice that we have to wait for the application to be created, because the process is asynchronous.
+The same goes for the systems. They might need to load resources or do other async operations.
 
-  // this will create a texture loader
-  const textureLoader = createTextureLoader(context.device);
-  // this will load the image and return a texture
-  const texture = await textureLoader('pixel-prowlers.png');
+With this setup you have a basic application that can render sprites, handle input and animate sprites.
+When using WASD or the arrow keys the camera will move around the screen.
 
-  // this will create a sprite at position 300, 300 with the texture we just loaded
-  const sampleSprite = sprite({
+### Rendering a Sprite
+
+Every game is built up of sprites. A sprite is a 2D image that can be rendered on the screen. This can be a character, a background, a bullet or anything else you can think of.
+
+:::caution
+The support around rendering sprites does not have any high-level abstractions yet, so you have to do use the engine API for now.
+:::
+
+We will go ahead and try to render a sprite at a specific position on the screen. For this you will need an image to render, a `TextureLoader` to load the image and a `sprite` object.
+Together it should look like this:
+
+```ts title="src/application.ts" ins={9-12,26-37} collapse={2-7,15-24}
+import {
+  AnimatorSystem,
+  Application,
+  InputCameraSystem,
+  InputSystem,
+  RenderSystem,
+  TimerSystem,
+} from '@pixel-craft/pixel-craft';
+import { createTextureLoader, sprite } from '@pixel-craft/engine';
+
+export async function application(canvas: HTMLCanvasElement): Promise<void> {
+  // create the application
+  const app = await Application.create(canvas);
+  // create the systems
+  const renderer = new RenderSystem();
+  const input = new InputSystem();
+  const timer = new TimerSystem();
+  const camera = new InputCameraSystem(input, timer);
+  const animator = new AnimatorSystem(timer);
+  // add the systems to the application
+  await app.addSystems(renderer, input, timer, camera, animator);
+
+  // create a texture loader
+  const textureLoader = createTextureLoader(app.context.device);
+  // load the image of your choice as a texture
+  const texture = await textureLoader('assets/pixel-prowlers.png');
+  // create a sprite
+  const mySprite = sprite({
     texture,
     x: 300,
     y: 300,
   });
-}
-```
-
-### Create a draw loop
-
-We're almost there. Now we need to add the sprite to the render pass. To do this we need a render loop. A render loop is a function that is called every frame.
-This is done with `requestAnimationFrame`. Inside the render loop we need to call the `renderPass` function and pass in the sprites we want to render.
-
-```ts collapse={9-20} ins={22-27}
-import {
-  createContext,
-  pipeline,
-  createTextureLoader,
-  sprite,
-} from '@pixel-craft/engine';
-
-export async function application(): Promise<void> {
-  const canvas = document.getElementsByTagName('canvas')[0]!;
-  const context = await createContext(canvas);
-
-  const renderPass = pipeline(context);
-
-  const textureLoader = createTextureLoader(context.device);
-  const texture = await textureLoader('pixel-prowlers.png');
-  const sampleSprite = sprite({
-    texture,
-    x: 300,
-    y: 300,
-  });
-
-  const draw = function () {
-    renderPass([sampleSprite]);
-    requestAnimationFrame(draw);
-  };
-
-  draw();
+  // add the sprite to the application, so it can be picked up by the render system
+  app.addGameObjects(mySprite);
 }
 ```
 
@@ -162,7 +158,11 @@ And that's it. You should now see a sprite rendered on the screen.
 
 You can play around with the code and see what happens. To make it easier for you, I've created a [StackBlitz](https://stackblitz.com/edit/vitejs-vite-5tbqtd?file=src%2Fmain.ts) project that you can use to experiment with the code.
 
-You could change the position of the sprite to, say, 150,150, or add another sprite. You could also change the texture to something else.
-You might try rotating the sprite in the render loop with `sampleSprite.rotation += 0.01`.
+:::danger
+Since Bun is not yet supported in StackBlitz, the sample uses Vite instead. The code is the same, but the setup is different.
+:::
 
-<iframe width="100%" style="height: 400px !important" src="https://stackblitz.com/edit/vitejs-vite-5tbqtd?ctl=1&embed=1&file=src%2Fmain.ts"></iframe>
+You could change the position of the sprite to, say, 150,150, or add another sprite. You could also change the texture to something else.
+You might try rotating the sprite with a custom system by calling `mySprite.rotation += 0.01` in the `update` method of the system.
+
+<iframe width="100%" style="height: 400px !important" src="https://stackblitz.com/edit/vitejs-vite-upvica?embed=1&file=src%2Fapplication.ts"></iframe>

@@ -1,9 +1,9 @@
 import {
+  createTextureLoader,
   Rect,
   Sprite,
-  Vec2,
-  createTextureLoader,
   sprite,
+  Vec2,
 } from '@pixel-craft/engine';
 import {
   Animated,
@@ -13,6 +13,7 @@ import {
   InputSystem,
   RenderSystem,
   TimerSystem,
+  TransitionType,
 } from '@pixel-craft/pixel-craft';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
@@ -73,6 +74,14 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     });
   }
 
+  const animation = {
+    name: 'idle',
+    interruptible: true,
+    loop: true,
+    speed: 5,
+    animationFrames: heroFrames,
+  };
+
   const hero: Sprite & Animated = {
     ...sprite({
       texture: atlasCharacters,
@@ -83,9 +92,19 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       frame: heroFrames[0],
     }),
     animationFrame: 0,
-    animationSpeed: 5,
     animationTimer: 0,
-    animationFrames: heroFrames,
+    animation,
+    animations: {
+      [animation.name]: animation,
+    },
+    transitions: [
+      {
+        from: { type: TransitionType.Entry },
+        to: animation.name,
+        condition: () => true,
+      },
+    ],
+    possibleTransitions: [],
   };
   app.addGameObjects(hero);
 }

@@ -1,12 +1,7 @@
-import {
-  createTextureLoader,
-  Rect,
-  Sprite,
-  sprite,
-  Vec2,
-} from '@pixel-craft/engine';
+import { Sprite, sprite, Vec2 } from '@pixel-craft/engine';
 import {
   Animated,
+  animatedSpriteSheet,
   AnimatorSystem,
   Application,
   InputCameraSystem,
@@ -28,11 +23,9 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const scaling: Vec2.Vec2 = [4, 4];
   app.context.camera.zoom(scaling);
 
-  const textureLoader = createTextureLoader(app.context.device);
-
   const [atlasFloor, atlasCharacters] = await Promise.all([
-    textureLoader('assets/0x72_DungeonTilesetII_v1.7/atlas_floor-16x16.png'),
-    textureLoader(
+    app.loadTexture('assets/0x72_DungeonTilesetII_v1.7/atlas_floor-16x16.png'),
+    app.loadTexture(
       'assets/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7.png',
     ),
   ]);
@@ -56,55 +49,66 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
           texture: atlasFloor,
           x: x * tileSize,
           y: y * tileSize,
-          width: tileSize,
-          height: tileSize,
           frame: groundTileFrame,
         }),
       );
     }
   }
 
-  const heroFrames: Rect[] = [];
-  for (let i = 0; i < 4; i++) {
-    heroFrames.push({
-      x: (8 + i) * tileSize,
-      y: 12 * tileSize,
-      width: tileSize,
-      height: tileSize * 2,
-    });
-  }
+  const dinoSpriteSheet = animatedSpriteSheet({
+    frameWidth: tileSize,
+    frameHeight: tileSize * 2,
+    width: atlasCharacters.width,
+    height: atlasCharacters.height,
+    animations: [
+      {
+        name: 'idle',
+        row: 6,
+        frames: 4,
+        startFrame: 8,
+      },
+      {
+        name: 'run',
+        row: 6,
+        frames: 4,
+        startFrame: 12,
+      },
+      {
+        name: 'hit',
+        row: 6,
+        frames: 1,
+        startFrame: 16,
+      },
+    ],
+  });
 
   const animation = {
     name: 'idle',
     interruptible: true,
     loop: true,
     speed: 5,
-    animationFrames: heroFrames,
+    animationFrames: dinoSpriteSheet['idle'],
   };
 
-  const hero: Sprite & Animated = {
+  const dino: Sprite & Animated = {
     ...sprite({
       texture: atlasCharacters,
       x: (tilesX / 2) * tileSize,
       y: (tilesY / 2) * tileSize,
-      width: tileSize,
-      height: tileSize * 2,
-      frame: heroFrames[0],
+      frame: animation.animationFrames[0],
     }),
-    animationFrame: 0,
-    animationTimer: 0,
-    animation,
-    animations: {
-      [animation.name]: animation,
-    },
-    transitions: [
-      {
-        from: { type: TransitionType.Entry },
-        to: animation.name,
-        condition: () => true,
+    ...AnimatorSystem.createAnimated({
+      animations: {
+        [animation.name]: animation,
       },
-    ],
-    possibleTransitions: [],
+      transitions: [
+        {
+          from: { type: TransitionType.Entry },
+          to: animation.name,
+          condition: () => true,
+        },
+      ],
+    }),
   };
-  app.addGameObjects(hero);
+  app.addGameObjects(dino);
 }

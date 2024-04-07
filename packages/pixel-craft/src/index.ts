@@ -1,4 +1,6 @@
 export { Application } from './application';
+export { animatedSpriteSheet } from './spritesheet/animated';
+export { uniformSpriteSheet } from './spritesheet/uniform';
 export { type Animated } from './system/animator/animated';
 export { AnimatorSystem } from './system/animator/system';
 export { TransitionType, type Transition } from './system/animator/transition';

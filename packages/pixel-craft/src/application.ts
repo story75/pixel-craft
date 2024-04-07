@@ -1,4 +1,9 @@
-import { createContext, WebGPUContext } from '@pixel-craft/engine';
+import {
+  createContext,
+  createTextureLoader,
+  TextureLoader,
+  WebGPUContext,
+} from '@pixel-craft/engine';
 import { CreateHookContext, System } from './system/system';
 
 type HookList = keyof Required<Omit<System, 'createSystem'>>;
@@ -39,6 +44,7 @@ export class Application {
   constructor(
     public readonly canvas: HTMLCanvasElement,
     public readonly context: WebGPUContext,
+    private readonly textureLoader: TextureLoader,
     scheduler = requestAnimationFrame,
   ) {
     this.createHookContext = {
@@ -64,8 +70,9 @@ export class Application {
    */
   static async create(canvas: HTMLCanvasElement): Promise<Application> {
     const context = await createContext(canvas);
+    const textureLoader = createTextureLoader(context.device);
 
-    return new Application(canvas, context);
+    return new Application(canvas, context, textureLoader);
   }
 
   /**
@@ -167,5 +174,14 @@ export class Application {
         hook(gameObject);
       }
     }
+  }
+
+  /**
+   * Load a texture by path.
+   *
+   * @see TextureLoader
+   */
+  loadTexture(path: string): Promise<GPUTexture> {
+    return this.textureLoader(path);
   }
 }

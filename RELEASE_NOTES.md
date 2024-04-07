@@ -1,5 +1,97 @@
 # Release Notes
 
+## UNRELEASED
+
+### Features
+
+#### Add `uniformSpriteSheet` function
+
+With the new `uniformSpriteSheet` function you can generate frame data for sprite sheets with uniform tiles.
+The resulting frames are indexed in a 2D array corresponding to the x and y position of the tile in the sprite sheet.
+
+#### Add `animatedSpriteSheet` function
+
+The new `animatedSpriteSheet` function allows you to generate frame data for sprite sheets with animations.
+For example if you want to extract the first dino sprite of the https://0x72.itch.io/dungeontileset-ii asset pack you can use the following code:
+
+```ts
+const dinoSpriteSheet = animatedSpriteSheet({
+  frameWidth: tileSize,
+  frameHeight: tileSize * 2,
+  width: atlasCharacters.width,
+  height: atlasCharacters.height,
+  animations: [
+    {
+      name: 'idle',
+      row: 6,
+      frames: 4,
+      startFrame: 8,
+    },
+    {
+      name: 'run',
+      row: 6,
+      frames: 4,
+      startFrame: 12,
+    },
+    {
+      name: 'hit',
+      row: 6,
+      frames: 1,
+      startFrame: 16,
+    },
+  ],
+});
+```
+
+Together with the correct 0x72_DungeonTilesetII_v1.7.png texture you could create a sprite with the following code:
+
+```ts
+const animation = {
+  name: 'idle',
+  interruptible: true,
+  loop: true,
+  speed: 5,
+  animationFrames: dinoSpriteSheet['idle'],
+};
+const dino: Sprite & Animated = {
+  ...sprite({
+    texture: atlasCharacters,
+    frame: animation.animationFrames[0],
+  }),
+  ...AnimatorSystem.createAnimated({
+    animations: {
+      [animation.name]: animation,
+    },
+    transitions: [
+      {
+        from: { type: TransitionType.Entry },
+        to: animation.name,
+        condition: () => true,
+      },
+    ],
+  }),
+};
+```
+
+Doing the entire process manually is cumbersome, so you may want to check out the new `animatedSprite` function that simplifies the process.
+
+#### Add `animatedSprite` function
+
+TBD
+
+### Fixes and improvements
+
+#### `sprite` will now use frame rect before texture rect if width and height are not provided
+
+Previously, if you did not provide a `width` and `height` property to the `sprite` function, it would use the texture rect to determine the size of the sprite.
+Now, it will use the frame rect if it is available, and fall back to the texture rect if it is not. This makes working with sprite sheets easier,
+as you can provide the frame rect and not have to explicitly provide the width and height.
+
+#### Application provides a `loadTexture` function
+
+The `Application` class now provides a `loadTexture` function that you can use to load textures.
+Internally, it creates a `TextureLoader` and uses it to load the texture. This is a convenience function that allows you to load textures without having to create a `TextureLoader` yourself.
+
 ## 0.6.0 (06.04.2024)
 
 ### Breaking changes

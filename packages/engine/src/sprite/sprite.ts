@@ -13,6 +13,13 @@ export type Sprite = Rect & {
 
   /**
    * The frame of the texture to render
+   *
+   * @remarks
+   * The frame is a rectangle which represents the portion of the texture to render.
+   * By default, the frame will be the entire texture.
+   * If the frame is smaller than the texture, only the portion of the texture within the frame will be rendered.
+   *
+   * If a frame is specified, the width and height of the sprite will be set to the width and height of the frame if not explicitly specified.
    */
   frame: Rect;
 
@@ -110,8 +117,8 @@ export function sprite(
 ): Sprite {
   return {
     texture: data.texture,
-    width: data.width ?? data.texture.width,
-    height: data.height ?? data.texture.height,
+    width: data.width ?? data.frame?.width ?? data.texture.width,
+    height: data.height ?? data.frame?.height ?? data.texture.height,
     x: data.x ?? 0,
     y: data.y ?? 0,
     frame: data.frame ?? {

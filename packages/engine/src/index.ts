@@ -1,6 +1,6 @@
 /// <reference types="@webgpu/types" />
-export { createFontLoader } from './loader/font';
-export { createTextureLoader } from './loader/texture';
+export { createFontLoader, type FontLoader } from './loader/font';
+export { createTextureLoader, type TextureLoader } from './loader/texture';
 export * as Mat4 from './math/mat4';
 export { type Rect } from './math/rect';
 export * as Vec2 from './math/vec2';

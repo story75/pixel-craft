@@ -1,6 +1,6 @@
 # Release Notes
 
-## UNRELEASED
+## 0.6.1 (12.04.2024)
 
 ### Features
 
@@ -73,11 +73,56 @@ const dino: Sprite & Animated = {
 };
 ```
 
-Doing the entire process manually is cumbersome, so you may want to check out the new `animatedSprite` function that simplifies the process.
+Doing the entire process manually is cumbersome, so you may want to check out the new `spriteParser` function that simplifies the process.
 
-#### Add `animatedSprite` function
+#### Add `spriteParser` function
 
-TBD
+The above example can get a little tedious, so the new `spriteParser` function can help you with that.
+If you're fine wit ha little less flexibility, you can omit a lot of the boilerplate code like so:
+
+```ts
+const dino = spriteParser({
+  frameWidth: tileSize,
+  frameHeight: tileSize * 2,
+  atlas: atlasCharacters,
+  animations: [
+    {
+      name: 'idle',
+      row: 6,
+      frames: 4,
+      startFrame: 8,
+      speed: 5,
+      interruptible: true,
+      loop: true,
+    },
+    {
+      name: 'run',
+      row: 6,
+      frames: 4,
+      startFrame: 12,
+      speed: 5,
+      interruptible: true,
+      loop: true,
+    },
+    {
+      name: 'hit',
+      row: 6,
+      frames: 1,
+      startFrame: 16,
+      speed: 5,
+      interruptible: true,
+      loop: true,
+    },
+  ],
+  transitions: [
+    {
+      from: { type: TransitionType.Entry },
+      to: 'idle',
+      condition: () => true,
+    },
+  ],
+});
+```
 
 ### Fixes and improvements
 

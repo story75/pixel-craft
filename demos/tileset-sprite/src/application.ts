@@ -1,12 +1,11 @@
-import { Sprite, sprite, Vec2 } from '@pixel-craft/engine';
+import { sprite, Vec2 } from '@pixel-craft/engine';
 import {
-  Animated,
-  animatedSpriteSheet,
   AnimatorSystem,
   Application,
   InputCameraSystem,
   InputSystem,
   RenderSystem,
+  spriteParser,
   TimerSystem,
   TransitionType,
 } from '@pixel-craft/pixel-craft';
@@ -55,60 +54,48 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     }
   }
 
-  const dinoSpriteSheet = animatedSpriteSheet({
+  const dino = spriteParser({
     frameWidth: tileSize,
     frameHeight: tileSize * 2,
-    width: atlasCharacters.width,
-    height: atlasCharacters.height,
+    x: (tilesX / 2) * tileSize,
+    y: (tilesY / 2) * tileSize,
+    atlas: atlasCharacters,
     animations: [
       {
         name: 'idle',
         row: 6,
         frames: 4,
         startFrame: 8,
+        speed: 5,
+        interruptible: true,
+        loop: true,
       },
       {
         name: 'run',
         row: 6,
         frames: 4,
         startFrame: 12,
+        speed: 5,
+        interruptible: true,
+        loop: true,
       },
       {
         name: 'hit',
         row: 6,
         frames: 1,
         startFrame: 16,
+        speed: 5,
+        interruptible: true,
+        loop: true,
+      },
+    ],
+    transitions: [
+      {
+        from: { type: TransitionType.Entry },
+        to: 'idle',
+        condition: () => true,
       },
     ],
   });
-
-  const animation = {
-    name: 'idle',
-    interruptible: true,
-    loop: true,
-    speed: 5,
-    animationFrames: dinoSpriteSheet['idle'],
-  };
-
-  const dino: Sprite & Animated = {
-    ...sprite({
-      texture: atlasCharacters,
-      x: (tilesX / 2) * tileSize,
-      y: (tilesY / 2) * tileSize,
-      frame: animation.animationFrames[0],
-    }),
-    ...AnimatorSystem.createAnimated({
-      animations: {
-        [animation.name]: animation,
-      },
-      transitions: [
-        {
-          from: { type: TransitionType.Entry },
-          to: animation.name,
-          condition: () => true,
-        },
-      ],
-    }),
-  };
   app.addGameObjects(dino);
 }

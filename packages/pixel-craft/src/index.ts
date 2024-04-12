@@ -1,4 +1,5 @@
 export { Application } from './application';
+export { spriteParser } from './sprite/parser';
 export { animatedSpriteSheet } from './spritesheet/animated';
 export { uniformSpriteSheet } from './spritesheet/uniform';
 export { type Animated } from './system/animator/animated';

@@ -3,8 +3,11 @@ import { animatedSpriteSheet } from '../spritesheet/animated';
 import { Animated } from '../system/animator/animated';
 import { AnimatorSystem } from '../system/animator/system';
 
-type Options = Pick<Sprite, 'x' | 'y'> &
-  Pick<Animated, 'transitions'> & {
+type Options<T extends Record<string, unknown> | undefined> = Pick<
+  Sprite,
+  'x' | 'y'
+> &
+  Pick<Animated<T & Sprite>, 'transitions'> & {
     /**
      * The width of each frame for the sprite in pixels
      */
@@ -75,7 +78,10 @@ type Options = Pick<Sprite, 'x' | 'y'> &
     }>;
   };
 
-export function spriteParser(options: Options): Sprite & Animated {
+export function spriteParser<T extends Record<string, unknown> | undefined>(
+  options: Options<T>,
+  components: T,
+): T & Sprite & Animated<T & Sprite> {
   const spriteSheet = animatedSpriteSheet({
     frameWidth: options.frameWidth,
     frameHeight: options.frameHeight,
@@ -97,7 +103,9 @@ export function spriteParser(options: Options): Sprite & Animated {
       },
       {},
     ),
-    transitions: options.transitions,
+    // TODO: The types for Animated and especially transitions are too cumbersome to work with right now.
+    // eslint-disable-next-line
+    transitions: options.transitions as any,
   });
 
   return {
@@ -108,5 +116,6 @@ export function spriteParser(options: Options): Sprite & Animated {
       frame: animated.animation.animationFrames[0],
     }),
     ...animated,
+    ...components,
   };
 }

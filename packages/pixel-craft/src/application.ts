@@ -153,7 +153,7 @@ export class Application {
    * This will call the addGameObject hook of all systems.
    * The game object can be any type of object, and it's up to the systems to decide how to handle it.
    */
-  addGameObjects(...gameObjects: unknown[]): void {
+  addGameObjects(...gameObjects: Array<Record<string, unknown>>): void {
     for (const gameObject of gameObjects) {
       for (const hook of this.hooks.addGameObject) {
         hook(gameObject);
@@ -168,7 +168,7 @@ export class Application {
    * This will call the removeGameObject hook of all systems.
    * The game object can be any type of object, and it's up to the systems to decide how to handle it.
    */
-  removeGameObjects(...gameObjects: unknown[]): void {
+  removeGameObjects(...gameObjects: Array<Record<string, unknown>>): void {
     for (const gameObject of gameObjects) {
       for (const hook of this.hooks.removeGameObject) {
         hook(gameObject);

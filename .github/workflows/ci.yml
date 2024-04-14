@@ -14,8 +14,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
       # run scripts
-      - run: bun install --frozen-lockfile
-      - run: bun check # type check must run before lint
+      - run: bun install # renovate does not update the lockfile properly, so --frozen-lockfile would break dependency updates
+      - run: bun run build # will run check, which must run before lint
       - run: bun lint
       - run: bun format
       - run: bun test

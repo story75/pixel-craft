@@ -4,7 +4,7 @@ import { Transition } from './transition';
 /**
  * Defines a game object that is animated.
  */
-export type Animated = {
+export type Animated<T = unknown> = {
   /**
    * The current frame of the current animation.
    */
@@ -32,7 +32,7 @@ export type Animated = {
    * The transitions are evaluated in the order they are defined.
    * Only the entry transition is special and takes precedence over all other transitions.
    */
-  transitions: Transition[];
+  transitions: Array<Transition<T>>;
 
   /**
    * The possible transitions for the current animation.
@@ -40,5 +40,5 @@ export type Animated = {
    * @remarks
    * This is used as a cache to avoid recalculating the all transitions every frame, but just the possible ones.
    */
-  possibleTransitions: Transition[];
+  possibleTransitions: Array<Transition<T>>;
 };

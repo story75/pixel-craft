@@ -47,7 +47,7 @@ export type System = {
    * If the system should handle the game object, it should add the game object to its internal state for processing.
    * If the system is not interested in the game object, it should return early.
    */
-  addGameObject?: <T>(gameObject: T) => void;
+  addGameObject?: (gameObject: Record<string, unknown>) => void;
 
   /**
    * Called when a game object is removed from the application.
@@ -55,7 +55,7 @@ export type System = {
    * @remarks
    * This hook should remove the game object from the system's internal state to stop processing it.
    */
-  removeGameObject?: <T>(gameObject: T) => void;
+  removeGameObject?: (gameObject: Record<string, unknown>) => void;
 
   /**
    * Called when game objects are updated.

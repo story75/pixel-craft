@@ -1,5 +1,17 @@
 # Release Notes
 
+## UNRELEASED
+
+### Features
+
+#### Add `MovementSystem`
+
+The `MovementSystem` allows you to move entities with a velocity and acceleration. You can create one like this:
+
+```ts
+TBD;
+```
+
 ## 0.6.1 (12.04.2024)
 
 ### Features

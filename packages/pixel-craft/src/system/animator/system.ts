@@ -13,9 +13,9 @@ export class AnimatorSystem implements System {
 
   constructor(private readonly timer: TimerSystem) {}
 
-  static createAnimated(
+  static createAnimated<T>(
     options: Pick<Animated, 'animations' | 'transitions'>,
-  ): Animated {
+  ): Animated<T> {
     const entryTransition = options.transitions.find(
       (transition) => transition.from.type === TransitionType.Entry,
     );

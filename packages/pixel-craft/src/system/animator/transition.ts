@@ -36,7 +36,7 @@ type TransitionLink =
 /**
  * Define a transition between two animations.
  */
-export type Transition = {
+export type Transition<T> = {
   /**
    * The source animation.
    */
@@ -53,5 +53,5 @@ export type Transition = {
    * @remarks
    * The state is the game object that is animated.
    */
-  condition: <T>(state: T) => boolean;
+  condition: (state: T) => boolean;
 };

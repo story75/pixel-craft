@@ -15,13 +15,13 @@ var texture: texture_2d<f32>;
 
 @vertex
 fn vs_main(
-  @location(0) position: vec2f, // x: f32, y: f32,
+  @location(0) position: vec3f, // x: f32, y: f32, z: f32,
   @location(1) uv: vec2f, // u: f32, v: f32
   @location(2) color: vec4f, // r: f32, g: f32, b: f32, a: f32
 ) -> VertexOutput {
   var output: VertexOutput;
 
-  output.position = projection_view_matrix * vec4f(position, 0.0, 1.0);
+  output.position = projection_view_matrix * vec4f(position, 1.0);
   output.color = color;
   output.uv = uv;
 
@@ -31,7 +31,12 @@ fn vs_main(
 @fragment
 fn fs_main(output: VertexOutput) -> @location(0) vec4f {
   var texture_color = textureSample(texture, texture_sampler, output.uv);
-  return texture_color * output.color;
+  var final_color = texture_color * output.color;
+  if (final_color.a < 0.01) {
+    discard;
+  }
+
+  return final_color;
 }
 
 @fragment

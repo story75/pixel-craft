@@ -80,7 +80,7 @@ type Options<T extends Record<string, unknown> | undefined> = Pick<
 
 export function spriteParser<T extends Record<string, unknown> | undefined>(
   options: Options<T>,
-  components: T,
+  data: T,
 ): T & Sprite & Animated<T & Sprite> {
   const spriteSheet = animatedSpriteSheet({
     frameWidth: options.frameWidth,
@@ -116,6 +116,6 @@ export function spriteParser<T extends Record<string, unknown> | undefined>(
       frame: animated.animation.animationFrames[0],
     }),
     ...animated,
-    ...components,
+    ...data,
   };
 }

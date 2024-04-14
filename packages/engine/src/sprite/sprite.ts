@@ -29,6 +29,16 @@ export type Sprite = Rect & {
   rotation: number;
 
   /**
+   * The z-index of the sprite
+   *
+   * @remarks
+   * The z-index is a positive integer which represents the order in which the sprite will be rendered.
+   * Sprites with a higher z-index will be rendered on top of sprites with a lower z-index.
+   * The value must be between 0 and 1. Default is 0.001.
+   */
+  z: number;
+
+  /**
    * Options to flip the sprite
    *
    * @remarks
@@ -121,6 +131,7 @@ export function sprite(
     height: data.height ?? data.frame?.height ?? data.texture.height,
     x: data.x ?? 0,
     y: data.y ?? 0,
+    z: data.z ?? 0.001,
     frame: data.frame ?? {
       x: 0,
       y: 0,

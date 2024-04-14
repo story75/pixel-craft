@@ -1,0 +1,15 @@
+{
+  "name": "@pixel-craft/engine-demo-z-index",
+  "private": true,
+  "scripts": {
+    "check": "tsc",
+    "watch": "pixel-craft bundle --watch"
+  },
+  "dependencies": {
+    "@pixel-craft/engine": "workspace:*",
+    "@pixel-craft/pixel-craft": "workspace:*"
+  },
+  "devDependencies": {
+    "@pixel-craft/cli": "workspace:*"
+  }
+}

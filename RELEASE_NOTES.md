@@ -1,16 +1,22 @@
 # Release Notes
 
-## UNRELEASED
+## 0.6.2 (14.04.2024)
 
 ### Features
 
-#### Add `MovementSystem`
+#### Add `z` property to `Sprite`
 
-The `MovementSystem` allows you to move entities with a velocity and acceleration. You can create one like this:
+You can now set the `z` property on a `Sprite` to control the draw order of sprites. Sprites with a higher `z` value will be drawn on top of sprites with a lower `z` value.
+This is backed by depth and stencil testing in the pipeline. THis should enable all sorts of possibilities for layering sprites and creating more complex scenes.
+Previously, the draw order was determined by the order in which sprites were passed to the `renderPass` function.
 
-```ts
-TBD;
-```
+This is not only prone to user errors, but was also sometimes re-shuffled by the batching process. Now you can control the draw order of sprites more precisely.
+Performance-wise, the impact is negligible, and avoids sorting the sprites in JS.
+
+#### Add option to pass data to `spriteParser`
+
+You can now pass data to the `spriteParser` function to create sprites with additional data attached.
+This, together with some updates to the Transition type, allows your IDE to provide better autocompletion and type checking for your conditions.
 
 ## 0.6.1 (12.04.2024)
 
@@ -90,7 +96,7 @@ Doing the entire process manually is cumbersome, so you may want to check out th
 #### Add `spriteParser` function
 
 The above example can get a little tedious, so the new `spriteParser` function can help you with that.
-If you're fine wit ha little less flexibility, you can omit a lot of the boilerplate code like so:
+If you're fine with a little less flexibility, you can omit a lot of the boilerplate code like so:
 
 ```ts
 const dino = spriteParser({

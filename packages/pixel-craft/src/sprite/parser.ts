@@ -4,8 +4,8 @@ import { Animated } from '../system/animator/animated';
 import { AnimatorSystem } from '../system/animator/system';
 
 type Options<T extends Record<string, unknown> | undefined> = Pick<
-  Sprite,
-  'x' | 'y'
+  Partial<Sprite>,
+  'x' | 'y' | 'z'
 > &
   Pick<Animated<T & Sprite>, 'transitions'> & {
     /**
@@ -113,6 +113,7 @@ export function spriteParser<T extends Record<string, unknown> | undefined>(
       texture: options.atlas,
       x: options.x,
       y: options.y,
+      z: options.z,
       frame: animated.animation.animationFrames[0],
     }),
     ...animated,

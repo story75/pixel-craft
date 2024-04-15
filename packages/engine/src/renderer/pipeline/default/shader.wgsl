@@ -42,5 +42,10 @@ fn fs_main(output: VertexOutput) -> @location(0) vec4f {
 @fragment
 fn fs_repeating(output: VertexOutput) -> @location(0) vec4f {
   var texture_color = textureSample(texture, texture_sampler, fract(output.uv));
-  return texture_color * output.color;
+  var final_color = texture_color * output.color;
+  if (final_color.a < 0.01) {
+    discard;
+  }
+
+  return final_color;
 }

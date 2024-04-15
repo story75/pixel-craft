@@ -35,12 +35,14 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   const skyBackgroundSprite = tilingSprite({
     texture: skyBackground,
+    z: 0.1,
     width: canvas.width,
     height: canvas.height,
   });
 
   const skyMoonSprite = tilingSprite({
     texture: skyMoon,
+    z: 0.2,
     width: canvas.width,
     height: canvas.height,
   });
@@ -48,18 +50,21 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   const skyCloudsBackgroundSprite = tilingSprite({
     texture: skyCloudsBackground,
+    z: 0.3,
     width: canvas.width,
     height: canvas.height,
   });
 
   const skyCloudsForegroundSprite = tilingSprite({
     texture: skyCloudsForeground,
+    z: 0.4,
     width: canvas.width,
     height: canvas.height,
   });
 
   const logoSprite = sprite({
     texture: logo,
+    z: 0.5,
     width: logo.width * 4,
     height: logo.height * 4,
   });

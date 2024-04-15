@@ -85,6 +85,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       frameHeight: tileSize * 2,
       x: (tilesX / 2) * tileSize,
       y: (tilesY / 2) * tileSize,
+      z: 0.002,
       atlas: atlasCharacters,
       animations: [
         {

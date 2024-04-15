@@ -17,7 +17,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
         texture,
         x: i * 15,
         y: i * 15,
-        z: sprites / 100,
+        z: 0.01 + i / sprites,
       }),
     );
   }

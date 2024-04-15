@@ -1,4 +1,4 @@
-import { rotate, Vec2 } from '../../../math/vec2';
+import { Point2, Vector2 } from '../../../math/vec2';
 import { indexBufferAllocator } from '../../buffer/index-buffer-allocator';
 import { vertexBufferAllocator } from '../../buffer/vertex-buffer-allocator';
 import { WebGPUContext } from '../../context/create-context';
@@ -193,31 +193,34 @@ export function pipeline({
         batches.push(batch);
       }
 
-      let topLeft: Vec2 = [sprite.x, sprite.y];
-      let topRight: Vec2 = [sprite.x + sprite.width, sprite.y];
-      let bottomRight: Vec2 = [
-        sprite.x + sprite.width,
-        sprite.y + sprite.height,
-      ];
-      let bottomLeft: Vec2 = [sprite.x, sprite.y + sprite.height];
+      let topLeft = new Vector2({ x: sprite.x, y: sprite.y });
+      let topRight = new Vector2({ x: sprite.x + sprite.width, y: sprite.y });
+      let bottomRight = new Vector2({
+        x: sprite.x + sprite.width,
+        y: sprite.y + sprite.height,
+      });
+      let bottomLeft = new Vector2({
+        x: sprite.x,
+        y: sprite.y + sprite.height,
+      });
 
       if (sprite.rotation) {
-        const origin: Vec2 = [
-          sprite.x + sprite.origin[0] * sprite.width,
-          sprite.y + sprite.origin[1] * sprite.height,
-        ];
+        const origin: Point2 = {
+          x: sprite.x + sprite.origin.x * sprite.width,
+          y: sprite.y + sprite.origin.y * sprite.height,
+        };
 
-        topLeft = rotate(topLeft, origin, sprite.rotation);
-        topRight = rotate(topRight, origin, sprite.rotation);
-        bottomRight = rotate(bottomRight, origin, sprite.rotation);
-        bottomLeft = rotate(bottomLeft, origin, sprite.rotation);
+        topLeft = topLeft.rotate(origin, sprite.rotation);
+        topRight = topRight.rotate(origin, sprite.rotation);
+        bottomRight = bottomRight.rotate(origin, sprite.rotation);
+        bottomLeft = bottomLeft.rotate(origin, sprite.rotation);
       }
 
-      const u: Vec2 = [
+      const u: [number, number] = [
         sprite.frame.x / sprite.texture.width,
         (sprite.frame.x + sprite.frame.width) / sprite.texture.width,
       ];
-      const v: Vec2 = [
+      const v: [number, number] = [
         sprite.frame.y / sprite.texture.height,
         (sprite.frame.y + sprite.frame.height) / sprite.texture.height,
       ];
@@ -233,16 +236,16 @@ export function pipeline({
       }
 
       if ('offset' in sprite) {
-        u[0] += sprite.offset[0];
-        u[1] += sprite.offset[0];
-        v[0] += sprite.offset[1];
-        v[1] += sprite.offset[1];
+        u[0] += sprite.offset.x;
+        u[1] += sprite.offset.x;
+        v[0] += sprite.offset.y;
+        v[1] += sprite.offset.y;
       }
 
       const i = batch.instances * FLOATS_PER_SPRITE;
       // top left
-      batch.vertices[0 + i] = topLeft[0];
-      batch.vertices[1 + i] = topLeft[1];
+      batch.vertices[0 + i] = topLeft.x;
+      batch.vertices[1 + i] = topLeft.y;
       batch.vertices[2 + i] = sprite.z;
       batch.vertices[3 + i] = u[0];
       batch.vertices[4 + i] = v[0];
@@ -252,8 +255,8 @@ export function pipeline({
       batch.vertices[8 + i] = sprite.alpha;
 
       // top right
-      batch.vertices[9 + i] = topRight[0];
-      batch.vertices[10 + i] = topRight[1];
+      batch.vertices[9 + i] = topRight.x;
+      batch.vertices[10 + i] = topRight.y;
       batch.vertices[11 + i] = sprite.z;
       batch.vertices[12 + i] = u[1];
       batch.vertices[13 + i] = v[0];
@@ -263,8 +266,8 @@ export function pipeline({
       batch.vertices[17 + i] = sprite.alpha;
 
       // bottom right
-      batch.vertices[18 + i] = bottomRight[0];
-      batch.vertices[19 + i] = bottomRight[1];
+      batch.vertices[18 + i] = bottomRight.x;
+      batch.vertices[19 + i] = bottomRight.y;
       batch.vertices[20 + i] = sprite.z;
       batch.vertices[21 + i] = u[1];
       batch.vertices[22 + i] = v[1];
@@ -274,8 +277,8 @@ export function pipeline({
       batch.vertices[26 + i] = sprite.alpha;
 
       // bottom left
-      batch.vertices[27 + i] = bottomLeft[0];
-      batch.vertices[28 + i] = bottomLeft[1];
+      batch.vertices[27 + i] = bottomLeft.x;
+      batch.vertices[28 + i] = bottomLeft.y;
       batch.vertices[29 + i] = sprite.z;
       batch.vertices[30 + i] = u[0];
       batch.vertices[31 + i] = v[1];

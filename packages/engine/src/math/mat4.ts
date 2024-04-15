@@ -1,12 +1,26 @@
-import { cross, dot, normalize, subtract, Vec3 } from './vec3';
-
 // prettier-ignore
-export type Mat4 = [
-    number, number, number, number,
-    number, number, number, number,
-    number, number, number, number,
-    number, number, number, number,
-] | Float32Array;
+import { Point3,Vector3 } from "./vec3";
+
+export type Mat4 =
+  | [
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+      number,
+    ]
+  | Float32Array;
 
 /**
  * Creates an orthographic projection matrix.
@@ -17,13 +31,6 @@ export type Mat4 = [
  *
  * @see https://en.wikipedia.org/wiki/Orthographic_projection
  * @see https://gpuweb.github.io/gpuweb/#coordinate-systems
- *
- * @param left
- * @param right
- * @param bottom
- * @param top
- * @param near
- * @param far
  */
 export function orthographic(
   left: number,
@@ -47,31 +54,23 @@ export function orthographic(
  *
  * @see https://www.geertarien.com/blog/2017/07/30/breakdown-of-the-lookAt-function-in-OpenGL/
  * @see https://developer.apple.com/forums/thread/711797
- *
- * @param camera
- * @param object
- * @param up
  */
-export function lookAt(
-  camera: Readonly<Vec3>,
-  object: Readonly<Vec3>,
-  up: Readonly<Vec3>,
-): Mat4 {
-  const forwardVector = normalize(subtract(camera, object));
-  const rightVector = normalize(cross(up, forwardVector));
-  const upVector = cross(forwardVector, rightVector);
+export function lookAt(camera: Vector3, object: Vector3, up: Vector3): Mat4 {
+  const forwardVector = camera.subtract(object).normal();
+  const rightVector = up.cross(forwardVector).normal();
+  const upVector = forwardVector.cross(rightVector);
 
   const translation = [
-    -dot(rightVector, camera),
-    -dot(upVector, camera),
-    -dot(forwardVector, camera),
-  ];
+    -rightVector.dot(camera),
+    -upVector.dot(camera),
+    -forwardVector.dot(camera),
+  ] as const;
 
   // prettier-ignore
   return [
-    rightVector[0], upVector[0], forwardVector[0], 0,
-    rightVector[1], upVector[1], forwardVector[1], 0,
-    rightVector[2], upVector[2], forwardVector[2], 0,
+    rightVector.x, upVector.x, forwardVector.x, 0,
+    rightVector.y, upVector.y, forwardVector.y, 0,
+    rightVector.z, upVector.z, forwardVector.z, 0,
     translation[0], translation[1], translation[2], 1,
   ];
 }
@@ -124,30 +123,25 @@ export function multiply(a: Readonly<Mat4>, b: Readonly<Mat4>): Mat4 {
 /**
  * Translate a matrix.
  */
-export function translate(
-  matrix: Readonly<Mat4>,
-  translation: Readonly<Vec3>,
-): Mat4 {
-  const [x, y, z] = translation;
+export function translate(matrix: Readonly<Mat4>, translation: Point3): Mat4 {
   // prettier-ignore
   return multiply(matrix, [
     1, 0, 0, 0,
     0, 1, 0, 0,
     0, 0, 1, 0,
-    x, y, z, 1,
+    translation.x, translation.y, translation.z, 1,
   ]);
 }
 
 /**
  * Scale a matrix.
  */
-export function scale(matrix: Readonly<Mat4>, scaling: Readonly<Vec3>): Mat4 {
-  const [x, y, z] = scaling;
+export function scale(matrix: Readonly<Mat4>, scaling: Vector3): Mat4 {
   // prettier-ignore
   return [
-    matrix[0] * x, matrix[1] * x, matrix[2] * x, matrix[3] * x,
-    matrix[4] * y, matrix[5] * y, matrix[6] * y, matrix[7] * y,
-    matrix[8] * z, matrix[9] * z, matrix[10] * z, matrix[11] * z,
+    matrix[0] * scaling.x, matrix[1] * scaling.x, matrix[2] * scaling.x, matrix[3] * scaling.x,
+    matrix[4] * scaling.y, matrix[5] * scaling.y, matrix[6] * scaling.y, matrix[7] * scaling.y,
+    matrix[8] * scaling.z, matrix[9] * scaling.z, matrix[10] * scaling.z, matrix[11] * scaling.z,
     matrix[12], matrix[13], matrix[14], matrix[15],
   ];
 }

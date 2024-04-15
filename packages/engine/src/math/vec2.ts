@@ -1,88 +1,107 @@
-export type Vec2 = [number, number] | Float32Array;
+/**
+ * A simple point in 2D space
+ */
+export type Point2 = {
+  x: number;
+  y: number;
+};
 
 /**
- * Normalize a vector.
- *
- * @see https://en.wikipedia.org/wiki/Unit_vector
- *
- * @param v
+ * A vector in 2D space
  */
-export function normalize(v: Readonly<Vec2>): Vec2 {
-  const [x, y] = v;
-  const l = length(v);
-  return [x / l, y / l];
-}
+export class Vector2 {
+  static Up = new Vector2({ x: 0, y: -1 });
+  static Down = new Vector2({ x: 0, y: 1 });
+  static Left = new Vector2({ x: -1, y: 0 });
+  static Right = new Vector2({ x: 1, y: 0 });
 
-/**
- * Calculate the length of a vector.
- * @see https://en.wikipedia.org/wiki/Euclidean_vector#Length
- *
- * @param v
- */
-export function length(v: Readonly<Vec2>): number {
-  const [x, y] = v;
-  return Math.sqrt(x * x + y * y);
-}
+  public x: number;
+  public y: number;
 
-/**
- * Subtract two vectors.
- *
- * @see https://en.wikipedia.org/wiki/Euclidean_vector#Addition_and_subtraction
- *
- * @param a
- * @param b
- */
-export function subtract(a: Readonly<Vec2>, b: Readonly<Vec2>): Vec2 {
-  const [ax, ay] = a;
-  const [bx, by] = b;
-  return [ax - bx, ay - by];
-}
+  constructor({ x, y }: Point2 | Vector2) {
+    this.x = x;
+    this.y = y;
+  }
 
-/**
- * Cross two vectors.
- *
- * @see https://en.wikipedia.org/wiki/Cross_product
- *
- * @param a
- * @param b
- */
-export function cross(a: Readonly<Vec2>, b: Readonly<Vec2>): Vec2 {
-  const [ax, ay] = a;
-  const [bx, by] = b;
-  return [ay * bx - ax * by, ax * by - ay * bx];
-}
+  /**
+   * Return the length of a vector
+   */
+  length(): number {
+    return Math.sqrt(this.x * this.x + this.y * this.y);
+  }
 
-/**
- * Dot two vectors.
- *
- * @see https://en.wikipedia.org/wiki/Dot_product
- *
- * @param a
- * @param b
- */
-export function dot(a: Readonly<Vec2>, b: Readonly<Vec2>): number {
-  const [ax, ay] = a;
-  const [bx, by] = b;
-  return ax * bx + ay * by;
-}
+  /**
+   * Create a new vector which is the product of the current vector and the factor
+   *
+   * @param factor - The factor to multiply by
+   */
+  multiply(factor: number): Vector2 {
+    return new Vector2({
+      x: this.x * factor,
+      y: this.y * factor,
+    });
+  }
 
-/**
- * Rotate a vector around an origin.
- *
- * @see https://en.wikipedia.org/wiki/Rotation_matrix
- *
- * @param v
- * @param origin
- * @param radians
- */
-export function rotate(
-  v: Readonly<Vec2>,
-  origin: Readonly<Vec2>,
-  radians: number,
-): Vec2 {
-  const x = v[0] - origin[0];
-  const y = v[1] - origin[1];
-  const cos = Math.cos(radians);
-  const sin = Math.sin(radians);
-  return [origin[0] + x * cos - y * sin, origin[1] + x * sin + y * cos];
+  /**
+   * Create a normalized vector from the current vector
+   *
+   * @remarks
+   * A normalized vector has a length of 1.
+   *
+   * If the current Vector does not have a length,
+   * a new vector with the same properties is returned instead.
+   */
+  normal(): Vector2 {
+    const length = this.length();
+    if (!length) {
+      return new Vector2(this);
+    }
+    return this.multiply(1 / length);
+  }
+
+  /**
+   * Subtract two vectors.
+   *
+   * @see https://en.wikipedia.org/wiki/Euclidean_vector#Addition_and_subtraction
+   */
+  subtract(b: Vector2): Vector2 {
+    return new Vector2({ x: this.x - b.x, y: this.y - b.y });
+  }
+
+  /**
+   * Cross two vectors.
+   *
+   * @see https://en.wikipedia.org/wiki/Cross_product
+   */
+  cross(b: Vector2): Vector2 {
+    return new Vector2({
+      x: this.y * b.x - this.x * b.y,
+      y: this.x * b.y - this.y * b.x,
+    });
+  }
+
+  /**
+   * Dot two vectors.
+   *
+   * @see https://en.wikipedia.org/wiki/Dot_product
+   */
+  dot(b: Vector2): number {
+    return this.x * b.x + this.y * b.y;
+  }
+
+  /**
+   * Rotate a vector around an origin.
+   *
+   * @see https://en.wikipedia.org/wiki/Rotation_matrix
+   */
+  rotate(origin: Point2, radians: number): Vector2 {
+    const x = this.x - origin.x;
+    const y = this.y - origin.y;
+    const cos = Math.cos(radians);
+    const sin = Math.sin(radians);
+    return new Vector2({
+      x: origin.x + (x * cos - y * sin),
+      y: origin.y + (x * sin + y * cos),
+    });
+  }
 }

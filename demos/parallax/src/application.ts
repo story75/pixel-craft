@@ -46,7 +46,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     width: canvas.width,
     height: canvas.height,
   });
-  skyMoonSprite.offset[0] = 0.5;
+  skyMoonSprite.offset.x = 0.5;
 
   const skyCloudsBackgroundSprite = tilingSprite({
     texture: skyCloudsBackground,
@@ -86,11 +86,11 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     timer.update(now);
     stats.begin();
 
-    skyBackgroundSprite.offset[0] += (backgroundSpeed / 4) * timer.deltaTime;
-    skyMoonSprite.offset[0] += (backgroundSpeed / 8) * timer.deltaTime;
-    skyCloudsBackgroundSprite.offset[0] +=
+    skyBackgroundSprite.offset.x += (backgroundSpeed / 4) * timer.deltaTime;
+    skyMoonSprite.offset.x += (backgroundSpeed / 8) * timer.deltaTime;
+    skyCloudsBackgroundSprite.offset.x +=
       (backgroundSpeed / 2) * timer.deltaTime;
-    skyCloudsForegroundSprite.offset[0] += backgroundSpeed * timer.deltaTime;
+    skyCloudsForegroundSprite.offset.x += backgroundSpeed * timer.deltaTime;
 
     renderPass(sprites);
 

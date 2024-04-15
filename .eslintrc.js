@@ -51,6 +51,11 @@ module.exports = {
         format: ['camelCase', 'UPPER_CASE'],
       },
       {
+        selector: 'classProperty',
+        modifiers: ['static'],
+        format: ['PascalCase', 'UPPER_CASE'],
+      },
+      {
         // only allow camelCase, UPPER_CASE or _
         selector: 'variable',
         format: ['camelCase', 'UPPER_CASE'],

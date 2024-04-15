@@ -6,7 +6,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const renderer = new RenderSystem();
   await app.addSystems(renderer);
 
-  app.context.camera.zoom([4, 4]);
+  app.context.camera.zoom({ x: 4, y: 4 });
 
   const texture = await app.loadTexture('assets/pixel-prowlers.png');
   const sprites = 10;

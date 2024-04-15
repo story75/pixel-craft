@@ -1,6 +1,5 @@
 import { Rect } from '../math/rect';
-import { Vec2 } from '../math/vec2';
-import { Vec3 } from '../math/vec3';
+import { Point2 } from '../math/vec2';
 
 /**
  * An instance of a sprite which can be rendered to a canvas
@@ -56,7 +55,7 @@ export type Sprite = Rect & {
    * The origin is a value between 0 and 1 which represents the position of the origin relative to the sprite.
    * For example, [0, 0] would be the top left corner of the sprite, [0.5, 0.5] would be the center of the sprite, and [1, 1] would be the bottom right corner of the sprite.
    */
-  origin: Vec2;
+  origin: Point2;
 
   /**
    * The color of the sprite
@@ -65,7 +64,7 @@ export type Sprite = Rect & {
    * The color is a value between 0 and 1 for each channel (red, green, blue).
    * If all channels are 1, the sprite will be rendered normally.
    */
-  color: Vec3;
+  color: [number, number, number];
 
   /**
    * The alpha of the sprite
@@ -111,7 +110,7 @@ export type TilingSprite = Sprite & {
    * The offset value is relative to the texture size. If the texture is 100px wide, and the offset is 0.5, the texture will be offset by 50px.
    * If the value is greater than 1, the texture will be offset by the remainder. For example, if the texture is 100px wide, and the offset is 1.5, the texture will be offset by 50px.
    */
-  offset: Vec2;
+  offset: Point2;
 };
 
 /**
@@ -140,7 +139,7 @@ export function sprite(
     },
     flip: data.flip ?? [false, false],
     rotation: data.rotation ?? 0,
-    origin: data.origin ?? [0, 0],
+    origin: data.origin ?? { x: 0, y: 0 },
     color: data.color ?? [1, 1, 1],
     alpha: data.alpha ?? 1,
     sampler: data.sampler ?? 'nearest',
@@ -161,6 +160,6 @@ export function tilingSprite(
   return {
     ...sprite(data),
     mode: 'repeat',
-    offset: data.offset ?? [0, 0],
+    offset: data.offset ?? { x: 0, y: 0 },
   };
 }

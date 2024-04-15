@@ -1,4 +1,4 @@
-import { Sprite, sprite } from '@pixel-craft/engine';
+import { Point2, Sprite, sprite } from '@pixel-craft/engine';
 import {
   AnimatorSystem,
   Application,
@@ -44,7 +44,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   })();
   await app.addSystems(renderer, input, timer, movement, animator);
 
-  const scaling: [number, number] = [4, 4];
+  const scaling: Point2 = { x: 4, y: 4 };
   app.context.camera.zoom(scaling);
 
   const [atlasFloor, atlasCharacters] = await Promise.all([
@@ -56,8 +56,8 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   const tileSize = 16;
 
-  const tilesX = Math.ceil(canvas.width / tileSize / scaling[0]);
-  const tilesY = Math.ceil(canvas.height / tileSize / scaling[1]);
+  const tilesX = Math.ceil(canvas.width / tileSize / scaling.x);
+  const tilesY = Math.ceil(canvas.height / tileSize / scaling.y);
 
   const groundTileFrame = {
     x: 0,

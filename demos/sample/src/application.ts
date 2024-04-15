@@ -37,31 +37,31 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       texture: tex,
       x,
       y,
-      origin: [0, 0],
+      origin: { x: 0, y: 0 },
     }),
     sprite({
       texture: tex,
       x,
       y,
-      origin: [0, 1],
+      origin: { x: 0, y: 1 },
     }),
     sprite({
       texture: tex,
       x,
       y,
-      origin: [1, 0],
+      origin: { x: 1, y: 0 },
     }),
     sprite({
       texture: tex,
       x,
       y,
-      origin: [1, 1],
+      origin: { x: 1, y: 1 },
     }),
     sprite({
       texture: tex,
       x,
       y,
-      origin: [0.5, 0.5],
+      origin: { x: 0.5, y: 0.5 },
     }),
   ];
 
@@ -94,8 +94,8 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     height: canvas.height,
   });
 
-  tiledSprite.offset[0] = 1.5;
-  tiledSprite.offset[1] = 1.5;
+  tiledSprite.offset.x = 1.5;
+  tiledSprite.offset.y = 1.5;
 
   const fontLoader = createFontLoader();
   await fontLoader('Monocraft', 'vendor/monocraft/Monocraft.otf');

@@ -1,5 +1,20 @@
 # Release Notes
 
+## UNRELEASED
+
+### Breaking changes
+
+#### Export new Point types and Vector classes
+
+The new `Point` types and `Vector` classes are now exported from the `@pixel-craft/engine` package.
+In contrast to the old array-based types, these are easier to use and provide more functionality.
+
+### Fixes and improvements
+
+#### Discard transparent pixels in repeating fragment shader
+
+The repeating fragment shader now discards transparent pixels. This fixes z index issues with tiling sprites.
+
 ## 0.6.2 (14.04.2024)
 
 ### Features

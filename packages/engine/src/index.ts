@@ -1,11 +1,10 @@
 /// <reference types="@webgpu/types" />
 export { createFontLoader, type FontLoader } from './loader/font';
 export { createTextureLoader, type TextureLoader } from './loader/texture';
-export * as Mat4 from './math/mat4';
 export { type Rect } from './math/rect';
-export * as Vec2 from './math/vec2';
-export * as Vec3 from './math/vec3';
-export * as Vec4 from './math/vec4';
+export { Vector2, type Point2 } from './math/vec2';
+export { Vector3, type Point3 } from './math/vec3';
+export { Vector4, type Point4 } from './math/vec4';
 export { type Camera } from './renderer/camera/camera';
 export {
   createContext,

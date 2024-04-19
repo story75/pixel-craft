@@ -1,6 +1,6 @@
 # Release Notes
 
-## UNRELEASED
+## 0.7.0 (19.04.2024)
 
 ### Breaking changes
 
@@ -9,11 +9,22 @@
 The new `Point` types and `Vector` classes are now exported from the `@pixel-craft/engine` package.
 In contrast to the old array-based types, these are easier to use and provide more functionality.
 
+### Features
+
+#### Add `InputMovementSystem`
+
+The new `InputMovementSystem` allows you to move entities with the arrow keys or WASD.
+To use it, instantiate the system and create entities implementing the `Moveable` type.
+
 ### Fixes and improvements
 
 #### Discard transparent pixels in repeating fragment shader
 
 The repeating fragment shader now discards transparent pixels. This fixes z index issues with tiling sprites.
+
+#### Correctly flip texture slices
+
+Previously, only full texture frames were flipped correctly but not texture slices. This has been fixed.
 
 ## 0.6.2 (14.04.2024)
 

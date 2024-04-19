@@ -23,8 +23,9 @@ export class InputCameraSystem implements System {
   }
 
   update(): void {
-    this.x += this.input.x * this.speed * this.timer.deltaTime;
-    this.y += this.input.y * this.speed * this.timer.deltaTime;
+    const adjustedSpeed = this.speed * this.timer.deltaTime;
+    this.x += this.input.x * adjustedSpeed;
+    this.y += this.input.y * adjustedSpeed;
 
     this.camera.observe({ x: this.x, y: this.y });
   }

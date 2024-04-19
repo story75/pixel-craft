@@ -183,9 +183,10 @@ export function pipeline({
       }
 
       let batch = batches.at(-1);
-      if (!batch || batch.instances === MAX_SPRITES_PER_BATCH) {
+      const parralax = 'mode' in sprite;
+      if (parralax || !batch || batch.instances === MAX_SPRITES_PER_BATCH) {
         batch = {
-          pipeline: 'mode' in sprite ? parallaxPipeline : spritePipeline,
+          pipeline: parralax ? parallaxPipeline : spritePipeline,
           instances: 0,
           vertices: new Float32Array(MAX_SPRITES_PER_BATCH * FLOATS_PER_SPRITE),
           texture: sprite.texture,
@@ -226,13 +227,15 @@ export function pipeline({
       ];
 
       if (sprite.flip[0]) {
-        u[0] = 1 - u[0];
-        u[1] = 1 - u[1];
+        const swap = u[0];
+        u[0] = u[1];
+        u[1] = swap;
       }
 
       if (sprite.flip[1]) {
-        v[0] = 1 - v[0];
-        v[1] = 1 - v[1];
+        const swap = v[0];
+        v[0] = v[1];
+        v[1] = swap;
       }
 
       if ('offset' in sprite) {

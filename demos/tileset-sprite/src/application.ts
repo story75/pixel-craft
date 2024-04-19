@@ -1,29 +1,25 @@
-import { Point2, Sprite, sprite } from '@pixel-craft/engine';
+import { Point2, Sprite, sprite, Vector2 } from '@pixel-craft/engine';
 import {
   AnimatorSystem,
   Application,
-  // InputCameraSystem,
+  InputMovementSystem,
   InputSystem,
+  Moveable,
   RenderSystem,
+  spriteParser,
   System,
   TimerSystem,
   TransitionType,
-  spriteParser,
 } from '@pixel-craft/pixel-craft';
-
-type Moveable = {
-  velocity: [number, number];
-  movementSpeed: number;
-};
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const app = await Application.create(canvas);
   const renderer = new RenderSystem();
   const input = new InputSystem();
   const timer = new TimerSystem();
-  // const camera = new InputCameraSystem(input, timer);
   const animator = new AnimatorSystem(timer);
-  const movement = new (class implements System {
+  const movement = new InputMovementSystem(input, timer);
+  const flipper = new (class implements System {
     private readonly moveables: Array<Sprite & Moveable> = [];
 
     addGameObject(sprite: Record<string, unknown>) {
@@ -35,14 +31,13 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
     update() {
       for (const moveable of this.moveables) {
-        const velocity: [number, number] = [input.x, input.y];
-        moveable.velocity = velocity;
-        moveable.x += velocity[0] * moveable.movementSpeed * timer.deltaTime;
-        moveable.y += velocity[1] * moveable.movementSpeed * timer.deltaTime;
+        if (moveable.velocity.x !== 0) {
+          moveable.flip[0] = moveable.velocity.x < 0;
+        }
       }
     }
   })();
-  await app.addSystems(renderer, input, timer, movement, animator);
+  await app.addSystems(renderer, input, timer, movement, flipper, animator);
 
   const scaling: Point2 = { x: 4, y: 4 };
   app.context.camera.zoom(scaling);
@@ -125,21 +120,19 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
         {
           from: { type: TransitionType.Any },
           to: 'idle',
-          condition: (state) =>
-            state.velocity[0] === 0 && state.velocity[1] === 0,
+          condition: (state) => state.velocity.length() === 0,
         },
         {
           from: { type: TransitionType.Any },
           to: 'run',
-          condition: (state) =>
-            state.velocity[0] !== 0 || state.velocity[1] !== 0,
+          condition: (state) => state.velocity.length() !== 0,
         },
       ],
     },
     {
-      velocity: [0, 0],
+      velocity: new Vector2({ x: 0, y: 0 }),
       movementSpeed: 1,
-    } as Moveable,
+    } satisfies Moveable,
   );
   app.addGameObjects(dino);
 }

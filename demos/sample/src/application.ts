@@ -121,6 +121,24 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   };
   await app.addSystems(sceneSystem);
   app.addGameObjects(
+    sprite({
+      texture: tex,
+      x: x - (tex.width + 20),
+      y: y - 300,
+      flip: [true, false],
+    }),
+    sprite({
+      texture: tex,
+      x,
+      y: y - 300,
+      flip: [false, true],
+    }),
+    sprite({
+      texture: tex,
+      x: x + (tex.width + 20),
+      y: y - 300,
+      flip: [true, true],
+    }),
     tiledSprite,
     ...rotatingSprites,
     text,

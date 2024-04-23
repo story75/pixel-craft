@@ -1,5 +1,20 @@
 # Release Notes
 
+## UNRELEASED
+
+### Features
+
+#### Add `@pixel-craft/observable` package
+
+Introducing the `@pixel-craft/observable` package. This package provides an observable class for synchronous event handling.
+
+#### Add `@pixel-craft/ec` package
+
+Introducing the `@pixel-craft/ec` package.
+
+This package provides a simple Entity-Component framework to store and query entities.
+It purposefully does not provide any systems and leaves the implementation of systems to the user.
+
 ## 0.7.0 (19.04.2024)
 
 ### Breaking changes

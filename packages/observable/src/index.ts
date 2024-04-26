@@ -13,18 +13,40 @@ export class Observable<T extends unknown[] = []> {
    *
    * @remarks
    * This is a sink observable to enable meta operations like logging, tracking or debugging.
+   *
+   * @privateRemarks
+   * This has to be lazy initialized to avoid circular dependencies with the Observable class.
    */
-  public onSubscribe = new Observable<[observer: Observer<T>]>();
+  private _onSubscribe?: Observable<[observer: Observer<T>]>;
 
   /**
    * Observable that notifies when an observer unsubscribes.
    *
    * @remarks
    * This is a sink observable to enable meta operations like logging, tracking or debugging.
+   *
+   * @privateRemarks
+   * This has to be lazy initialized to avoid circular dependencies with the Observable class.
    */
-  public onUnsubscribe = new Observable<[observer: Observer<T>]>();
+  private _onUnsubscribe?: Observable<[observer: Observer<T>]>;
 
   private readonly observers = new Set<Observer<T>>();
+
+  get onSubscribe(): Observable<[observer: Observer<T>]> {
+    if (!this._onSubscribe) {
+      this._onSubscribe = new Observable<[observer: Observer<T>]>();
+    }
+
+    return this._onSubscribe;
+  }
+
+  get onUnsubscribe(): Observable<[observer: Observer<T>]> {
+    if (!this._onUnsubscribe) {
+      this._onUnsubscribe = new Observable<[observer: Observer<T>]>();
+    }
+
+    return this._onUnsubscribe;
+  }
 
   /**
    * Listen to data emitted by the observable.

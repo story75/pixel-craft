@@ -56,14 +56,16 @@ export class Store<T> implements Iterable<T> {
    * If the entity is already in the store, it will not be added again.
    * If the entity was added, the onAdd observable will be notified.
    */
-  add(entity: T): void {
+  add(entity: T): T {
     if (!entity || this.has(entity)) {
-      return;
+      return entity;
     }
 
     this.data.push(entity);
     this.indices.set(entity, this.data.length - 1);
     this.onAdd.notify(entity);
+
+    return entity;
   }
 
   /**
@@ -87,7 +89,7 @@ export class Store<T> implements Iterable<T> {
     const last = this.data.at(-1);
     if (last !== entity) {
       this.data[index] = last as T; // last is never undefined, because the list can never be empty here
-      this.indices.set(last, index);
+      this.indices.set(last as T, index);
     }
 
     this.data.pop();

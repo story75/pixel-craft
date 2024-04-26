@@ -1,0 +1,14 @@
+{
+  "name": "@pixel-craft/ec-demo",
+  "private": true,
+  "scripts": {
+    "check": "tsc",
+    "watch": "pixel-craft bundle --watch"
+  },
+  "dependencies": {
+    "@pixel-craft/ec": "workspace:*"
+  },
+  "devDependencies": {
+    "@pixel-craft/cli": "workspace:*"
+  }
+}

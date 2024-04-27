@@ -1,6 +1,6 @@
 # Release Notes
 
-## UNRELEASED
+## 0.7.1 (27.04.2024)
 
 ### Features
 

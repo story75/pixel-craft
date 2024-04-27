@@ -15,6 +15,29 @@ Introducing the `@pixel-craft/ec` package.
 This package provides a simple Entity-Component framework to store and query entities.
 It purposefully does not provide any systems and leaves the implementation of systems to the user.
 
+#### Add `@pixel-craft/composer` package
+
+Introducing the `@pixel-craft/composer` package.
+
+This package provides `Composer`, a class which allows you to build a pipeline by chaining functions with different input and output types.
+
+```typescript
+const add = (a: number) => (b: number) => a + b;
+const multiply = (a: number) => (b: number) => a * b;
+
+const add3 = add(3);
+const double = multiply(2);
+const triple = multiply(3);
+
+const result = new Composer(1, add3)
+  .next(double)
+  .next(triple)
+  .next((n) => String(n))
+  .execute();
+
+expect(result).toBe('24');
+```
+
 ## 0.7.0 (19.04.2024)
 
 ### Breaking changes

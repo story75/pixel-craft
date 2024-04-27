@@ -19,6 +19,7 @@
     "tileset": "bun --cwd demos/tileset-sprite watch",
     "z-index": "bun --cwd demos/z-index watch",
     "ec": "bun --cwd demos/ec watch",
+    "ec-app": "bun --cwd demos/ec-app watch",
     "docs": "bun --cwd apps/docs dev",
     "check": "turbo run check",
     "build": "turbo run build",

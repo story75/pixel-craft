@@ -1,5 +1,5 @@
 import { Animated, Animator } from '@pixel-craft/animator';
-import { sprite, Sprite } from '@pixel-craft/engine';
+import { Sprite, sprite } from '@pixel-craft/engine';
 import { animatedSpriteSheet } from './animated-sprite-sheet';
 
 type Options<T extends Record<string, unknown> | undefined> = Pick<

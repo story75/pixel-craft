@@ -7,6 +7,7 @@ import { createIndices } from '../shared/create-indices';
 import { RenderPass } from '../shared/render-pass';
 import { linearSampler } from '../shared/sampler/linear-sampler';
 import { nearestSampler } from '../shared/sampler/nearest-sampler';
+import { globalLight as createGlobalLightUniform } from '../shared/uniforms/global-light';
 import { projectionViewMatrix } from '../shared/uniforms/projection-view-matrix';
 import { texture } from '../shared/uniforms/texture';
 import shader from './shader.wgsl';
@@ -53,6 +54,7 @@ export function pipeline({
   context,
   presentationFormat,
   camera,
+  globalLight,
 }: WebGPUContext): RenderPass {
   const vertexBufferLayout: GPUVertexBufferLayout = {
     arrayStride: FLOATS_PER_VERTEX * Float32Array.BYTES_PER_ELEMENT,
@@ -82,6 +84,11 @@ export function pipeline({
   );
   const textureUniform = texture(device);
 
+  const globalLightUniform = createGlobalLightUniform(
+    device,
+    globalLight.globalLightUniformBuffer,
+  );
+
   const depthTexture = device.createTexture({
     size: {
       width: context.canvas.width,
@@ -95,6 +102,7 @@ export function pipeline({
     bindGroupLayouts: [
       projectionViewMatrixUniform.layout,
       textureUniform.layout,
+      globalLightUniform.layout,
     ],
   });
 
@@ -341,6 +349,7 @@ export function pipeline({
         passEncoder.setVertexBuffer(0, vertexBuffer);
         passEncoder.setBindGroup(0, projectionViewMatrixUniform.bindGroup);
         passEncoder.setBindGroup(1, textureBindGroup);
+        passEncoder.setBindGroup(2, globalLightUniform.bindGroup);
         passEncoder.drawIndexed(6 * batch.instances);
       }
     }

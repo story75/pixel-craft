@@ -1,5 +1,21 @@
 # Release Notes
 
+## 0.7.2 (27.04.2024)
+
+### Features
+
+#### Add global lighting
+
+You can now use global lighting in your scenes. The `WebGPUContext` now exposes a `globalLight` property that you can use to set the global light like so:
+
+```ts
+context.globalLight.color([Math.random(), Math.random(), Math.random()]);
+context.globalLight.intensity(Math.random());
+```
+
+If you do this in a render loop, you can create a disco light effect. The global light will be applied to all sprites in the scene.
+Be default, the global light is white with an intensity of 1.0, so it will not affect the colors of the sprites.
+
 ## 0.7.1 (27.04.2024)
 
 ### Features

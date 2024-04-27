@@ -37,6 +37,12 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       }
     }
   })();
+  // const disco = new (class implements System {
+  //   update() {
+  //     app.context.globalLight.color([Math.random(), Math.random(), Math.random()]);
+  //     app.context.globalLight.intensity(Math.random());
+  //   }
+  // })();
   await app.addSystems(renderer, input, timer, movement, flipper, animator);
 
   const scaling: Point2 = { x: 4, y: 4 };

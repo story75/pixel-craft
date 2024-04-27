@@ -9,8 +9,6 @@ type Uniform = {
  * @remarks
  * This bind group is used to bind a texture to a shader. Bind groups are created per texture.
  * The bind group layout is shared between all bind groups.
- *
- * @param device
  */
 export function texture(device: GPUDevice): Uniform {
   const textureBindGroupLayout = device.createBindGroupLayout({

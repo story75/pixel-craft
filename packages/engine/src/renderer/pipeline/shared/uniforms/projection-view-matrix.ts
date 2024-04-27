@@ -5,9 +5,6 @@ type Uniform = {
 
 /**
  * Defines a projection view matrix bind group.
- *
- * @param device
- * @param projectionViewMatrixUniformBuffer
  */
 export function projectionViewMatrix(
   device: GPUDevice,

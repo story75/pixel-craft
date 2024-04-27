@@ -1,10 +1,15 @@
+export {
+  TransitionType,
+  type Animated,
+  type Transition,
+} from '@pixel-craft/animator';
+export {
+  animatedSpriteSheet,
+  spriteParser,
+  uniformSpriteSheet,
+} from '@pixel-craft/spritesheet';
 export { Application } from './application';
-export { spriteParser } from './sprite/parser';
-export { animatedSpriteSheet } from './spritesheet/animated';
-export { uniformSpriteSheet } from './spritesheet/uniform';
-export { type Animated } from './system/animator/animated';
-export { AnimatorSystem } from './system/animator/system';
-export { TransitionType, type Transition } from './system/animator/transition';
+export { AnimatorSystem } from './system/animator';
 export { InputSystem } from './system/input';
 export { InputCameraSystem } from './system/input-camera';
 export { InputMovementSystem, type Moveable } from './system/input-movement';

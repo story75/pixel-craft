@@ -38,6 +38,24 @@ const result = new Composer(1, add3)
 expect(result).toBe('24');
 ```
 
+#### Add `@pixel-craft/animator` package
+
+Introducing the `@pixel-craft/animator` package.
+
+This package contains the Animation code previously found in the `@pixel-craft/pixel-craft` package.
+The code is now system agnostic and can be used in any project using the `@pixel-craft/engine` package.
+
+The `@pixel-craft/pixel-craft` package was updated to use the `@pixel-craft/animator` package.
+
+#### Add `@pixel-craft/spritesheet` package
+
+Introducing the `@pixel-craft/spritesheet` package.
+
+This package contains the sprite sheet code previously found in the `@pixel-craft/pixel-craft` package.
+The code was moved just like the animation code to make it more reusable for custom integrations.
+
+The `@pixel-craft/pixel-craft` package was updated to use the `@pixel-craft/spritesheet` package.
+
 ## 0.7.0 (19.04.2024)
 
 ### Breaking changes

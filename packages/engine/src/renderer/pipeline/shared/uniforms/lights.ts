@@ -9,6 +9,7 @@ type Uniform = {
 export function lights(
   device: GPUDevice,
   globalLightUniformBuffer: GPUBuffer,
+  pointLights: { amount: GPUBuffer; lights: GPUBuffer },
   gBuffer: GPUTexture,
 ): Uniform {
   const globalLightLayout = device.createBindGroupLayout({
@@ -27,6 +28,20 @@ export function lights(
           sampleType: 'unfilterable-float',
         },
       },
+      {
+        binding: 2,
+        visibility: GPUShaderStage.FRAGMENT,
+        buffer: {
+          type: 'uniform',
+        },
+      },
+      {
+        binding: 3,
+        visibility: GPUShaderStage.FRAGMENT,
+        buffer: {
+          type: 'read-only-storage',
+        },
+      },
     ],
   });
 
@@ -42,6 +57,18 @@ export function lights(
       {
         binding: 1,
         resource: gBuffer.createView(),
+      },
+      {
+        binding: 2,
+        resource: {
+          buffer: pointLights.amount,
+        },
+      },
+      {
+        binding: 3,
+        resource: {
+          buffer: pointLights.lights,
+        },
       },
     ],
   });

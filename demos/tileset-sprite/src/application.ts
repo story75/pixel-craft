@@ -56,6 +56,12 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const tilesX = Math.ceil(canvas.width / tileSize / scaling.x);
   const tilesY = Math.ceil(canvas.height / tileSize / scaling.y);
 
+  app.context.pointLight.addLight({
+    position: [480, 480],
+    color: [1.0, 0.2, 0.2],
+    intensity: 1,
+  });
+
   const groundTileFrame = {
     x: 0,
     y: 0,

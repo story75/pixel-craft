@@ -56,6 +56,7 @@ export function pipeline({
   presentationFormat,
   camera,
   globalLight,
+  pointLight,
 }: WebGPUContext): RenderPass {
   const vertexBufferLayout: GPUVertexBufferLayout = {
     arrayStride: FLOATS_PER_VERTEX * Float32Array.BYTES_PER_ELEMENT,
@@ -107,6 +108,10 @@ export function pipeline({
   const lightsUniform = lights(
     device,
     globalLight.globalLightUniformBuffer,
+    {
+      amount: pointLight.amountUniformBuffer,
+      lights: pointLight.storageBuffer,
+    },
     gBuffer,
   );
 

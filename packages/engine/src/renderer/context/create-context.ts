@@ -1,5 +1,6 @@
 import { Camera, createCamera } from '../camera/camera';
 import { GlobalLight, createGlobalLight } from '../lighting/global-light';
+import { PointLightSystem, createPointLight } from '../lighting/point-light';
 
 /**
  * Defines a WebGPU context.
@@ -10,6 +11,7 @@ export type WebGPUContext = {
   presentationFormat: GPUTextureFormat;
   camera: Camera;
   globalLight: GlobalLight;
+  pointLight: PointLightSystem;
 };
 
 /**
@@ -51,6 +53,7 @@ export async function createContext(
 
   const camera = createCamera(device, canvas.width, canvas.height);
   const globalLight = createGlobalLight(device);
+  const pointLight = createPointLight(device);
 
   return {
     device,
@@ -58,5 +61,6 @@ export async function createContext(
     presentationFormat,
     camera,
     globalLight,
+    pointLight,
   };
 }

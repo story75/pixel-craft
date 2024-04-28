@@ -1,5 +1,15 @@
 # Release Notes
 
+## UNRELEASED
+
+### Features
+
+#### Use deferred rendering for lighting
+
+The renderer now uses deferred rendering for lighting. This allows for more complex lighting effects and better performance when rendering multiple lights.
+The previous forward rendering approach only implemented global lighting, which was applied to all sprites in the scene.
+With the new system it is now possible to add multiple lights to the scene with different positions, colors, intensities and other properties.
+
 ## 0.7.2 (27.04.2024)
 
 ### Features

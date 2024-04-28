@@ -7,10 +7,11 @@ import { createIndices } from '../shared/create-indices';
 import { RenderPass } from '../shared/render-pass';
 import { linearSampler } from '../shared/sampler/linear-sampler';
 import { nearestSampler } from '../shared/sampler/nearest-sampler';
-import { globalLight as createGlobalLightUniform } from '../shared/uniforms/global-light';
+import { lights } from '../shared/uniforms/lights';
 import { projectionViewMatrix } from '../shared/uniforms/projection-view-matrix';
 import { texture } from '../shared/uniforms/texture';
-import shader from './shader.wgsl';
+import lightsShader from './lights.wgsl';
+import pipelineShader from './pipeline.wgsl';
 
 /**
  * A batch of sprites that share the same texture.
@@ -78,17 +79,6 @@ export function pipeline({
     stepMode: 'vertex',
   };
 
-  const projectionViewMatrixUniform = projectionViewMatrix(
-    device,
-    camera.projectionViewMatrixUniformBuffer,
-  );
-  const textureUniform = texture(device);
-
-  const globalLightUniform = createGlobalLightUniform(
-    device,
-    globalLight.globalLightUniformBuffer,
-  );
-
   const depthTexture = device.createTexture({
     size: {
       width: context.canvas.width,
@@ -98,46 +88,73 @@ export function pipeline({
     usage: GPUTextureUsage.RENDER_ATTACHMENT,
   });
 
+  const gBuffer = device.createTexture({
+    size: {
+      width: context.canvas.width,
+      height: context.canvas.height,
+    },
+    format: 'bgra8unorm',
+    usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
+    label: 'gBuffer',
+  });
+
+  const projectionViewMatrixUniform = projectionViewMatrix(
+    device,
+    camera.projectionViewMatrixUniformBuffer,
+  );
+  const textureUniform = texture(device);
+
+  const lightsUniform = lights(
+    device,
+    globalLight.globalLightUniformBuffer,
+    gBuffer,
+  );
+
   const pipelineLayout = device.createPipelineLayout({
     bindGroupLayouts: [
       projectionViewMatrixUniform.layout,
       textureUniform.layout,
-      globalLightUniform.layout,
     ],
   });
 
-  const shaderModule = device.createShaderModule({
+  const pipelineShaderModule = device.createShaderModule({
     // ESLint doesn't recognize the `wgsl` extension as a string, even though we defined the module as string in `wgsl.d.ts`.
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    code: shader,
+    code: pipelineShader,
   });
 
-  const pipeline = (vertex = 'vs_main', fragment = 'fs_main') =>
+  const lightsShaderModule = device.createShaderModule({
+    // ESLint doesn't recognize the `wgsl` extension as a string, even though we defined the module as string in `wgsl.d.ts`.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    code: lightsShader,
+  });
+
+  const pipeline = (vertex: string, fragment: string) =>
     device.createRenderPipeline({
       layout: pipelineLayout,
       vertex: {
-        module: shaderModule,
+        module: pipelineShaderModule,
         entryPoint: vertex,
         buffers: [vertexBufferLayout],
       },
       fragment: {
-        module: shaderModule,
+        module: pipelineShaderModule,
         entryPoint: fragment,
         targets: [
           {
-            format: presentationFormat,
-            blend: {
-              color: {
-                srcFactor: 'one',
-                dstFactor: 'one-minus-src-alpha',
-                operation: 'add',
-              },
-              alpha: {
-                srcFactor: 'one',
-                dstFactor: 'one-minus-src-alpha',
-                operation: 'add',
-              },
-            },
+            format: gBuffer.format,
+            // blend: {
+            //   color: {
+            //     srcFactor: 'one',
+            //     dstFactor: 'one-minus-src-alpha',
+            //     operation: 'add',
+            //   },
+            //   alpha: {
+            //     srcFactor: 'one',
+            //     dstFactor: 'one-minus-src-alpha',
+            //     operation: 'add',
+            //   },
+            // },
           },
         ],
       },
@@ -153,6 +170,30 @@ export function pipeline({
 
   const spritePipeline = pipeline('vs_main', 'fs_main');
   const parallaxPipeline = pipeline('vs_main', 'fs_repeating');
+  const lightsPipeline = device.createRenderPipeline({
+    layout: device.createPipelineLayout({
+      bindGroupLayouts: [
+        projectionViewMatrixUniform.layout,
+        lightsUniform.layout,
+      ],
+    }),
+    vertex: {
+      module: lightsShaderModule,
+      entryPoint: 'vs_lights',
+    },
+    fragment: {
+      module: lightsShaderModule,
+      entryPoint: 'fs_lights',
+      targets: [
+        {
+          format: presentationFormat,
+        },
+      ],
+    },
+    primitive: {
+      topology: 'triangle-list',
+    },
+  });
 
   const indices = createIndices(MAX_SPRITES_PER_BATCH);
 
@@ -168,6 +209,26 @@ export function pipeline({
   const textureBindGroups = new Map<GPUTexture, GPUBindGroup>();
   const defaultSampler = nearestSampler(device);
   const textSampler = linearSampler(device);
+
+  const renderPassDescriptor: GPURenderPassDescriptor = {
+    colorAttachments: [
+      {
+        view: gBuffer.createView(),
+        clearValue: { r: 0.8, g: 0.8, b: 0.8, a: 1.0 },
+        loadOp: 'clear',
+        storeOp: 'store',
+      },
+    ],
+    depthStencilAttachment: {
+      view: depthTexture.createView(),
+      depthLoadOp: 'clear',
+      depthStoreOp: 'store',
+      depthClearValue: 1.0,
+      stencilClearValue: 1.0,
+      stencilLoadOp: 'clear',
+      stencilStoreOp: 'store',
+    },
+  };
 
   return (sprites) => {
     const batchMap = new Map<GPUTexture, Batch[]>();
@@ -301,30 +362,9 @@ export function pipeline({
       batch.instances++;
     }
 
-    const textureView = context.getCurrentTexture().createView();
-
-    const renderPassDescriptor: GPURenderPassDescriptor = {
-      colorAttachments: [
-        {
-          view: textureView,
-          clearValue: { r: 0.8, g: 0.8, b: 0.8, a: 1.0 },
-          loadOp: 'clear',
-          storeOp: 'store',
-        },
-      ],
-      depthStencilAttachment: {
-        view: depthTexture.createView(),
-        depthLoadOp: 'clear',
-        depthStoreOp: 'store',
-        depthClearValue: 1.0,
-        stencilClearValue: 1.0,
-        stencilLoadOp: 'clear',
-        stencilStoreOp: 'store',
-      },
-    };
-
     const commandEncoder = device.createCommandEncoder();
-    const passEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
+    const pipelinePassEncoder =
+      commandEncoder.beginRenderPass(renderPassDescriptor);
 
     const usedVertexBuffers: GPUBuffer[] = [];
 
@@ -344,17 +384,37 @@ export function pipeline({
           throw new Error('Texture bind group not found!');
         }
 
-        passEncoder.setPipeline(batch.pipeline);
-        passEncoder.setIndexBuffer(indexBuffer, 'uint16');
-        passEncoder.setVertexBuffer(0, vertexBuffer);
-        passEncoder.setBindGroup(0, projectionViewMatrixUniform.bindGroup);
-        passEncoder.setBindGroup(1, textureBindGroup);
-        passEncoder.setBindGroup(2, globalLightUniform.bindGroup);
-        passEncoder.drawIndexed(6 * batch.instances);
+        pipelinePassEncoder.setPipeline(batch.pipeline);
+        pipelinePassEncoder.setIndexBuffer(indexBuffer, 'uint16');
+        pipelinePassEncoder.setVertexBuffer(0, vertexBuffer);
+        pipelinePassEncoder.setBindGroup(
+          0,
+          projectionViewMatrixUniform.bindGroup,
+        );
+        pipelinePassEncoder.setBindGroup(1, textureBindGroup);
+        pipelinePassEncoder.drawIndexed(6 * batch.instances);
       }
     }
 
-    passEncoder.end();
+    pipelinePassEncoder.end();
+
+    const lightsPassDescriptor: GPURenderPassDescriptor = {
+      colorAttachments: [
+        {
+          view: context.getCurrentTexture().createView(), // will be replaced in the render function, can't set undefined here
+          clearValue: { r: 0.8, g: 0.8, b: 0.8, a: 1.0 },
+          loadOp: 'clear',
+          storeOp: 'store',
+        },
+      ],
+    };
+    const lightsPassEncoder =
+      commandEncoder.beginRenderPass(lightsPassDescriptor);
+    lightsPassEncoder.setPipeline(lightsPipeline);
+    lightsPassEncoder.setBindGroup(0, projectionViewMatrixUniform.bindGroup);
+    lightsPassEncoder.setBindGroup(1, lightsUniform.bindGroup);
+    lightsPassEncoder.draw(6);
+    lightsPassEncoder.end();
 
     device.queue.submit([commandEncoder.finish()]);
 

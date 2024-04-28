@@ -4,11 +4,12 @@ type Uniform = {
 };
 
 /**
- * Defines a global light bind group.
+ * Defines a lights bind group.
  */
-export function globalLight(
+export function lights(
   device: GPUDevice,
   globalLightUniformBuffer: GPUBuffer,
+  gBuffer: GPUTexture,
 ): Uniform {
   const globalLightLayout = device.createBindGroupLayout({
     entries: [
@@ -17,6 +18,13 @@ export function globalLight(
         visibility: GPUShaderStage.FRAGMENT,
         buffer: {
           type: 'uniform',
+        },
+      },
+      {
+        binding: 1,
+        visibility: GPUShaderStage.FRAGMENT,
+        texture: {
+          sampleType: 'unfilterable-float',
         },
       },
     ],
@@ -30,6 +38,10 @@ export function globalLight(
         resource: {
           buffer: globalLightUniformBuffer,
         },
+      },
+      {
+        binding: 1,
+        resource: gBuffer.createView(),
       },
     ],
   });

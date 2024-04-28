@@ -38,6 +38,8 @@ export function createGlobalLight(device: GPUDevice): GlobalLight {
     device.queue.writeBuffer(globalLightUniformBuffer, 0, state);
   };
 
+  update();
+
   return {
     globalLightUniformBuffer,
     color,

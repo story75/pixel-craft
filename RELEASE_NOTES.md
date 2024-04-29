@@ -1,6 +1,6 @@
 # Release Notes
 
-## UNRELEASED
+## 0.7.3 (29.04.2024)
 
 ### Features
 
@@ -12,8 +12,53 @@ With the new system it is now possible to also add multiple lights to the scene 
 
 #### Add point light support
 
-You can now add point lights to the scene.
-TODO: finish this
+You can now add point lights to the scene. A point light has a position in 2D screen space and emits light in all directions.
+
+The current implementation uses a simple attenuation model to calculate the light intensity based on the distance to the light source.
+The formula right now is `light_attenuation = mix(2, 0, clamp(light_distance / 200, 0, 1))`. This is just the current implementation and will change in the future,
+to be configurable instead.
+
+The lights right now are also in screen space, which means they move with the camera. This is not ideal, so the plan is to use world space in the future.
+
+To add a point light to the scene, you can use the `addPointLight` function like so:
+
+```ts
+app.context.pointLight.addLight({
+  position: [400, 480],
+  color: [1.0, 0.2, 0.2],
+  intensity: 1,
+});
+app.context.pointLight.addLight({
+  position: [500, 480],
+  color: [0.2, 1, 0.2],
+  intensity: 1,
+});
+app.context.pointLight.addLight({
+  position: [480, 400],
+  color: [0.2, 0.2, 1],
+  intensity: 1,
+});
+const playerLight = app.context.pointLight.addLight({
+  position: [480, 480],
+  color: [0.5, 0.5, 0.5],
+  intensity: 1,
+});
+```
+
+The `addLight` function returns the light object, which you can use to update the light properties later on.
+To update the light properties, you can use the `updateLight` function like so:
+
+```ts
+playerLight.position[0] = (dino.x + dino.width / 2) * 4;
+playerLight.position[1] = (dino.y + dino.height / 2) * 4;
+app.context.pointLight.updateLight(playerLight);
+```
+
+To remove a light from the scene, you can use the `removeLight` function like so:
+
+```ts
+app.context.pointLight.removeLight(playerLight);
+```
 
 ## 0.7.2 (27.04.2024)
 

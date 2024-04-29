@@ -57,8 +57,23 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const tilesY = Math.ceil(canvas.height / tileSize / scaling.y);
 
   app.context.pointLight.addLight({
-    position: [480, 480],
+    position: [400, 480],
     color: [1.0, 0.2, 0.2],
+    intensity: 1,
+  });
+  app.context.pointLight.addLight({
+    position: [500, 480],
+    color: [0.2, 1, 0.2],
+    intensity: 1,
+  });
+  app.context.pointLight.addLight({
+    position: [480, 400],
+    color: [0.2, 0.2, 1],
+    intensity: 1,
+  });
+  const playerLight = app.context.pointLight.addLight({
+    position: [480, 480],
+    color: [0.5, 0.5, 0.5],
     intensity: 1,
   });
 
@@ -143,4 +158,16 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     } satisfies Moveable,
   );
   app.addGameObjects(dino);
+
+  await app.addSystems(
+    new (class implements System {
+      update() {
+        playerLight.position = [
+          (dino.x + dino.width / 2) * 4,
+          (dino.y + dino.height / 2) * 4,
+        ];
+        app.context.pointLight.updateLight(playerLight);
+      }
+    })(),
+  );
 }

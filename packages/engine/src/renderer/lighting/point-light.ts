@@ -2,20 +2,20 @@ import { storageBufferAllocator } from '../buffer/storage-buffer-allocator';
 import { uniformBufferAllocator } from '../buffer/uniform-buffer-allocator';
 
 export type PointLight = {
-  position: [x: number, y: number];
   color: [r: number, g: number, b: number];
   intensity: number;
+  position: [x: number, y: number];
 };
 
 export type PointLightSystem = {
   storageBuffer: GPUBuffer;
   amountUniformBuffer: GPUBuffer;
-  addLight: (light: PointLight) => void;
-  updateLight: (light: PointLight) => void;
+  addLight: (light: PointLight) => PointLight;
+  updateLight: (light: PointLight) => PointLight;
   removeLight: (light: PointLight) => void;
 };
 
-const FLOATS_PER_LIGHT = 6;
+const FLOATS_PER_LIGHT = 8; // 3 for color, 1 for intensity, 2 for position, 2 for padding
 
 /**
  * Creates a global light uniform buffer.
@@ -49,19 +49,20 @@ export function createPointLight(device: GPUDevice): PointLightSystem {
   const updateLight = (light: PointLight) => {
     const index = dict.get(light);
     if (index === undefined) {
-      return;
+      return light;
     }
 
     const offset = index * FLOATS_PER_LIGHT * Float32Array.BYTES_PER_ELEMENT;
-    storage.set(light.position, offset);
-    storage.set(light.color, offset + 2);
-    storage.set([light.intensity], offset + 5);
+    storage.set(light.color, offset);
+    storage.set([light.intensity], offset + 3);
+    storage.set(light.position, offset + 4); // position has to be last for alignment
 
     device.queue.writeBuffer(
       storageBuffer,
       offset,
-      storage.subarray(offset, offset + 6),
+      storage.subarray(offset, offset + FLOATS_PER_LIGHT),
     );
+    return light;
   };
 
   return {
@@ -79,6 +80,7 @@ export function createPointLight(device: GPUDevice): PointLightSystem {
 
       updateLight(light);
       writeLength();
+      return light;
     },
     updateLight,
     removeLight: (light: PointLight) => {

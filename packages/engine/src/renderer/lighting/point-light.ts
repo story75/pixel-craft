@@ -1,3 +1,4 @@
+import { Store } from '@pixel-craft/store';
 import { storageBufferAllocator } from '../buffer/storage-buffer-allocator';
 import { uniformBufferAllocator } from '../buffer/uniform-buffer-allocator';
 
@@ -49,19 +50,21 @@ export function createPointLight(device: GPUDevice): PointLightSystem {
     new Uint32Array([0]),
   ); // single uint32
 
-  const lights: PointLight[] = [];
-  const dict = new Map<PointLight, number>();
+  const store = new Store<PointLight>();
+  store.onShuffle.subscribe((light) => {
+    updateLight(light);
+  });
 
   const writeLength = () =>
     device.queue.writeBuffer(
       amountUniformBuffer,
       0,
-      new Uint32Array([lights.length]),
+      new Uint32Array([store.size]),
     );
   writeLength();
 
   const updateLight = (light: PointLight) => {
-    const index = dict.get(light);
+    const index = store.index(light);
     if (index === undefined) {
       return light;
     }
@@ -96,38 +99,20 @@ export function createPointLight(device: GPUDevice): PointLightSystem {
     addLight: (
       inputLight: Pick<PointLight, 'position'> & Partial<PointLight>,
     ): PointLight => {
-      if (lights.length >= maxLights) {
+      if (store.size >= maxLights) {
         // TODO: Grow the buffer
         throw new Error('Too many lights!');
       }
 
       const light = setDefaults(inputLight);
-
-      const index = lights.length;
-      dict.set(light, index);
-      lights.push(light);
-
+      store.add(light);
       updateLight(light);
       writeLength();
       return light;
     },
     updateLight,
     removeLight: (light: PointLight) => {
-      const index = dict.get(light);
-      if (index === undefined) {
-        return;
-      }
-
-      dict.delete(light);
-
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const last = lights.at(-1)!;
-      if (last !== light) {
-        lights[index] = last;
-        dict.set(last, index);
-        updateLight(last);
-      }
-
+      store.remove(light);
       writeLength();
     },
   };

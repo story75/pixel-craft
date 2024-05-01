@@ -1,4 +1,4 @@
-import { EntityStore } from '@pixel-craft/ec';
+import { EntityStore } from '@pixel-craft/store';
 
 type Entity = Partial<{
   x: number;

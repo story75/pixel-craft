@@ -18,6 +18,15 @@ export class Store<T> implements Iterable<T> {
    */
   public onRemove = new Observable<[entity: T]>();
 
+  /**
+   * Observable that notifies when an entity is shuffled in the store.
+   *
+   * @remarks
+   * This happens when an entity is removed and the last entity is moved to the position of the removed entity.
+   * The index is the new index of the entity in the store.
+   */
+  public onShuffle = new Observable<[entity: T, index: number]>();
+
   protected data: T[] = [];
   protected indices = new Map<T, number>();
 
@@ -47,6 +56,13 @@ export class Store<T> implements Iterable<T> {
    */
   has(entity: T): boolean {
     return this.indices.has(entity);
+  }
+
+  /**
+   * Return the index of the given entity in the store if it exists.
+   */
+  index(entity: T): number | undefined {
+    return this.indices.get(entity);
   }
 
   /**
@@ -86,10 +102,11 @@ export class Store<T> implements Iterable<T> {
     }
 
     this.indices.delete(entity);
-    const last = this.data.at(-1);
+    const last = this.data.at(-1) as T; // last is never undefined, because the list can never be empty here
     if (last !== entity) {
-      this.data[index] = last as T; // last is never undefined, because the list can never be empty here
-      this.indices.set(last as T, index);
+      this.data[index] = last;
+      this.indices.set(last, index);
+      this.onShuffle.notify(last, index);
     }
 
     this.data.pop();

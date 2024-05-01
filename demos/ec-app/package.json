@@ -6,7 +6,7 @@
     "watch": "pixel-craft bundle --watch"
   },
   "dependencies": {
-    "@pixel-craft/ec": "workspace:*",
+    "@pixel-craft/store": "workspace:*",
     "@pixel-craft/composer": "workspace:*",
     "@pixel-craft/engine": "workspace:*",
     "@pixel-craft/pixel-craft": "workspace:*"

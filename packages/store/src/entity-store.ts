@@ -32,7 +32,7 @@ class EntityQuery<T extends Record<IndexType, unknown>>
     super();
 
     for (const entity of store) {
-      this.index(entity as T);
+      this.evaluate(entity as T);
     }
   }
 
@@ -57,7 +57,7 @@ class EntityQuery<T extends Record<IndexType, unknown>>
   }
 
   /**
-   * Index an entity in the query.
+   * Evaluate an entity for the query.
    *
    * @remarks
    * If the entity matches the query, it will be added to the query.
@@ -67,7 +67,7 @@ class EntityQuery<T extends Record<IndexType, unknown>>
    *
    * @internal
    */
-  index(entity: T, next = entity): void {
+  evaluate(entity: T, next = entity): void {
     const contains = this.has(entity);
     const matches = this.match(next);
 
@@ -96,7 +96,7 @@ export class EntityStore<T extends Record<IndexType, unknown>>
   constructor() {
     super();
 
-    this.onAdd.subscribe((entity) => this.index(entity));
+    this.onAdd.subscribe((entity) => this.evaluate(entity));
     this.onRemove.subscribe((entity) =>
       this.queries.forEach((query) => query.remove(entity)),
     );
@@ -115,7 +115,7 @@ export class EntityStore<T extends Record<IndexType, unknown>>
     }
 
     entity[property] = value;
-    this.index(entity);
+    this.evaluate(entity);
   }
 
   /**
@@ -151,7 +151,7 @@ export class EntityStore<T extends Record<IndexType, unknown>>
       return;
     }
 
-    this.index(entity, { ...entity, [property]: undefined });
+    this.evaluate(entity, { ...entity, [property]: undefined });
 
     // we cheat here by using delete to avoid wrestling with typescript
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
@@ -200,9 +200,9 @@ export class EntityStore<T extends Record<IndexType, unknown>>
     return this.query({ with: [], without: properties });
   }
 
-  private index(entity: T, next = entity): void {
+  private evaluate(entity: T, next = entity): void {
     for (const query of this.queries) {
-      query.index(entity, next);
+      query.evaluate(entity, next);
     }
   }
 }

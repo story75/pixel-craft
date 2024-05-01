@@ -1,5 +1,26 @@
 # Release Notes
 
+## UNRELEASED
+
+### Breaking changes
+
+#### Rename `@pixel-craft/ec` package to `@pixel-craft/store`
+
+The `@pixel-craft/ec` package has been renamed to `@pixel-craft/store`.
+This change was made to better reflect the contents of the package, which are two classes for storing and querying entities.
+
+### Features
+
+#### Add `Store.index` method
+
+The `Store.index` method allows you to get the index of an entity in the store.
+This can be useful if you want to synchronize entities between different stores e.g. with a storage buffer.
+
+#### Add `Store.onShuffle` observable
+
+The `Store.onShuffle` observable emits an event whenever an entity in the store is shuffled. This happens when an entity is removed and another entity is moved to take its place.
+This can be useful if you want to synchronize entities between different stores e.g. with a storage buffer.
+
 ## 0.7.4 (01.05.2024)
 
 ### Fixes and improvements

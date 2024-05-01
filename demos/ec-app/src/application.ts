@@ -1,5 +1,4 @@
 import { Composer } from '@pixel-craft/composer';
-import { EntityStore } from '@pixel-craft/ec';
 import {
   RenderPass,
   Sprite,
@@ -9,6 +8,7 @@ import {
   pipeline,
   sprite,
 } from '@pixel-craft/engine';
+import { EntityStore } from '@pixel-craft/store';
 
 type Entity = Sprite;
 

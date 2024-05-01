@@ -7,6 +7,7 @@ struct PointLight {
     @location(0) color: vec3f,
     @location(1) intensity: f32,
     @location(2) position: vec2f,
+    @location(3) radius: f32,
 }
 
 struct CameraTransform {
@@ -53,9 +54,12 @@ fn fs_lights(@builtin(position) position: vec4f) -> @location(0) vec4f {
         var point_light = point_lights[i];
         var light_position = (point_light.position + camera_transform.translation) * camera_transform.scaling;
 
+        var light_radius = point_light.radius * camera_transform.scaling.x; // only use x scaling and assume it's uniform
         var light_distance = length(light_position - position.xy);
-        var light_attenuation = mix(2, 0, clamp(light_distance / 200, 0, 1));
-
+        if (light_distance > light_radius) {
+            continue;
+        }
+        var light_attenuation = 1.0 - light_distance / light_radius;
         light_color += point_light.color * point_light.intensity * light_attenuation;
     }
 

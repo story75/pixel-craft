@@ -1,6 +1,6 @@
 # Release Notes
 
-## UNRELEASED
+## 0.7.4 (01.05.2024)
 
 ### Fixes and improvements
 
@@ -8,6 +8,16 @@
 
 The point light position is now defined in world space instead of screen space. This means that the light will move with the camera and not stay in the same position on the screen.
 The calculation is done in the shader by transforming the light position with the camera translation and scaling.
+
+#### Add `radius` property to `PointLight
+
+You can now set the `radius` property on a `PointLight` to control the radius of the light.
+The radius is used to calculate the light intensity based on the distance to the light source.
+
+#### Make `color`, `intensity` and `radius` properties of `PointLight` optional
+
+The `color`, `intensity` and `radius` properties of `PointLight` are now optional. This allows you to create a light with default values and update the properties later on.
+The default values are `color: [1, 1, 1]`, `intensity: 1` and `radius: 40`.
 
 ## 0.7.3 (29.04.2024)
 

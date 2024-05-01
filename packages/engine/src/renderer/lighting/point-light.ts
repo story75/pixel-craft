@@ -2,15 +2,29 @@ import { storageBufferAllocator } from '../buffer/storage-buffer-allocator';
 import { uniformBufferAllocator } from '../buffer/uniform-buffer-allocator';
 
 export type PointLight = {
+  /**
+   * @default [1, 1, 1]
+   */
   color: [r: number, g: number, b: number];
+
+  /**
+   * @default 1
+   */
   intensity: number;
   position: [x: number, y: number];
+
+  /**
+   * @default 40
+   */
+  radius: number;
 };
 
 export type PointLightSystem = {
   storageBuffer: GPUBuffer;
   amountUniformBuffer: GPUBuffer;
-  addLight: (light: PointLight) => PointLight;
+  addLight: (
+    light: Pick<PointLight, 'position'> & Partial<PointLight>,
+  ) => PointLight;
   updateLight: (light: PointLight) => PointLight;
   removeLight: (light: PointLight) => void;
 };
@@ -55,7 +69,8 @@ export function createPointLight(device: GPUDevice): PointLightSystem {
     const offset = index * FLOATS_PER_LIGHT * Float32Array.BYTES_PER_ELEMENT;
     storage.set(light.color, offset);
     storage.set([light.intensity], offset + 3);
-    storage.set(light.position, offset + 4); // position has to be last for alignment
+    storage.set(light.position, offset + 4);
+    storage.set([light.radius], offset + 6);
 
     device.queue.writeBuffer(
       storageBuffer,
@@ -65,14 +80,28 @@ export function createPointLight(device: GPUDevice): PointLightSystem {
     return light;
   };
 
+  const setDefaults = (
+    light: Pick<PointLight, 'position'> & Partial<PointLight>,
+  ): PointLight => {
+    light.radius = light.radius ?? 40;
+    light.intensity = light.intensity ?? 1;
+    light.color = light.color ?? [1, 1, 1];
+
+    return light as PointLight;
+  };
+
   return {
     storageBuffer,
     amountUniformBuffer,
-    addLight: (light: PointLight) => {
+    addLight: (
+      inputLight: Pick<PointLight, 'position'> & Partial<PointLight>,
+    ): PointLight => {
       if (lights.length >= maxLights) {
         // TODO: Grow the buffer
         throw new Error('Too many lights!');
       }
+
+      const light = setDefaults(inputLight);
 
       const index = lights.length;
       dict.set(light, index);

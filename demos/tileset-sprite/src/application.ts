@@ -56,25 +56,35 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const tilesX = Math.ceil(canvas.width / tileSize / scaling.x);
   const tilesY = Math.ceil(canvas.height / tileSize / scaling.y);
 
-  app.context.pointLight.addLight({
+  const redLight = app.context.pointLight.addLight({
     position: [100, 120],
     color: [1.0, 0.2, 0.2],
-    intensity: 1,
+    intensity: 2,
+    radius: 50,
   });
-  app.context.pointLight.addLight({
+  const greenLight = app.context.pointLight.addLight({
     position: [125, 120],
     color: [0.2, 1, 0.2],
-    intensity: 1,
+    intensity: 2,
+    radius: 50,
   });
-  app.context.pointLight.addLight({
+  const blueLight = app.context.pointLight.addLight({
     position: [120, 100],
     color: [0.2, 0.2, 1],
-    intensity: 1,
+    intensity: 2,
+    radius: 50,
   });
   const playerLight = app.context.pointLight.addLight({
     position: [120, 120],
     color: [0.5, 0.5, 0.5],
-    intensity: 1,
+    radius: 30,
+    intensity: 2,
+  });
+  const pulsingLight = app.context.pointLight.addLight({
+    position: [400, 100],
+    color: [0.5, 0.5, 0.5],
+    radius: 100,
+    intensity: 2,
   });
 
   const groundTileFrame = {
@@ -164,9 +174,30 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       update() {
         playerLight.position = [
           dino.x + dino.width / 2,
-          dino.y + dino.height / 2,
+          dino.y + dino.height / 2 + 5,
         ];
         app.context.pointLight.updateLight(playerLight);
+
+        pulsingLight.intensity = Math.sin(performance.now() / 1000) * 2;
+        app.context.pointLight.updateLight(pulsingLight);
+
+        const anchor = [100, 100] as const;
+
+        redLight.position = [
+          anchor[0] + Math.sin(performance.now() / 1000) * 40,
+          anchor[1] + Math.cos(performance.now() / 1000) * 40,
+        ];
+        greenLight.position = [
+          anchor[0] + Math.sin(performance.now() / 1000 + Math.PI / 2) * 40,
+          anchor[1] + Math.cos(performance.now() / 1000 + Math.PI / 2) * 40,
+        ];
+        blueLight.position = [
+          anchor[0] + Math.sin(performance.now() / 1000 + Math.PI) * 40,
+          anchor[1] + Math.cos(performance.now() / 1000 + Math.PI) * 40,
+        ];
+        app.context.pointLight.updateLight(redLight);
+        app.context.pointLight.updateLight(greenLight);
+        app.context.pointLight.updateLight(blueLight);
       }
     })(),
   );

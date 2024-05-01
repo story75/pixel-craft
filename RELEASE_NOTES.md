@@ -1,5 +1,14 @@
 # Release Notes
 
+## UNRELEASED
+
+### Fixes and improvements
+
+#### Define point light position in world space
+
+The point light position is now defined in world space instead of screen space. This means that the light will move with the camera and not stay in the same position on the screen.
+The calculation is done in the shader by transforming the light position with the camera translation and scaling.
+
 ## 0.7.3 (29.04.2024)
 
 ### Features

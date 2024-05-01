@@ -12,6 +12,7 @@ import { uniformBufferAllocator } from '../buffer/uniform-buffer-allocator';
 
 export type Camera = {
   projectionViewMatrixUniformBuffer: GPUBuffer;
+  transformUniformBuffer: GPUBuffer;
   observe: (position: Point2) => void;
   zoom: (scaling: Point2) => void;
 };
@@ -30,7 +31,10 @@ export function createCamera(
   height: number,
 ): Camera {
   const projectionViewMatrixUniformBuffer = uniformBufferAllocator(device)(
-    new Float32Array(16),
+    new Float32Array(16 * Float32Array.BYTES_PER_ELEMENT),
+  );
+  const transformUniformBuffer = uniformBufferAllocator(device)(
+    new Float32Array(4 * Float32Array.BYTES_PER_ELEMENT),
   );
 
   const scaling = new Vector3({ x: 1, y: 1, z: 1 });
@@ -70,12 +74,18 @@ export function createCamera(
       0,
       new Float32Array(scaled),
     );
+    device.queue.writeBuffer(
+      transformUniformBuffer,
+      0,
+      new Float32Array([-position.x, -position.y, scaling.x, scaling.y]),
+    );
   };
 
   update();
 
   return {
     projectionViewMatrixUniformBuffer,
+    transformUniformBuffer,
     observe,
     zoom,
   };

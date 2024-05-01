@@ -7,6 +7,7 @@ import { createIndices } from '../shared/create-indices';
 import { RenderPass } from '../shared/render-pass';
 import { linearSampler } from '../shared/sampler/linear-sampler';
 import { nearestSampler } from '../shared/sampler/nearest-sampler';
+import { cameraTransform } from '../shared/uniforms/camera-transform';
 import { lights } from '../shared/uniforms/lights';
 import { projectionViewMatrix } from '../shared/uniforms/projection-view-matrix';
 import { texture } from '../shared/uniforms/texture';
@@ -103,6 +104,12 @@ export function pipeline({
     device,
     camera.projectionViewMatrixUniformBuffer,
   );
+
+  const cameraTransformUniform = cameraTransform(
+    device,
+    camera.transformUniformBuffer,
+  );
+
   const textureUniform = texture(device);
 
   const lightsUniform = lights(
@@ -148,18 +155,6 @@ export function pipeline({
         targets: [
           {
             format: gBuffer.format,
-            // blend: {
-            //   color: {
-            //     srcFactor: 'one',
-            //     dstFactor: 'one-minus-src-alpha',
-            //     operation: 'add',
-            //   },
-            //   alpha: {
-            //     srcFactor: 'one',
-            //     dstFactor: 'one-minus-src-alpha',
-            //     operation: 'add',
-            //   },
-            // },
           },
         ],
       },
@@ -179,6 +174,7 @@ export function pipeline({
     layout: device.createPipelineLayout({
       bindGroupLayouts: [
         projectionViewMatrixUniform.layout,
+        cameraTransformUniform.layout,
         lightsUniform.layout,
       ],
     }),
@@ -417,7 +413,8 @@ export function pipeline({
       commandEncoder.beginRenderPass(lightsPassDescriptor);
     lightsPassEncoder.setPipeline(lightsPipeline);
     lightsPassEncoder.setBindGroup(0, projectionViewMatrixUniform.bindGroup);
-    lightsPassEncoder.setBindGroup(1, lightsUniform.bindGroup);
+    lightsPassEncoder.setBindGroup(1, cameraTransformUniform.bindGroup);
+    lightsPassEncoder.setBindGroup(2, lightsUniform.bindGroup);
     lightsPassEncoder.draw(6);
     lightsPassEncoder.end();
 

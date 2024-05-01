@@ -21,6 +21,12 @@ This can be useful if you want to synchronize entities between different stores 
 The `Store.onShuffle` observable emits an event whenever an entity in the store is shuffled. This happens when an entity is removed and another entity is moved to take its place.
 This can be useful if you want to synchronize entities between different stores e.g. with a storage buffer.
 
+#### Add `SpatialHashGrid` class to `@pixel-craft/store`
+
+The `SpatialHashGrid` class is a spatial partitioning data structure that can be used to efficiently store and query entities in a 2D space.
+It offers unbounded 2D space partitioning with a fixed cell size and supports adding, removing, updating and querying entities.
+It is particularly useful for collision detection and spatial queries like finding entities in a certain area.
+
 ## 0.7.4 (01.05.2024)
 
 ### Fixes and improvements

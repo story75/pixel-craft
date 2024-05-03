@@ -14,7 +14,7 @@ export function bundle(cli: ReturnType<typeof yargs>): void {
     },
     async (args) => {
       const watch = args['w'] as boolean | undefined;
-      await $`esbuild src/index.ts --outfile=public/dist/bundle.js --bundle --servedir=public ${{ raw: watch ? '--sourcemap --watch' : '' }}`;
+      await $`esbuild src/index.ts --outfile=public/dist/bundle.js --bundle ${{ raw: watch ? '--servedir=public --sourcemap --watch' : '' }}`;
     },
   );
 }

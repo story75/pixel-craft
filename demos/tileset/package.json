@@ -1,8 +1,9 @@
 {
-  "name": "@pixel-craft/engine-demo-tileset-sprite",
+  "name": "@pixel-craft/engine-demo-tileset",
   "private": true,
   "scripts": {
     "check": "tsc",
+    "build": "pixel-craft bundle",
     "watch": "pixel-craft bundle --watch"
   },
   "dependencies": {

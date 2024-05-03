@@ -14,9 +14,12 @@
   },
   "dependencies": {
     "yargs": "^17.7.2",
-    "find-up": "^7.0.0"
+    "find-up": "^7.0.0",
+    "chokidar": "^3.6.0",
+    "browser-sync": "^3.0.2"
   },
   "devDependencies": {
-    "@types/yargs": "^17.0.32"
+    "@types/yargs": "^17.0.32",
+    "@types/browser-sync": "^2.29.0"
   }
 }

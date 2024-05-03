@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "check": "tsc",
+    "build": "pixel-craft bundle",
     "watch": "pixel-craft bundle --watch"
   },
   "dependencies": {

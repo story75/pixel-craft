@@ -1,5 +1,4 @@
-import { Point2 } from '@pixel-craft/math';
-import { Rect } from './rect';
+import { Point2, Rect } from '@pixel-craft/math';
 
 /**
  * An instance of a sprite which can be rendered to a canvas

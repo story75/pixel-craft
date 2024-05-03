@@ -1,6 +1,6 @@
 # Release Notes
 
-## UNRELEASED
+## 0.8.0 (04.05.2024)
 
 ### Breaking changes
 
@@ -15,6 +15,19 @@ The point and vector classes have been extracted into a new `@pixel-craft/math` 
 This was done to slim down the `@pixel-craft/engine` package to focus on rendering logic.
 
 ### Features
+
+#### Create `@pixel-craft/collision` package
+
+To check primitives for collision detection, the `@pixel-craft/collision` package has been created.
+It currently contains functions to check for collision between the following primitives:
+
+- Point with Point
+- Point with Circle
+- Point with Rectangle
+- Point with Line
+- Circle with Circle
+- Circle with Rectangle
+- Rectangle with Rectangle (AABB)
 
 #### Add `Store.index` method
 

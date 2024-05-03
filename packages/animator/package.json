@@ -22,6 +22,7 @@
     "release": "pixel-craft-tooling release-package \"${PUBLISH_VERSION}\""
   },
   "dependencies": {
+    "@pixel-craft/math": "workspace:*",
     "@pixel-craft/engine": "workspace:*"
   }
 }

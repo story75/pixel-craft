@@ -8,7 +8,6 @@ export {
 } from './renderer/context/create-context';
 export { pipeline } from './renderer/pipeline/default/pipeline';
 export { type RenderPass } from './renderer/pipeline/shared/render-pass';
-export { type Rect } from './sprite/rect';
 export {
   sprite,
   tilingSprite,

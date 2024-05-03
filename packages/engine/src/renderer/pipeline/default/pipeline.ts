@@ -1,4 +1,4 @@
-import { Point2, Vector2 } from '../../../math/vec2';
+import { Point2, Vector2 } from '@pixel-craft/math';
 import { indexBufferAllocator } from '../../buffer/index-buffer-allocator';
 import { vertexBufferAllocator } from '../../buffer/vertex-buffer-allocator';
 import { WebGPUContext } from '../../context/create-context';

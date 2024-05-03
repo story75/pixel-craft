@@ -1,5 +1,5 @@
 {
-  "name": "@pixel-craft/engine",
+  "name": "@pixel-craft/math",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/story75/pixel-craft.git"
@@ -20,10 +20,5 @@
     "watch": "pixel-craft build-library -w",
     "build": "pixel-craft build-library",
     "release": "pixel-craft-tooling release-package \"${PUBLISH_VERSION}\""
-  },
-  "dependencies": {
-    "@pixel-craft/math": "workspace:*",
-    "@pixel-craft/store": "workspace:*",
-    "@webgpu/types": "^0.1.40"
   }
 }

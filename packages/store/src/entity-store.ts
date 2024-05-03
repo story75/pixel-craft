@@ -181,7 +181,11 @@ export class EntityStore<T extends Record<IndexType, unknown>>
       }
     }
 
-    const query = new EntityQuery<N>(key, this, normalized);
+    const query = new EntityQuery<N>(
+      key,
+      this as EntityStore<Record<IndexType, unknown>>,
+      normalized,
+    );
     this.queries.add(query);
     return query;
   }

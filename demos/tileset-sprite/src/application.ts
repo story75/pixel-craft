@@ -1,4 +1,5 @@
-import { Point2, Sprite, sprite, Vector2 } from '@pixel-craft/engine';
+import { Sprite, sprite } from '@pixel-craft/engine';
+import { Point2, Vector2 } from '@pixel-craft/math';
 import {
   AnimatorSystem,
   Application,
@@ -6,10 +7,10 @@ import {
   InputSystem,
   Moveable,
   RenderSystem,
-  spriteParser,
   System,
   TimerSystem,
   TransitionType,
+  spriteParser,
 } from '@pixel-craft/pixel-craft';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {

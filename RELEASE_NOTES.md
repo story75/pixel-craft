@@ -9,6 +9,11 @@
 The `@pixel-craft/ec` package has been renamed to `@pixel-craft/store`.
 This change was made to better reflect the contents of the package, which are two classes for storing and querying entities.
 
+#### Extract point and vector classes from `@pixel-craft/engine` into new `@pixel-craft/math` package
+
+The point and vector classes have been extracted into a new `@pixel-craft/math` package.
+This was done to slim down the `@pixel-craft/engine` package to focus on rendering logic.
+
 ### Features
 
 #### Add `Store.index` method

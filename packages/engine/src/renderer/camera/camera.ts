@@ -1,13 +1,14 @@
 import {
+  Point2,
+  Vector2,
+  Vector3,
+  Vector4,
   lookAt,
   multiply,
   orthographic,
   scale,
   translate,
-} from '../../math/mat4';
-import { Point2, Vector2 } from '../../math/vec2';
-import { Vector3 } from '../../math/vec3';
-import { Vector4 } from '../../math/vec4';
+} from '@pixel-craft/math';
 import { uniformBufferAllocator } from '../buffer/uniform-buffer-allocator';
 
 export type Camera = {

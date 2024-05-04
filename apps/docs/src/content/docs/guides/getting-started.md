@@ -8,6 +8,9 @@ description: A guide to get you started with Pixel Craft
 :::caution
 This is not a tutorial on HTML, TypeScript or JavaScript. If you're not familiar with those technologies
 I recommend that you read up on them first. This guide assumes your familiar with modern web development and know how to use and configure your tools.
+
+Also since the engine is still in development, the API might change. The current Application API is very likely to be heavily refactored soon.
+For the time being, you can use it, but it may be helpful to use the raw engine integration instead.
 :::
 
 The CLI uses [Bun](https://bun.sh/) internally. You can use npm or yarn instead, but then you're required to handle bundling and the development server yourself.

@@ -17,9 +17,15 @@ export default defineConfig({
       },
       sidebar: [
         {
+          label: 'Overview',
+          items: [
+            { label: 'Why Pixel Craft?', link: '/overview/why/' },
+            { label: 'Features', link: '/overview/features/' },
+          ],
+        },
+        {
           label: 'Guides',
           items: [
-            { label: 'Why Pixel Craft?', link: '/guides/why/' },
             { label: 'Getting started', link: '/guides/getting-started/' },
             {
               label: 'Advanced',

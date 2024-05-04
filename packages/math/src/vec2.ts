@@ -60,6 +60,15 @@ export class Vector2 {
   }
 
   /**
+   * Add two vectors.
+   *
+   * @see https://en.wikipedia.org/wiki/Euclidean_vector#Addition_and_subtraction
+   */
+  add(b: Vector2): Vector2 {
+    return new Vector2({ x: this.x + b.x, y: this.y + b.y });
+  }
+
+  /**
    * Subtract two vectors.
    *
    * @see https://en.wikipedia.org/wiki/Euclidean_vector#Addition_and_subtraction

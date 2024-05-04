@@ -1,5 +1,37 @@
 # Release Notes
 
+## 0.8.1 (04.05.2024)
+
+### Features
+
+#### Add `@pixel-craft/physics` package
+
+You can now use the `@pixel-craft/physics` package to add simple physics to your projects.
+For this to work you need to orchestrate the collision and physics system in your game loop.
+It is also advised to use the `@pixel-craft/store` package to store and query entities via the `SpatialHashGrid` class.
+
+For a very rough example of how to use the physics package, check out the "collision" demo.
+The key components are indexing all entities in the `SpatialHashGrid` when they are created,
+and then in your game loop, you should update the positions of all entities, check for collisions and apply physics to the colliding entities.
+
+You also need to update the positions according to the velocity of entities and apply friction.
+
+The implementation is very basic and does not include more advanced features like rotation, inertia, or more complex collision shapes.
+Since the focus is to create classic RPGs, the physics package is kept simple and should be enough for most use cases.
+If you need more advanced physics, you should consider using a different physics engine.
+
+#### Add `Vector2.add` method
+
+The `Vector2.add` method allows you to add two vectors together and return the result as a new vector.
+Previously, you had to manually add the x and y components of two vectors to get the result.
+
+### Fixes and improvements
+
+#### EntityStore queries now return an EntityQuery instead of just a Query
+
+The `EntityStore` queries now return an `EntityQuery` instead of just a `Query`.
+This allows you to access the observables of the queries, and only listen for changes you are interested in.
+
 ## 0.8.0 (04.05.2024)
 
 ### Breaking changes

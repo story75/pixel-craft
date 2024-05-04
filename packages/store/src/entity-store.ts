@@ -171,13 +171,13 @@ export class EntityStore<T extends Record<IndexType, unknown>>
    */
   query<N extends Record<IndexType, unknown>>(
     config: QueryConfiguration,
-  ): Query<N> {
+  ): EntityQuery<N> {
     const normalized = normalize(config);
     const key = cacheKey(normalized);
 
     for (const query of this.queries) {
       if (query.key === key) {
-        return query as Query<N>;
+        return query as EntityQuery<N>;
       }
     }
 
@@ -193,14 +193,14 @@ export class EntityStore<T extends Record<IndexType, unknown>>
   /**
    * Get the entities that include the specified properties.
    */
-  with<P extends keyof T>(...properties: P[]): Query<With<T, P>> {
+  with<P extends keyof T>(...properties: P[]): EntityQuery<With<T, P>> {
     return this.query({ with: properties, without: [] });
   }
 
   /**
    * Get the entities that exclude the specified properties.
    */
-  without<P extends keyof T>(...properties: P[]): Query<Without<T, P>> {
+  without<P extends keyof T>(...properties: P[]): EntityQuery<Without<T, P>> {
     return this.query({ with: [], without: properties });
   }
 

@@ -46,9 +46,9 @@ export function watch(cli: ReturnType<typeof yargs>): void {
         });
         if (!proc.success) {
           console.error(`Build failed with code ${String(proc.exitCode)}`);
-          return;
+        } else {
+          console.log(`Build finished successfully`);
         }
-        console.log(`Build finished successfully`);
         createWatcher();
         devServer?.resume();
         devServer?.reload();

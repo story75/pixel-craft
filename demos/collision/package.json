@@ -1,0 +1,21 @@
+{
+  "name": "@pixel-craft/collision-demo",
+  "private": true,
+  "scripts": {
+    "check": "tsc",
+    "build": "pixel-craft bundle",
+    "watch": "pixel-craft bundle --watch"
+  },
+  "dependencies": {
+    "@pixel-craft/collision": "workspace:*",
+    "@pixel-craft/physics": "workspace:*",
+    "@pixel-craft/math": "workspace:*",
+    "@pixel-craft/store": "workspace:*",
+    "@pixel-craft/composer": "workspace:*",
+    "@pixel-craft/engine": "workspace:*",
+    "@pixel-craft/pixel-craft": "workspace:*"
+  },
+  "devDependencies": {
+    "@pixel-craft/cli": "workspace:*"
+  }
+}

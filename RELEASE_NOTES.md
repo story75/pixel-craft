@@ -27,6 +27,11 @@ This change was not applied to sub queries, which has now been fixed.
 Previously, when removing a component with a value of `false`, `0`, '' or null from an entity, the component would not be removed.
 The store now check for undefined values instead of falsy values.
 
+#### `collide` now correctly uses second bodies mass for displacement
+
+Previously, when colliding two bodies the displacement was calculated using the first bodies mass for both bodies.
+This has been fixed to use the mass of the body that is being displaced instead.
+
 ## 0.8.1 (04.05.2024)
 
 ### Features

@@ -31,7 +31,7 @@ export function collide(a: PhysicsBody, b: PhysicsBody): void {
     a.y += massAffected.y;
   }
   if (!b.static) {
-    const massAffected = overlap.multiply(1 / a.mass);
+    const massAffected = overlap.multiply(1 / b.mass);
     b.x -= massAffected.x;
     b.y -= massAffected.y;
   }

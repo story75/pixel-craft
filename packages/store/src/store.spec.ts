@@ -25,6 +25,8 @@ describe('Store', () => {
     // will index
     expect(store.index(a)).toBe(0);
     expect(store.index(b)).toBe(1);
+    // for whatever reason bun narrows number | undefined down to just number and fails to compile
+    // @ts-expect-error TS2345 - https://github.com/oven-sh/bun/issues/6934
     expect(store.index(c)).toBe(undefined);
     // will contain
     expect(store.has(a)).toBe(true);
@@ -41,8 +43,14 @@ describe('Store', () => {
     // will count
     expect(store.size).toBe(0);
     // will not index
+    // for whatever reason bun narrows number | undefined down to just number and fails to compile
+    // @ts-expect-error TS2345 - https://github.com/oven-sh/bun/issues/6934
     expect(store.index(a)).toBe(undefined);
+    // for whatever reason bun narrows number | undefined down to just number and fails to compile
+    // @ts-expect-error TS2345 - https://github.com/oven-sh/bun/issues/6934
     expect(store.index(b)).toBe(undefined);
+    // for whatever reason bun narrows number | undefined down to just number and fails to compile
+    // @ts-expect-error TS2345 - https://github.com/oven-sh/bun/issues/6934
     expect(store.index(c)).toBe(undefined);
     // will not contain
     expect(store.has(a)).toBe(false);

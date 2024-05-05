@@ -44,7 +44,7 @@ describe('SpatialHashGrid', () => {
     grid.add(c.x, c.y, c.width, c.height, c);
 
     // query by cells
-    const cells = [];
+    const cells: Entity[][] = [];
     grid.forEach((cell) => {
       cells.push(cell);
     });

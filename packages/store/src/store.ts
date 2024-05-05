@@ -97,7 +97,7 @@ export class Store<T> implements Iterable<T> {
    */
   remove(entity: T): void {
     const index = this.indices.get(entity);
-    if (!index) {
+    if (index === undefined) {
       return;
     }
 

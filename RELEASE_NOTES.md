@@ -1,5 +1,32 @@
 # Release Notes
 
+## UNRELEASED
+
+### Breaking changes
+
+#### `EntityStore.update` is now private
+
+The `EntityStore.update` method is now private and should not be called directly.
+This is internally used on `EntityStore.addComponent` and should be used instead, because it conveys the intent better.
+Since there falsy values also count as values, they were basically doing the same thing for that case,
+but using it to remove components was not intended and did not work. To remove components, use `EntityStore.removeComponent` instead.
+
+### Fixes and improvements
+
+#### `Store` now correctly removes the entity at index 0
+
+Previously, when removing an entity at index 0 from a `Store`, the store would do nothing due to an incorrect check.
+
+#### Sub queries of `EntityStore` now also return an `EntityQuery` instead of just a `Query`
+
+THe entity store was previously changed to return an `EntityQuery` instead of a `Query` for queries.
+This change was not applied to sub queries, which has now been fixed.
+
+#### `EntityStore` now correctly removes components with falsy values
+
+Previously, when removing a component with a value of `false`, `0`, '' or null from an entity, the component would not be removed.
+The store now check for undefined values instead of falsy values.
+
 ## 0.8.1 (04.05.2024)
 
 ### Features

@@ -39,7 +39,7 @@ class EntityQuery<T extends Record<IndexType, unknown>>
   /**
    * Get the entities that include the specified properties.
    */
-  with<P extends keyof T>(...properties: P[]): Query<With<T, P>> {
+  with<P extends keyof T>(...properties: P[]): EntityQuery<With<T, P>> {
     return this.store.query<With<T, P>>({
       ...this.config,
       with: [...this.config.with, ...properties],
@@ -49,7 +49,7 @@ class EntityQuery<T extends Record<IndexType, unknown>>
   /**
    * Get the entities that exclude the specified properties.
    */
-  without<P extends keyof T>(...properties: P[]): Query<Without<T, P>> {
+  without<P extends keyof T>(...properties: P[]): EntityQuery<Without<T, P>> {
     return this.store.query<Without<T, P>>({
       ...this.config,
       without: [...this.config.without, ...properties],
@@ -103,22 +103,6 @@ export class EntityStore<T extends Record<IndexType, unknown>>
   }
 
   /**
-   * Update an entity in the store.
-   *
-   * @remarks
-   * If the entity is not in the store, it will not be updated.
-   * If the entity was updated, the queries will be updated.
-   */
-  update<P extends keyof T>(entity: T, property: P, value: T[P]): void {
-    if (!this.has(entity)) {
-      return;
-    }
-
-    entity[property] = value;
-    this.evaluate(entity);
-  }
-
-  /**
    * Add a component to an entity in the store.
    *
    * @remarks
@@ -127,7 +111,7 @@ export class EntityStore<T extends Record<IndexType, unknown>>
    * This will update the entity and the queries.
    */
   addComponent<P extends keyof T>(entity: T, property: P, value: T[P]): void {
-    if (entity[property]) {
+    if (entity[property] !== undefined) {
       return;
     }
 
@@ -143,7 +127,7 @@ export class EntityStore<T extends Record<IndexType, unknown>>
    * This will update the entity and the queries.
    */
   removeComponent<P extends keyof T>(entity: T, property: P): void {
-    if (!entity[property]) {
+    if (entity[property] === undefined) {
       return;
     }
 
@@ -208,5 +192,21 @@ export class EntityStore<T extends Record<IndexType, unknown>>
     for (const query of this.queries) {
       query.evaluate(entity, next);
     }
+  }
+
+  /**
+   * Update an entity in the store.
+   *
+   * @remarks
+   * If the entity is not in the store, it will not be updated.
+   * If the entity was updated, the queries will be updated.
+   */
+  private update<P extends keyof T>(entity: T, property: P, value: T[P]): void {
+    if (!this.has(entity)) {
+      return;
+    }
+
+    entity[property] = value;
+    this.evaluate(entity);
   }
 }

@@ -26,13 +26,10 @@ describe('collide', () => {
       static: false,
       ...bOverwrite,
     };
-    const cloneA = { ...a, velocity: new Vector2(a.velocity) };
-    const cloneB = { ...b, velocity: new Vector2(b.velocity) };
+    const cloneA = { ...a, velocity: a.velocity.copy() };
+    const cloneB = { ...b, velocity: b.velocity.copy() };
 
-    const overlap = new Vector2({
-      x: a.x - b.x,
-      y: a.y - b.y,
-    }).normal();
+    const overlap = new Vector2(a).subtract(b).normal();
 
     return { a, b, cloneA, cloneB, overlap };
   };
@@ -58,18 +55,15 @@ describe('collide', () => {
 
     collide(cloneA, cloneB);
 
-    expect(cloneA).toEqual({
-      ...a,
-      velocity: a.velocity.add(impulse),
-      x: a.x + overlap.x,
-      y: a.y + overlap.y,
-    });
-    expect(cloneB).toEqual({
-      ...b,
-      velocity: b.velocity.subtract(impulse),
-      x: b.x - overlap.x,
-      y: b.y - overlap.y,
-    });
+    expect(cloneA.velocity).toEqual(a.velocity.add(impulse));
+    const positionA = new Vector2(a).add(overlap);
+    expect(cloneA.x).toEqual(positionA.x);
+    expect(cloneA.y).toEqual(positionA.y);
+
+    expect(cloneB.velocity).toEqual(b.velocity.subtract(impulse));
+    const positionB = new Vector2(b).subtract(overlap);
+    expect(cloneB.x).toEqual(positionB.x);
+    expect(cloneB.y).toEqual(positionB.y);
   });
 
   it('will only move body a if b is static', () => {
@@ -84,12 +78,11 @@ describe('collide', () => {
 
     collide(cloneA, cloneB);
 
-    expect(cloneA).toEqual({
-      ...a,
-      velocity: a.velocity.add(impulse),
-      x: a.x + overlap.x,
-      y: a.y + overlap.y,
-    });
+    expect(cloneA.velocity).toEqual(a.velocity.add(impulse));
+    const positionA = new Vector2(a).add(overlap);
+    expect(cloneA.x).toEqual(positionA.x);
+    expect(cloneA.y).toEqual(positionA.y);
+
     expect(cloneB).toEqual(b);
   });
 
@@ -106,12 +99,11 @@ describe('collide', () => {
     collide(cloneA, cloneB);
 
     expect(cloneA).toEqual(a);
-    expect(cloneB).toEqual({
-      ...b,
-      velocity: b.velocity.subtract(impulse),
-      x: b.x - overlap.x,
-      y: b.y - overlap.y,
-    });
+
+    expect(cloneB.velocity).toEqual(b.velocity.subtract(impulse));
+    const positionB = new Vector2(b).subtract(overlap);
+    expect(cloneB.x).toEqual(positionB.x);
+    expect(cloneB.y).toEqual(positionB.y);
   });
 
   it('will move the bodies apart (with mass)', () => {
@@ -126,18 +118,17 @@ describe('collide', () => {
 
     collide(cloneA, cloneB);
 
-    expect(cloneA).toEqual({
-      ...a,
-      velocity: a.velocity.add(impulse.multiply(0.5)),
-      x: a.x + overlap.x * 0.5,
-      y: a.y + overlap.y * 0.5,
-    });
-    expect(cloneB).toEqual({
-      ...b,
-      velocity: b.velocity.subtract(impulse.multiply(0.25)),
-      x: b.x - overlap.x * 0.25,
-      y: b.y - overlap.y * 0.25,
-    });
+    expect(cloneA.velocity).toEqual(a.velocity.add(impulse.multiply(0.5)));
+    const positionA = new Vector2(a).add(overlap.multiply(0.5));
+    expect(cloneA.x).toEqual(positionA.x);
+    expect(cloneA.y).toEqual(positionA.y);
+
+    expect(cloneB.velocity).toEqual(
+      b.velocity.subtract(impulse.multiply(0.25)),
+    );
+    const positionB = new Vector2(b).subtract(overlap.multiply(0.25));
+    expect(cloneB.x).toEqual(positionB.x);
+    expect(cloneB.y).toEqual(positionB.y);
   });
 
   it('will move the bodies apart (with elasticity)', () => {
@@ -152,18 +143,15 @@ describe('collide', () => {
 
     collide(cloneA, cloneB);
 
-    expect(cloneA).toEqual({
-      ...a,
-      velocity: a.velocity.add(impulse),
-      x: a.x + overlap.x,
-      y: a.y + overlap.y,
-    });
-    expect(cloneB).toEqual({
-      ...b,
-      velocity: b.velocity.subtract(impulse),
-      x: b.x - overlap.x,
-      y: b.y - overlap.y,
-    });
+    expect(cloneA.velocity).toEqual(a.velocity.add(impulse));
+    const positionA = new Vector2(a).add(overlap);
+    expect(cloneA.x).toEqual(positionA.x);
+    expect(cloneA.y).toEqual(positionA.y);
+
+    expect(cloneB.velocity).toEqual(b.velocity.subtract(impulse));
+    const positionB = new Vector2(b).subtract(overlap);
+    expect(cloneB.x).toEqual(positionB.x);
+    expect(cloneB.y).toEqual(positionB.y);
   });
 
   it('will move the bodies apart (with mass & elasticity)', () => {
@@ -178,17 +166,16 @@ describe('collide', () => {
 
     collide(cloneA, cloneB);
 
-    expect(cloneA).toEqual({
-      ...a,
-      velocity: a.velocity.add(impulse.multiply(0.5)),
-      x: a.x + overlap.x * 0.5,
-      y: a.y + overlap.y * 0.5,
-    });
-    expect(cloneB).toEqual({
-      ...b,
-      velocity: b.velocity.subtract(impulse.multiply(0.25)),
-      x: b.x - overlap.x * 0.25,
-      y: b.y - overlap.y * 0.25,
-    });
+    expect(cloneA.velocity).toEqual(a.velocity.add(impulse.multiply(0.5)));
+    const positionA = new Vector2(a).add(overlap.multiply(0.5));
+    expect(cloneA.x).toEqual(positionA.x);
+    expect(cloneA.y).toEqual(positionA.y);
+
+    expect(cloneB.velocity).toEqual(
+      b.velocity.subtract(impulse.multiply(0.25)),
+    );
+    const positionB = new Vector2(b).subtract(overlap.multiply(0.25));
+    expect(cloneB.x).toEqual(positionB.x);
+    expect(cloneB.y).toEqual(positionB.y);
   });
 });

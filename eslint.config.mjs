@@ -46,7 +46,6 @@ export default tseslint.config(
       },
     },
     rules: {
-      '@typescript-eslint/member-ordering': 'error',
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/naming-convention': [
         'error',

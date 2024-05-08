@@ -1,26 +1,25 @@
-/**
- * A simple point in 2D space
- */
-export type Point2 = {
-  x: number;
-  y: number;
-};
+export type Point2 = { x: number; y: number };
+export type Vector2Like = Vector2 | Point2;
 
 /**
  * A vector in 2D space
+ *
+ * @remarks
+ * For creation object always beats array, but the margin is negligible, and both beat Float32Array by a huge margin (98% slower).
+ *
+ * For writing values (1m entries) the order is array > Float32Array (4% slower) > object (14% slower).
+ * For roughly 100k entries, there is next to no difference between the three.
+ *
+ * @see https://jsperf.app/jedemi
+ * @see https://jsperf.app/hekiqa
  */
 export class Vector2 {
-  static Up = new Vector2({ x: 0, y: -1 });
-  static Down = new Vector2({ x: 0, y: 1 });
-  static Left = new Vector2({ x: -1, y: 0 });
-  static Right = new Vector2({ x: 1, y: 0 });
-
   public x: number;
   public y: number;
 
-  constructor({ x, y }: Point2 | Vector2) {
-    this.x = x;
-    this.y = y;
+  constructor(input: Vector2Like) {
+    this.x = input.x;
+    this.y = input.y;
   }
 
   /**
@@ -64,7 +63,7 @@ export class Vector2 {
    *
    * @see https://en.wikipedia.org/wiki/Euclidean_vector#Addition_and_subtraction
    */
-  add(b: Vector2): Vector2 {
+  add(b: Vector2Like): Vector2 {
     return new Vector2({ x: this.x + b.x, y: this.y + b.y });
   }
 
@@ -73,16 +72,19 @@ export class Vector2 {
    *
    * @see https://en.wikipedia.org/wiki/Euclidean_vector#Addition_and_subtraction
    */
-  subtract(b: Vector2): Vector2 {
+  subtract(b: Vector2Like): Vector2 {
     return new Vector2({ x: this.x - b.x, y: this.y - b.y });
   }
 
   /**
    * Cross two vectors.
    *
+   * @remarks
+   * This is a fake 2D cross product, as the real cross product is only defined in 3D space.
+   *
    * @see https://en.wikipedia.org/wiki/Cross_product
    */
-  cross(b: Vector2): Vector2 {
+  cross(b: Vector2Like): Vector2 {
     return new Vector2({
       x: this.y * b.x - this.x * b.y,
       y: this.x * b.y - this.y * b.x,
@@ -94,7 +96,7 @@ export class Vector2 {
    *
    * @see https://en.wikipedia.org/wiki/Dot_product
    */
-  dot(b: Vector2): number {
+  dot(b: Vector2Like): number {
     return this.x * b.x + this.y * b.y;
   }
 
@@ -103,7 +105,7 @@ export class Vector2 {
    *
    * @see https://en.wikipedia.org/wiki/Rotation_matrix
    */
-  rotate(origin: Point2, radians: number): Vector2 {
+  rotate(origin: Vector2Like, radians: number): Vector2 {
     const x = this.x - origin.x;
     const y = this.y - origin.y;
     const cos = Math.cos(radians);
@@ -112,5 +114,15 @@ export class Vector2 {
       x: origin.x + (x * cos - y * sin),
       y: origin.y + (x * sin + y * cos),
     });
+  }
+
+  /**
+   * Create a new vector with the same properties as the current vector
+   *
+   * @remarks
+   * This is an alias for calling `new Vector2(myVector)`.
+   */
+  copy(): Vector2 {
+    return new Vector2(this);
   }
 }

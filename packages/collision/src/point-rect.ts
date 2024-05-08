@@ -1,9 +1,9 @@
-import { Point2, Rect } from '@pixel-craft/math';
+import { Rect, Vector2Like } from '@pixel-craft/math';
 
 /**
  * Checks if a point is colliding with a rectangle.
  */
-export function pointRect(point: Point2, rect: Rect): boolean {
+export function pointRect(point: Vector2Like, rect: Rect): boolean {
   return (
     point.x >= rect.x &&
     point.x <= rect.x + rect.width &&

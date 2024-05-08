@@ -1,14 +1,7 @@
-import { Mat4 } from './mat4';
+import { Mat4Like } from './mat4';
 
-/**
- * A point in 4D space
- */
-export type Point4 = {
-  x: number;
-  y: number;
-  z: number;
-  w: number;
-};
+export type Point4 = { x: number; y: number; z: number; w: number };
+export type Vector4Like = Vector4 | Point4;
 
 /**
  * A vector in 4D space
@@ -19,17 +12,17 @@ export class Vector4 {
   public z: number;
   public w: number;
 
-  constructor({ x, y, z, w }: Point4 | Vector4) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.w = w;
+  constructor(input: Vector4Like) {
+    this.x = input.x;
+    this.y = input.y;
+    this.z = input.z;
+    this.w = input.w;
   }
 
   /**
    * Multiply a matrix and a vector in the form of Mat4 * Vec4.
    */
-  multiply(m: Mat4): Vector4 {
+  multiply(m: Mat4Like): Vector4 {
     return new Vector4({
       x: m[0] * this.x + m[1] * this.y + m[2] * this.z + m[3] * this.w,
       y: m[4] * this.x + m[5] * this.y + m[6] * this.z + m[7] * this.w,

@@ -11,6 +11,13 @@ This is internally used on `EntityStore.addComponent` and should be used instead
 Since there falsy values also count as values, they were basically doing the same thing for that case,
 but using it to remove components was not intended and did not work. To remove components, use `EntityStore.removeComponent` instead.
 
+#### Mat4 is now a class
+
+The `Mat4` type was renamed to `Mat4Like` and `Mat4` is now a class.
+This change makes it easier to export the corresponding methods and should also make it easier to work with.
+`Mat4` extents `Float32Array` so you can pass it into GPU functions directly.
+`Mat4` also mutates in place instead of returning a new matrix.
+
 ### Fixes and improvements
 
 #### `Store` now correctly removes the entity at index 0

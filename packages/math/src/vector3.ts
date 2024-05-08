@@ -1,11 +1,5 @@
-/**
- * A simple point in 3D space
- */
-export type Point3 = {
-  x: number;
-  y: number;
-  z: number;
-};
+export type Point3 = { x: number; y: number; z: number };
+export type Vector3Like = Vector3 | Point3;
 
 /**
  * A vector in 3D space
@@ -15,10 +9,10 @@ export class Vector3 {
   public y: number;
   public z: number;
 
-  constructor({ x, y, z }: Point3 | Vector3) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
+  constructor(input: Vector3Like) {
+    this.x = input.x;
+    this.y = input.y;
+    this.z = input.z;
   }
 
   /**
@@ -59,11 +53,20 @@ export class Vector3 {
   }
 
   /**
+   * Add two vectors.
+   *
+   * @see https://en.wikipedia.org/wiki/Euclidean_vector#Addition_and_subtraction
+   */
+  add(b: Vector3Like): Vector3 {
+    return new Vector3({ x: this.x + b.x, y: this.y + b.y, z: this.z + b.z });
+  }
+
+  /**
    * Subtract two vectors.
    *
    * @see https://en.wikipedia.org/wiki/Euclidean_vector#Addition_and_subtraction
    */
-  subtract(b: Vector3): Vector3 {
+  subtract(b: Vector3Like): Vector3 {
     return new Vector3({ x: this.x - b.x, y: this.y - b.y, z: this.z - b.z });
   }
 
@@ -72,7 +75,7 @@ export class Vector3 {
    *
    * @see https://en.wikipedia.org/wiki/Cross_product
    */
-  cross(b: Vector3): Vector3 {
+  cross(b: Vector3Like): Vector3 {
     return new Vector3({
       x: this.y * b.z - this.z * b.y,
       y: this.z * b.x - this.x * b.z,
@@ -85,7 +88,7 @@ export class Vector3 {
    *
    * @see https://en.wikipedia.org/wiki/Dot_product
    */
-  dot(b: Vector3): number {
+  dot(b: Vector3Like): number {
     return this.x * b.x + this.y * b.y + this.z * b.z;
   }
 }

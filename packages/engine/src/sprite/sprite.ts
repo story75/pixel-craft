@@ -1,4 +1,4 @@
-import { Point2, Rect } from '@pixel-craft/math';
+import { Rect, Vector2Like } from '@pixel-craft/math';
 
 /**
  * An instance of a sprite which can be rendered to a canvas
@@ -54,7 +54,7 @@ export type Sprite = Rect & {
    * The origin is a value between 0 and 1 which represents the position of the origin relative to the sprite.
    * For example, [0, 0] would be the top left corner of the sprite, [0.5, 0.5] would be the center of the sprite, and [1, 1] would be the bottom right corner of the sprite.
    */
-  origin: Point2;
+  origin: Vector2Like;
 
   /**
    * The color of the sprite
@@ -109,7 +109,7 @@ export type TilingSprite = Sprite & {
    * The offset value is relative to the texture size. If the texture is 100px wide, and the offset is 0.5, the texture will be offset by 50px.
    * If the value is greater than 1, the texture will be offset by the remainder. For example, if the texture is 100px wide, and the offset is 1.5, the texture will be offset by 50px.
    */
-  offset: Point2;
+  offset: Vector2Like;
 };
 
 /**

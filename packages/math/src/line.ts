@@ -1,4 +1,4 @@
-import { Point2 } from './vec2';
+import { Point2 } from './vector2';
 
 export type Line = {
   from: Point2;

@@ -18,6 +18,41 @@ This change makes it easier to export the corresponding methods and should also 
 `Mat4` extents `Float32Array` so you can pass it into GPU functions directly.
 `Mat4` also mutates in place instead of returning a new matrix.
 
+#### `@pixel-craft/engine` was renamed to `@pixel-craft/renderer`
+
+The `@pixel-craft/engine` package was renamed to `@pixel-craft/renderer` to better reflect its contents.
+During the latest updates more and more functionality was moved out of the `@pixel-craft/engine` package, so the name was no longer fitting.
+The package contains only the rendering functionality, or very tightly related functionality like the camera and lighting code.
+
+### Features
+
+#### Add `composed` function to `@pixel-craft/composer`
+
+The `composed` function allows you to compose multiple objects into one object merging their types.
+You can use it like so:
+
+```ts
+const obj1 = { a: 1 };
+const obj2 = { b: 2 };
+const obj3 = { c: 3 };
+const obj4 = { d: 4 };
+const obj5 = { e: 5 };
+
+// const result: {     a: number } & {     b: number } & {     c: number } & {     d: number } & {     e: number }
+const result = composed([obj1, obj2, obj3, obj4, obj5]);
+
+expect(result).toEqual({
+  a: 1,
+  b: 2,
+  c: 3,
+  d: 4,
+  e: 5,
+});
+```
+
+Now imagine instead of plain objects, you have functions returning the individual objects.
+This is where this helper comes in handy and saves you from writing out the merged types manually.
+
 ### Fixes and improvements
 
 #### `Store` now correctly removes the entity at index 0

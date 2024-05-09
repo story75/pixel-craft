@@ -1,4 +1,4 @@
-import { Sprite } from '@pixel-craft/engine';
+import { Sprite } from '@pixel-craft/renderer';
 import { Animated } from './animated';
 import { Animation } from './animation';
 import { TransitionType } from './transition';

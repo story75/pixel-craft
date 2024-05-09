@@ -1,4 +1,4 @@
-import type { WebGPUContext } from '@pixel-craft/engine';
+import type { WebGPUContext } from '@pixel-craft/renderer';
 import type { Application } from '../application';
 
 export type CreateHookContext = {

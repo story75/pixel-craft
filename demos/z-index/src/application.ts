@@ -1,5 +1,5 @@
-import { sprite } from '@pixel-craft/engine';
 import { Application, RenderSystem } from '@pixel-craft/pixel-craft';
+import { sprite } from '@pixel-craft/renderer';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const app = await Application.create(canvas);

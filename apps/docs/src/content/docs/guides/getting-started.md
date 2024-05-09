@@ -126,7 +126,7 @@ import {
   RenderSystem,
   TimerSystem,
 } from '@pixel-craft/pixel-craft';
-import { createTextureLoader, sprite } from '@pixel-craft/engine';
+import { createTextureLoader, sprite } from '@pixel-craft/renderer';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
   // create the application

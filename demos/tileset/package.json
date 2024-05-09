@@ -9,7 +9,7 @@
   "dependencies": {
     "@pixel-craft/pixel-craft": "workspace:*",
     "@pixel-craft/math": "workspace:*",
-    "@pixel-craft/engine": "workspace:*"
+    "@pixel-craft/renderer": "workspace:*"
   },
   "devDependencies": {
     "@types/stats.js": "^0.17.3",

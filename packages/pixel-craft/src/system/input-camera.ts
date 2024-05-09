@@ -1,4 +1,4 @@
-import { Camera } from '@pixel-craft/engine';
+import { Camera } from '@pixel-craft/renderer';
 import { InputSystem } from './input';
 import { CreateHookContext, System } from './system';
 import { TimerSystem } from './timer';

@@ -1,4 +1,4 @@
-import { RenderPass, Sprite, pipeline } from '@pixel-craft/engine';
+import { RenderPass, Sprite, pipeline } from '@pixel-craft/renderer';
 import { CreateHookContext, System } from './system';
 
 /**

@@ -1,5 +1,5 @@
 import { Animated, Animation, Animator } from '@pixel-craft/animator';
-import { Sprite } from '@pixel-craft/engine';
+import { Sprite } from '@pixel-craft/renderer';
 import { System } from './system';
 import { TimerSystem } from './timer';
 

@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "stats.js": "^0.17.0",
-    "@pixel-craft/engine": "workspace:*",
+    "@pixel-craft/renderer": "workspace:*",
     "@pixel-craft/pixel-craft": "workspace:*"
   },
   "devDependencies": {

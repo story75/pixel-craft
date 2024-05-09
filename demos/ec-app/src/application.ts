@@ -7,7 +7,7 @@ import {
   createTextureLoader,
   pipeline,
   sprite,
-} from '@pixel-craft/engine';
+} from '@pixel-craft/renderer';
 import { EntityStore } from '@pixel-craft/store';
 
 type Entity = Sprite;

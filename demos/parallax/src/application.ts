@@ -1,3 +1,4 @@
+import { TimerSystem } from '@pixel-craft/pixel-craft';
 import {
   Sprite,
   createContext,
@@ -5,8 +6,7 @@ import {
   pipeline,
   sprite,
   tilingSprite,
-} from '@pixel-craft/engine';
-import { TimerSystem } from '@pixel-craft/pixel-craft';
+} from '@pixel-craft/renderer';
 import Stats from 'stats.js';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {

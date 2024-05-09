@@ -1,5 +1,8 @@
 import { rectRect } from '@pixel-craft/collision';
 import { Composer } from '@pixel-craft/composer';
+import { Vector2 } from '@pixel-craft/math';
+import { PhysicsBody, collide } from '@pixel-craft/physics';
+import { InputSystem } from '@pixel-craft/pixel-craft';
 import {
   RenderPass,
   Sprite,
@@ -8,10 +11,7 @@ import {
   createTextureLoader,
   pipeline,
   sprite,
-} from '@pixel-craft/engine';
-import { Vector2 } from '@pixel-craft/math';
-import { PhysicsBody, collide } from '@pixel-craft/physics';
-import { InputSystem } from '@pixel-craft/pixel-craft';
+} from '@pixel-craft/renderer';
 import { EntityStore, SpatialHashGrid } from '@pixel-craft/store';
 
 type Entity = Sprite & PhysicsBody;

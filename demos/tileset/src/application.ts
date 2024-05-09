@@ -1,4 +1,3 @@
-import { Sprite, sprite } from '@pixel-craft/engine';
 import { Point2, Vector2 } from '@pixel-craft/math';
 import {
   AnimatorSystem,
@@ -12,6 +11,7 @@ import {
   TransitionType,
   spriteParser,
 } from '@pixel-craft/pixel-craft';
+import { Sprite, sprite } from '@pixel-craft/renderer';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const app = await Application.create(canvas);

@@ -1,12 +1,4 @@
 import {
-  Sprite,
-  canvasText,
-  createFontLoader,
-  createTextureLoader,
-  sprite,
-  tilingSprite,
-} from '@pixel-craft/engine';
-import {
   AnimatorSystem,
   Application,
   InputCameraSystem,
@@ -14,6 +6,14 @@ import {
   RenderSystem,
   TimerSystem,
 } from '@pixel-craft/pixel-craft';
+import {
+  Sprite,
+  canvasText,
+  createFontLoader,
+  createTextureLoader,
+  sprite,
+  tilingSprite,
+} from '@pixel-craft/renderer';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const app = await Application.create(canvas);

@@ -1,5 +1,5 @@
 {
-  "name": "@pixel-craft/engine",
+  "name": "@pixel-craft/renderer",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/story75/pixel-craft.git"

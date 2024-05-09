@@ -1,5 +1,5 @@
-import { Sprite } from '@pixel-craft/engine';
 import { Vector2 } from '@pixel-craft/math';
+import { Sprite } from '@pixel-craft/renderer';
 import { InputSystem } from './input';
 import { System } from './system';
 import { TimerSystem } from './timer';

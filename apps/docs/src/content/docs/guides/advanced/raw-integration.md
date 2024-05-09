@@ -52,7 +52,7 @@ For the engine to work it has to initialize a `WebGPUContext`. This will prepare
 To do this grab the canvas element and pass it to the `createContext` function.
 
 ```ts ins={5}
-import { createContext } from '@pixel-craft/engine';
+import { createContext } from '@pixel-craft/renderer';
 
 export async function application(): Promise<void> {
   const canvas = document.getElementsByTagName('canvas')[0]!;
@@ -67,7 +67,7 @@ Once the basic configuration is done, it will return a so called `RenderPass` th
 your sprites. The render pass will take care of batching and instancing for you to make rendering more efficient.
 
 ```ts ins={7}
-import { createContext, pipeline } from '@pixel-craft/engine';
+import { createContext, pipeline } from '@pixel-craft/renderer';
 
 export async function application(): Promise<void> {
   const canvas = document.getElementsByTagName('canvas')[0]!;
@@ -89,7 +89,7 @@ import {
   pipeline,
   createTextureLoader,
   sprite,
-} from '@pixel-craft/engine';
+} from '@pixel-craft/renderer';
 
 export async function application(): Promise<void> {
   const canvas = document.getElementsByTagName('canvas')[0]!;
@@ -131,7 +131,7 @@ import {
   pipeline,
   createTextureLoader,
   sprite,
-} from '@pixel-craft/engine';
+} from '@pixel-craft/renderer';
 
 export async function application(): Promise<void> {
   const canvas = document.getElementsByTagName('canvas')[0]!;

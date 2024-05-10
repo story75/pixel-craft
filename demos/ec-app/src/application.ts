@@ -23,7 +23,7 @@ type RendererState = { renderPass: RenderPass; context: WebGPUContext };
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const context = await createContext(canvas);
   const textureLoader = createTextureLoader(context.device);
-  const texture = await textureLoader('assets/pixel-prowlers.png');
+  const texture = await textureLoader('assets/pixel-craft/pixel-prowlers.png');
 
   const entityStore = new EntityStore<Entity>();
   const spriteQuery = entityStore.with('texture');

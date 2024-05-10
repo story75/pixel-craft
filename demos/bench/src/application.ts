@@ -14,7 +14,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const context = await createContext(canvas);
 
   const textureLoader = createTextureLoader(context.device);
-  const texture = await textureLoader('assets/pixel-prowlers.png');
+  const texture = await textureLoader('assets/pixel-craft/pixel-prowlers.png');
 
   const renderPass = pipeline(context);
 

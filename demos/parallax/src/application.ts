@@ -26,7 +26,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     skyCloudsBackground,
     skyCloudsForeground,
   ] = await Promise.all([
-    textureLoader('assets/pixel-prowlers.png'),
+    textureLoader('assets/pixel-craft/pixel-prowlers.png'),
     textureLoader(`${skyAssetPath}/1.png`),
     textureLoader(`${skyAssetPath}/2.png`),
     textureLoader(`${skyAssetPath}/3.png`),

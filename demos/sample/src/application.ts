@@ -25,7 +25,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   await app.addSystems(renderer, input, timer, camera, animator);
 
   const textureLoader = createTextureLoader(app.context.device);
-  const tex = await textureLoader('assets/pixel-prowlers.png');
+  const tex = await textureLoader('assets/pixel-craft/pixel-prowlers.png');
 
   const [x, y] = [
     canvas.width / 2 - tex.width / 2,
@@ -98,7 +98,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   tiledSprite.offset.y = 1.5;
 
   const fontLoader = createFontLoader();
-  await fontLoader('Monocraft', 'vendor/monocraft/Monocraft.otf');
+  await fontLoader('Monocraft', 'assets/monocraft/Monocraft.otf');
   const text = canvasText(
     {
       text: 'Hello World!',

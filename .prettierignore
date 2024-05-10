@@ -4,6 +4,7 @@ LICENSE
 dist
 coverage
 public
+assets
 
 .*
 *.xml
@@ -16,6 +17,7 @@ public
 *.proto
 *.patch
 *.tsbuildinfo
+*.gif
 *.png
 *.ico
 *.txt

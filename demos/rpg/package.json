@@ -1,0 +1,18 @@
+{
+  "name": "@pixel-craft/rpg-demo",
+  "private": true,
+  "scripts": {
+    "check": "tsc",
+    "build": "pixel-craft bundle",
+    "watch": "pixel-craft bundle --watch"
+  },
+  "dependencies": {
+    "@pixel-craft/store": "workspace:*",
+    "@pixel-craft/composer": "workspace:*",
+    "@pixel-craft/renderer": "workspace:*",
+    "@pixel-craft/pixel-craft": "workspace:*"
+  },
+  "devDependencies": {
+    "@pixel-craft/cli": "workspace:*"
+  }
+}

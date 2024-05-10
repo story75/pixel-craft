@@ -1,2 +1,2 @@
-export { Composer } from './composer';
 export { composed } from './composed';
+export { Composer } from './composer';

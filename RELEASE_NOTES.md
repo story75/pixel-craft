@@ -52,6 +52,12 @@ expect(result).toEqual({
 
 Now imagine instead of plain objects, you have functions returning the individual objects.
 This is where this helper comes in handy and saves you from writing out the merged types manually.
+The difference to using object spread is that the original types are preserved, whereas object assign would create a new type with the same properties.
+
+#### `Store.add` now returns the inserted type instead of the Stores type
+
+Previously if you defined the store to accept e.g. `Sprite & Partial<Animated>` and inserted object of type `Sprite & Animated`,
+the `add` method would return `Sprite & Partial<Animated>` instead of the expected `Sprite & Animated`.
 
 ### Fixes and improvements
 

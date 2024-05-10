@@ -72,7 +72,7 @@ export class Store<T> implements Iterable<T> {
    * If the entity is already in the store, it will not be added again.
    * If the entity was added, the onAdd observable will be notified.
    */
-  add(entity: T): T {
+  add<R extends T>(entity: R): R {
     if (!entity || this.has(entity)) {
       return entity;
     }

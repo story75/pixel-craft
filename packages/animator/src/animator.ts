@@ -1,14 +1,14 @@
 import { Sprite } from '@pixel-craft/renderer';
 import { Animated } from './animated';
 import { Animation } from './animation';
-import { TransitionType } from './transition';
+import { Transition, TransitionType } from './transition';
 
 /**
  * An animator system is responsible to change the frame of an animated sprite.
  */
 export class Animator {
   static createAnimated<T>(
-    options: Pick<Animated, 'animations' | 'transitions'>,
+    options: Pick<Animated<T>, 'animations' | 'transitions'>,
   ): Animated<T> {
     const entryTransition = options.transitions.find(
       (transition) => transition.from.type === TransitionType.Entry,
@@ -24,17 +24,17 @@ export class Animator {
       animation,
       animations: options.animations,
       transitions: options.transitions,
-      possibleTransitions: Animator.findPossibleTransitions(
+      possibleTransitions: Animator.findPossibleTransitions<T>(
         options.transitions,
         animation,
       ),
     };
   }
 
-  static findPossibleTransitions(
-    transitions: Animated['transitions'],
+  static findPossibleTransitions<T>(
+    transitions: Array<Transition<T>>,
     newAnimation: Animation,
-  ): Animated['transitions'] {
+  ): Array<Transition<T>> {
     return transitions.filter((transition) => {
       if (transition.from.type === TransitionType.Any) {
         return (
@@ -48,50 +48,59 @@ export class Animator {
     });
   }
 
-  update(sprite: Sprite & Animated, deltaTime: number): void {
-    const transition = sprite.possibleTransitions.find((transition) =>
-      transition.condition(sprite),
+  update<T>(
+    sprite: Pick<Sprite, 'frame'>,
+    animated: Animated<T>,
+    state: T,
+    deltaTime: number,
+  ): void {
+    const transition = animated.possibleTransitions.find((transition) =>
+      transition.condition(state),
     );
 
     if (transition) {
-      const newAnimation = sprite.animations[transition.to];
-      this.animate(sprite, newAnimation);
+      const newAnimation = animated.animations[transition.to];
+      this.animate(sprite, animated, newAnimation);
     }
 
     if (
-      !sprite.animation.loop &&
-      sprite.animationFrame >= sprite.animation.animationFrames.length
+      !animated.animation.loop &&
+      animated.animationFrame >= animated.animation.animationFrames.length
     ) {
       return;
     }
 
-    sprite.animationTimer += deltaTime;
-    if (sprite.animationTimer <= sprite.animation.speed) {
+    animated.animationTimer += deltaTime;
+    if (animated.animationTimer <= animated.animation.speed) {
       return;
     }
 
-    sprite.animationTimer = 0;
-    sprite.animationFrame++;
+    animated.animationTimer = 0;
+    animated.animationFrame++;
 
-    if (sprite.animationFrame >= sprite.animation.animationFrames.length) {
-      sprite.animation.onEnd?.();
-      if (sprite.animation.loop) {
-        sprite.animationFrame = 0;
+    if (animated.animationFrame >= animated.animation.animationFrames.length) {
+      animated.animation.onEnd?.();
+      if (animated.animation.loop) {
+        animated.animationFrame = 0;
       }
     }
 
-    sprite.frame = sprite.animation.animationFrames[sprite.animationFrame];
-    sprite.animation.onFrame?.(sprite.animationFrame);
+    sprite.frame = animated.animation.animationFrames[animated.animationFrame];
+    animated.animation.onFrame?.(animated.animationFrame);
   }
 
-  animate(sprite: Sprite & Animated, animation: Animation): void {
-    sprite.possibleTransitions = Animator.findPossibleTransitions(
-      sprite.transitions,
+  animate<T>(
+    sprite: Pick<Sprite, 'frame'>,
+    animated: Animated<T>,
+    animation: Animation,
+  ): void {
+    animated.possibleTransitions = Animator.findPossibleTransitions<T>(
+      animated.transitions,
       animation,
     );
-    sprite.animation = animation;
-    sprite.animationFrame = 0;
-    sprite.animationTimer = 0;
-    sprite.frame = sprite.animation.animationFrames[sprite.animationFrame];
+    animated.animation = animation;
+    animated.animationFrame = 0;
+    animated.animationTimer = 0;
+    sprite.frame = animated.animation.animationFrames[animated.animationFrame];
   }
 }

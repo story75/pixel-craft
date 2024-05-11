@@ -1,4 +1,9 @@
-import { Animated, Animation, Animator } from '@pixel-craft/animator';
+import {
+  Animated,
+  Animation,
+  Animator,
+  Transition,
+} from '@pixel-craft/animator';
 import { Sprite } from '@pixel-craft/renderer';
 import { System } from './system';
 import { TimerSystem } from './timer';
@@ -15,16 +20,16 @@ export class AnimatorSystem implements System {
   ) {}
 
   static createAnimated<T>(
-    options: Pick<Animated, 'animations' | 'transitions'>,
+    options: Pick<Animated<T>, 'animations' | 'transitions'>,
   ): Animated<T> {
-    return Animator.createAnimated(options);
+    return Animator.createAnimated<T>(options);
   }
 
-  static findPossibleTransitions(
-    transitions: Animated['transitions'],
+  static findPossibleTransitions<T>(
+    transitions: Array<Transition<T>>,
     newAnimation: Animation,
-  ): Animated['transitions'] {
-    return Animator.findPossibleTransitions(transitions, newAnimation);
+  ): Array<Transition<T>> {
+    return Animator.findPossibleTransitions<T>(transitions, newAnimation);
   }
 
   addGameObject(sprite: unknown): void {
@@ -43,11 +48,11 @@ export class AnimatorSystem implements System {
 
   update(): void {
     for (const sprite of this.sprites) {
-      this.animator.update(sprite, this.timer.deltaTime);
+      this.animator.update(sprite, sprite, sprite, this.timer.deltaTime);
     }
   }
 
   animate(sprite: Sprite & Animated, animation: Animation): void {
-    this.animator.animate(sprite, animation);
+    this.animator.animate(sprite, sprite, animation);
   }
 }

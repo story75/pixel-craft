@@ -1,8 +1,8 @@
-import { Animated, Animator } from '@pixel-craft/animator';
+import { Animated, Animation, Animator } from '@pixel-craft/animator';
 import { Sprite, sprite } from '@pixel-craft/renderer';
 import { animatedSpriteSheet } from './animated-sprite-sheet';
 
-type Options<T extends Record<string, unknown> | undefined> = Pick<
+type Options<T extends Record<string, unknown>> = Pick<
   Partial<Sprite>,
   'x' | 'y' | 'z'
 > &
@@ -77,7 +77,7 @@ type Options<T extends Record<string, unknown> | undefined> = Pick<
     }>;
   };
 
-export function spriteParser<T extends Record<string, unknown> | undefined>(
+export function spriteParser<T extends Record<string, unknown>>(
   options: Options<T>,
   data: T,
 ): T & Sprite & Animated<T & Sprite> {
@@ -89,22 +89,22 @@ export function spriteParser<T extends Record<string, unknown> | undefined>(
     animations: options.animations,
   });
 
-  const animated = Animator.createAnimated({
-    animations: options.animations.reduce<Animated['animations']>(
-      (acc, animation) => {
-        acc[animation.name] = {
-          ...animation,
-          loop: animation.loop ?? false,
-          interruptible: animation.interruptible ?? false,
-          animationFrames: spriteSheet[animation.name],
-        };
-        return acc;
+  const animations = options.animations.reduce<Record<string, Animation>>(
+    (acc, animation) => ({
+      ...acc,
+      [animation.name]: {
+        ...animation,
+        loop: animation.loop ?? false,
+        interruptible: animation.interruptible ?? false,
+        animationFrames: spriteSheet[animation.name],
       },
-      {},
-    ),
-    // TODO: The types for Animated and especially transitions are too cumbersome to work with right now.
-    // eslint-disable-next-line
-    transitions: options.transitions as any,
+    }),
+    {},
+  );
+
+  const animated = Animator.createAnimated<T & Sprite>({
+    animations,
+    transitions: options.transitions,
   });
 
   return {

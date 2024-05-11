@@ -14,9 +14,12 @@ import {
 import { spriteParser } from '@pixel-craft/spritesheet';
 import { EntityStore } from '@pixel-craft/store';
 
-// TODO: remove me once animator is updated
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Entity = Sprite & Partial<Animated<any>>;
+type Moveable = {
+  velocity: Vector2;
+  movementSpeed: number;
+};
+
+type Entity = Sprite & Partial<Animated<Sprite & Moveable>>;
 
 type TimeState = {
   now: number;
@@ -78,68 +81,68 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     }
   }
 
-  const dino = entityStore.add(
-    spriteParser(
-      {
-        frameWidth: tileSize,
-        frameHeight: tileSize * 2,
-        x: 0,
-        y: 0,
-        z: 0.002,
-        atlas: atlasCharacters,
-        animations: [
-          {
-            name: 'idle',
-            row: 6,
-            frames: 4,
-            startFrame: 8,
-            speed: 5,
-            interruptible: false,
-            loop: true,
-          },
-          {
-            name: 'run',
-            row: 6,
-            frames: 4,
-            startFrame: 12,
-            speed: 5,
-            interruptible: false,
-            loop: true,
-          },
-          {
-            name: 'hit',
-            row: 6,
-            frames: 1,
-            startFrame: 16,
-            speed: 5,
-            interruptible: true,
-            loop: true,
-          },
-        ],
-        transitions: [
-          {
-            from: { type: TransitionType.Entry },
-            to: 'idle',
-            condition: () => true,
-          },
-          {
-            from: { type: TransitionType.Any },
-            to: 'idle',
-            condition: (state) => state.velocity.length() === 0,
-          },
-          {
-            from: { type: TransitionType.Any },
-            to: 'run',
-            condition: (state) => state.velocity.length() !== 0,
-          },
-        ],
-      },
-      {
-        velocity: new Vector2({ x: 0, y: 0 }),
-        movementSpeed: 1,
-      },
-    ),
+  const dino = spriteParser(
+    {
+      frameWidth: tileSize,
+      frameHeight: tileSize * 2,
+      x: 0,
+      y: 0,
+      z: 0.002,
+      atlas: atlasCharacters,
+      animations: [
+        {
+          name: 'idle',
+          row: 6,
+          frames: 4,
+          startFrame: 8,
+          speed: 5,
+          interruptible: false,
+          loop: true,
+        },
+        {
+          name: 'run',
+          row: 6,
+          frames: 4,
+          startFrame: 12,
+          speed: 5,
+          interruptible: false,
+          loop: true,
+        },
+        {
+          name: 'hit',
+          row: 6,
+          frames: 1,
+          startFrame: 16,
+          speed: 5,
+          interruptible: true,
+          loop: true,
+        },
+      ],
+      transitions: [
+        {
+          from: { type: TransitionType.Entry },
+          to: 'idle',
+          condition: () => true,
+        },
+        {
+          from: { type: TransitionType.Any },
+          to: 'idle',
+          condition: (state) => state.velocity.length() === 0,
+        },
+        {
+          from: { type: TransitionType.Any },
+          to: 'run',
+          condition: (state) => state.velocity.length() !== 0,
+        },
+      ],
+    },
+    {
+      velocity: new Vector2({ x: 0, y: 0 }),
+      movementSpeed: 1,
+    },
   );
+
+  entityStore.add(dino);
 
   const input = new InputSystem();
   await input.createSystem();
@@ -168,9 +171,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       dino.flip[0] = dino.velocity.x < 0;
     }
 
-    // TODO: remove me once animator is updated
-    // eslint-disable-next-line
-    animator.update(dino as any, state.deltaTime);
+    animator.update(dino, dino, dino, state.deltaTime);
   };
 
   const systems = [timeSystem, dinoSystem, renderSystem];

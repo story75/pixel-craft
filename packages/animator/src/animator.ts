@@ -65,7 +65,7 @@ export class Animator {
 
     if (
       !animated.animation.loop &&
-      animated.animationFrame >= animated.animation.animationFrames.length
+      animated.animationFrame === animated.animation.animationFrames.length - 1
     ) {
       return;
     }

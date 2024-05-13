@@ -33,7 +33,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const context = await createContext(canvas);
   const textureLoader = createTextureLoader(context.device);
   const [atlas, atlasCharacters] = await Promise.all([
-    textureLoader('assets/SERENE_VILLAGE_REVAMPED/Serene_Village_16x16.png'),
+    textureLoader('assets/0x72_DungeonTilesetII_v1.7/atlas_floor-16x16.png'),
     textureLoader(
       'assets/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7.png',
     ),
@@ -71,7 +71,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
           x: x * tileSize,
           y: y * tileSize,
           frame: {
-            x: 4 * tileSize,
+            x: 0,
             y: 0,
             height: tileSize,
             width: tileSize,

@@ -1,5 +1,5 @@
 import type {Component} from 'solid-js';
-import {setSpriteSheet} from "../state/sprite-sheet";
+import {setState} from "../state/state";
 
 export const StartPage: Component = () => {
     const onSpriteSheetChange = (e: Event) => {
@@ -9,7 +9,7 @@ export const StartPage: Component = () => {
             return;
         }
 
-        setSpriteSheet(file);
+        setState(state => ({...state, spriteSheet: file}));
         window.location.hash = "#/sprite-sheet";
     }
 

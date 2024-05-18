@@ -1,14 +1,13 @@
 import type {Component} from 'solid-js';
-import {setSpriteFrames, spriteSheet} from "../state/sprite-sheet";
 import {createSignal} from "solid-js";
+import {setState, state} from "../state/state";
 
 export const SpriteSheetPage: Component = () => {
-    if (!spriteSheet()) {
+    if (!state.spriteSheet) {
         window.location.hash = "#/";
         return;
     }
 
-    const [activeTiles, setActiveTiles] = createSignal<string[]>([]);
     const [imageWidth, setImageWidth] = createSignal<number>(0);
     const [imageHeight, setImageHeight] = createSignal<number>(0);
     const onImageLoad = (e: Event) => {
@@ -17,60 +16,92 @@ export const SpriteSheetPage: Component = () => {
         setImageHeight(target.height);
     }
 
-    const [zoom, setZoom] = createSignal<number>(4);
     const zooms = [1, 2, 4];
     const onZoomChange = (e: Event) => {
         const target = e.target as HTMLInputElement;
-        setZoom(Number(target.value));
+        setState(s => ({
+            ...s,
+            spriteSheetOptions: {
+                ...s.spriteSheetOptions,
+                zoom: Number(target.value),
+            }
+        }));
     }
 
-    const [tileSize, setTileSize] = createSignal<number>(16);
     const tileSizes = [16, 32, 48];
     const onTileSizeChange = (e: Event) => {
         const target = e.target as HTMLInputElement;
-        setTileSize(Number(target.value));
-        setActiveTiles([]);
+        setState(s => ({
+            ...s,
+            spriteSheetOptions: {
+                ...s.spriteSheetOptions,
+                tileSize: Number(target.value),
+                activeTiles: [],
+            }
+        }));
     }
 
-    const [margin, setMargin] = createSignal<number>(0);
     const margins = [0, 16, 32];
     const onMarginChange = (e: Event) => {
         const target = e.target as HTMLInputElement;
-        setMargin(Number(target.value));
-        setActiveTiles([]);
+        setState(s => ({
+            ...s,
+            spriteSheetOptions: {
+                ...s.spriteSheetOptions,
+                margin: Number(target.value),
+                activeTiles: [],
+            }
+        }));
     }
 
-    const zoomedTileSize = () => tileSize() * zoom();
-    const tileCountX = () => Math.floor((imageWidth() - margin() * 2) / tileSize());
-    const tileCountY = () => Math.floor((imageHeight() - margin() * 2) / tileSize());
+    const zoomedTileSize = () => state.spriteSheetOptions.tileSize * state.spriteSheetOptions.zoom;
+    const activeTilesLength = () => state.spriteSheetOptions.activeTiles.length;
+    const tileCountX = () => Math.floor((imageWidth() - state.spriteSheetOptions.margin * 2) / state.spriteSheetOptions.tileSize);
+    const tileCountY = () => Math.floor((imageHeight() - state.spriteSheetOptions.margin * 2) / state.spriteSheetOptions.tileSize);
 
     const tileKey = (x: number, y: number) => `${x}:${y}`;
 
     const onTileClick = (x: number, y: number) => {
         const key = tileKey(x, y);
-        const tiles = activeTiles();
+        const tiles = state.spriteSheetOptions.activeTiles;
         if (tiles.includes(key)) {
-            setActiveTiles(tiles.filter(t => t !== key));
+            setState(s => ({
+                ...s,
+                spriteSheetOptions: {
+                    ...s.spriteSheetOptions,
+                    activeTiles: tiles.filter(t => t !== key),
+                }
+            }));
         } else {
-            setActiveTiles([...tiles, key]);
+            setState(s => ({
+                ...s,
+                spriteSheetOptions: {
+                    ...s.spriteSheetOptions,
+                    activeTiles: [...tiles, key],
+                }
+            }));
         }
     }
 
     const onSaveTiles = () => {
-        if (activeTiles().length === 0) {
+        if (state.spriteSheetOptions.activeTiles.length === 0) {
             return;
         }
 
-        const frames = activeTiles().map(key => {
+        const frames = state.spriteSheetOptions.activeTiles.map(key => {
             const [x, y] = key.split(":").map(Number);
+            const tileSize = state.spriteSheetOptions.tileSize;
             return {
-                x: margin() + x * tileSize(),
-                y: margin() + y * tileSize(),
-                width: tileSize(),
-                height: tileSize(),
+                x: state.spriteSheetOptions.margin + x * tileSize,
+                y: state.spriteSheetOptions.margin + y * tileSize,
+                width: tileSize,
+                height: tileSize,
             };
         });
-        setSpriteFrames(frames);
+        setState(s => ({
+            ...s,
+            spriteFrames: frames,
+        }));
         window.location.hash = "#/painter";
     }
 
@@ -81,29 +112,31 @@ export const SpriteSheetPage: Component = () => {
                     <span className="join-item btn no-animation">Zoom</span>
                     <For each={zooms}>{(z) =>
                         <input className="join-item btn" type="radio" name="zoom"
-                               checked={zoom() === z} value={z} aria-label={`${z}x`} on:change={onZoomChange}/>
+                               checked={state.spriteSheetOptions.zoom === z} value={z} aria-label={`${z}x`} on:change={onZoomChange}/>
                     }</For>
                 </div>
                 <div className="join mr-4">
                     <span className="join-item btn no-animation">Tile size</span>
                     <For each={tileSizes}>{(t) =>
                         <input className="join-item btn" type="radio" name="tile-size"
-                               checked={tileSize() === t} value={t} aria-label={`${t}px`} on:change={onTileSizeChange}/>
+                               checked={state.spriteSheetOptions.tileSize === t} value={t} aria-label={`${t}px`} on:change={onTileSizeChange}/>
                     }</For>
                 </div>
                 <div className="join mr-4">
                     <span className="join-item btn no-animation">Margin</span>
                     <For each={margins}>{(m) =>
                         <input className="join-item btn" type="radio" name="margin"
-                               checked={margin() === m} value={m} aria-label={`${m}px`} on:change={onMarginChange}/>
+                               checked={state.spriteSheetOptions.margin === m} value={m} aria-label={`${m}px`} on:change={onMarginChange}/>
                     }</For>
                 </div>
-                <button className="btn btn-primary" disabled={activeTiles().length === 0} on:click={onSaveTiles}>Save tiles</button>
+                <button className="btn btn-primary" disabled={activeTilesLength() === 0} on:click={onSaveTiles}>Save
+                    tiles
+                </button>
             </div>
             <div className="mb-4">
                 <div className="inline-block">
                     <div className="absolute">
-                        <div className="flex flex-col" style={{padding: `${margin() * zoom()}px`}}>
+                        <div className="flex flex-col" style={{padding: `${state.spriteSheetOptions.margin * state.spriteSheetOptions.zoom}px`}}>
                             <For each={[...new Array(tileCountY())]}>{(_, y) =>
                                 <div className="flex">
                                     <For each={[...new Array(tileCountX())]}>{(_, x) =>
@@ -112,8 +145,8 @@ export const SpriteSheetPage: Component = () => {
                                             "box-sizing": "border-box",
                                             width: `${zoomedTileSize()}px`,
                                             height: `${zoomedTileSize()}px`,
-                                            border: activeTiles().includes(tileKey(x(), y())) ? `${zoom()}px solid rgba(255, 0, 0, 0.4)` : "none",
-                                            background: activeTiles().includes(tileKey(x(), y())) ? `rgba(0, 0, 0, 0)` : `rgba(0, 0, 0, 0.4)`,
+                                            border: state.spriteSheetOptions.activeTiles.includes(tileKey(x(), y())) ? `${state.spriteSheetOptions.zoom}px solid rgba(255, 0, 0, 0.4)` : "none",
+                                            background: state.spriteSheetOptions.activeTiles.includes(tileKey(x(), y())) ? `rgba(0, 0, 0, 0)` : `rgba(0, 0, 0, 0.4)`,
                                         }}>{x}{y}</div>
                                     }</For>
                                 </div>
@@ -123,7 +156,8 @@ export const SpriteSheetPage: Component = () => {
                     <div className="checkerboard" style={{
                         "background-size": `${zoomedTileSize()}px ${zoomedTileSize()}px`,
                     }}>
-                        <img src={URL.createObjectURL(spriteSheet())} style={{zoom: zoom(), "image-rendering": "pixelated"}}
+                        <img src={URL.createObjectURL(state.spriteSheet)}
+                             style={{zoom: state.spriteSheetOptions.zoom, "image-rendering": "pixelated"}}
                              on:load={onImageLoad}/>
                     </div>
                 </div>

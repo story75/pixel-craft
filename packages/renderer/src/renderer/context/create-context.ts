@@ -14,6 +14,11 @@ export type WebGPUContext = {
   pointLight: PointLightSystem;
 };
 
+export type CreateContextOptions = {
+  width?: number;
+  height?: number;
+}
+
 /**
  * Creates a WebGPU context for a given canvas.
  *
@@ -27,6 +32,7 @@ export type WebGPUContext = {
  */
 export async function createContext(
   canvas: HTMLCanvasElement,
+  options: CreateContextOptions = {},
 ): Promise<WebGPUContext> {
   const adapter = await navigator.gpu.requestAdapter();
   if (!adapter) {
@@ -39,9 +45,14 @@ export async function createContext(
     throw new Error('Could not request WebGPU context!');
   }
 
-  const devicePixelRatio = window.devicePixelRatio;
-  canvas.width = window.innerWidth * devicePixelRatio;
-  canvas.height = window.innerHeight * devicePixelRatio;
+  if (options.width && options.height) {
+    canvas.width = options.width;
+    canvas.height = options.height;
+  } else {
+    const devicePixelRatio = window.devicePixelRatio;
+    canvas.width = window.innerWidth * devicePixelRatio;
+    canvas.height = window.innerHeight * devicePixelRatio;
+  }
 
   const presentationFormat = navigator.gpu.getPreferredCanvasFormat();
 

@@ -2,6 +2,8 @@ import type {Component} from 'solid-js';
 import {setState, state} from "../state/state";
 import {createSignal} from "solid-js";
 import {produce} from "solid-js/store";
+import {createContext, createTextureLoader, pipeline, RenderPass, Sprite, sprite} from "@pixel-craft/renderer";
+import {EntityStore} from "@pixel-craft/store";
 
 export const PainterPage: Component = () => {
     if (!state.spriteSheet || state.spriteFrames.length === 0){
@@ -26,6 +28,45 @@ export const PainterPage: Component = () => {
     const [activeLayer, setActiveLayer] = createSignal<number>(0);
 
     const currentLayer = () => state.mapOptions.layers[activeLayer()];
+
+    let entityStore: EntityStore<any>;
+    let atlas: GPUTexture;
+    let renderPass: RenderPass | undefined;
+
+    const renderMap = () => {
+        if (!renderPass) {
+            return;
+        }
+
+        entityStore.clear();
+
+        const tileSize = state.spriteSheetOptions.tileSize;
+
+        const tilesX = state.mapOptions.width;
+        const tilesY = state.mapOptions.height;
+
+        for (let layer = 0; layer < state.mapOptions.layers.length; layer++) {
+            for (let y = 0; y < tilesY; y++) {
+                for (let x = 0; x < tilesX; x++) {
+                    const frameIndex = state.mapOptions.layers[layer][x][y];
+                    if (frameIndex === undefined) {
+                        continue;
+                    }
+
+                    entityStore.add(
+                        sprite({
+                            texture: atlas,
+                            x: tileSize * 7 + ((x * tileSize) / 2 + (y * -tileSize) / 2),
+                            y: (x * tileSize) / 4 + (y * tileSize) / 4,
+                            frame: state.spriteFrames[frameIndex],
+                        }),
+                    );
+                }
+            }
+        }
+
+        renderPass(entityStore as Sprite[]);
+    }
 
     const onTileClick = (i: number) => {
         setActiveTile(i);
@@ -84,13 +125,15 @@ export const PainterPage: Component = () => {
         }));
     }
 
-    const onTilePaint = (x: number, y: number) => {
-        if (!isMouseDown) {
+    const onTilePaint = (x: number, y: number, force?: boolean) => {
+        if (!isMouseDown && !force) {
             return;
         }
         setState(produce(s => {
             s.mapOptions.layers[activeLayer()][x][y] = activeTile();
         }));
+
+        renderMap();
     }
 
     const onSave = () => {
@@ -100,6 +143,23 @@ export const PainterPage: Component = () => {
 
     if (state.mapOptions.layers.length === 0) {
         onLayerAdd();
+    }
+
+    const onCanvasMount = async (canvas: HTMLCanvasElement) => {
+        const context = await createContext(canvas, {
+            width: 960,
+            height: 540,
+        });
+        const textureLoader = createTextureLoader(context.device);
+        atlas = await textureLoader(state.spriteSheet!);
+
+        entityStore = new EntityStore();
+        renderPass = pipeline(context);
+
+        const scaling = { x: 2, y: 2 };
+        context.camera.zoom(scaling);
+
+        renderMap();
     }
 
     return (
@@ -152,23 +212,26 @@ export const PainterPage: Component = () => {
                     }}></div>
                 }</For>
             </div>
-            <div className="flex flex-col mb-4">
-                <For each={currentLayer()}>{(row, x) =>
-                    <div className="flex">
-                        <For each={row}>{(tileIndex, y) =>
-                            <div on:mousemove={() => onTilePaint(x(), y())} style={{
-                                cursor: "pointer",
-                                "box-sizing": "border-box",
-                                margin: '2px',
-                                width: `${tileWidth}px`,
-                                height: `${tileHeight}px`,
-                                "image-rendering": "pixelated",
-                                background: tileIndex !== undefined ? `url(${spriteImageURL})` : 'rgba(0, 0, 0, 0.5)',
-                                "background-position": tileIndex !== undefined ? `-${state.spriteFrames[tileIndex].x}px -${state.spriteFrames[tileIndex].y}px` : 'initial',
-                            }}></div>
-                        }</For>
-                    </div>
-                }</For>
+            <div className="flex mb-4">
+                <div className="flex flex-col mb-4">
+                    <For each={currentLayer()}>{(row, x) =>
+                        <div className="flex">
+                            <For each={row}>{(tileIndex, y) =>
+                                <div on:mousemove={() => onTilePaint(x(), y())} on:click={() => onTilePaint(x(), y(), true)} style={{
+                                    cursor: "pointer",
+                                    "box-sizing": "border-box",
+                                    margin: '2px',
+                                    width: `${tileWidth}px`,
+                                    height: `${tileHeight}px`,
+                                    "image-rendering": "pixelated",
+                                    background: tileIndex !== undefined ? `url(${spriteImageURL})` : 'rgba(0, 0, 0, 0.5)',
+                                    "background-position": tileIndex !== undefined ? `-${state.spriteFrames[tileIndex].x}px -${state.spriteFrames[tileIndex].y}px` : 'initial',
+                                }}></div>
+                            }</For>
+                        </div>
+                    }</For>
+                </div>
+                <canvas ref={onCanvasMount}></canvas>
             </div>
         </div>
     );

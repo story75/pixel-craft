@@ -17,7 +17,7 @@ export type WebGPUContext = {
 export type CreateContextOptions = {
   width?: number;
   height?: number;
-}
+};
 
 /**
  * Creates a WebGPU context for a given canvas.

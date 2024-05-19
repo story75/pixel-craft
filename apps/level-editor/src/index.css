@@ -2,26 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
-    font-family: "Open Sans", sans-serif;
-    font-optical-sizing: auto;
-    font-style: normal;
-    font-variation-settings: "wdth" 100;
+html,
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings: 'wdth' 100;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: "Bebas Neue", sans-serif;
-    font-weight: 400;
-    font-style: normal;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .checkerboard {
-    background-image: conic-gradient(
-        rgba(220, 103, 175, 0.5) 90deg,
-        rgba(168, 15, 117, 0.5) 90deg 180deg,
-        rgba(220, 87, 175, 0.5) 180deg 270deg,
-        rgba(168, 15, 117, 0.5) 270deg
-    );
-    background-repeat: repeat;
-    background-size: 48px 48px;
+  background-image: conic-gradient(
+    rgba(220, 103, 175, 0.5) 90deg,
+    rgba(168, 15, 117, 0.5) 90deg 180deg,
+    rgba(220, 87, 175, 0.5) 180deg 270deg,
+    rgba(168, 15, 117, 0.5) 270deg
+  );
+  background-repeat: repeat;
+  background-size: 48px 48px;
 }

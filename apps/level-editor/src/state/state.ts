@@ -13,7 +13,7 @@ export type State = {
   mapOptions: {
     width: number;
     height: number;
-    layers: (number | undefined)[][][];
+    layers: Array<Array<Array<number | undefined>>>;
   };
 };
 

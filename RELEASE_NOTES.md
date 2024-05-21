@@ -1,6 +1,6 @@
 # Release Notes
 
-## UNRELEASED
+## 0.9.0 (21.05.2024)
 
 ### Breaking changes
 
@@ -58,6 +58,12 @@ The difference to using object spread is that the original types are preserved, 
 
 Previously if you defined the store to accept e.g. `Sprite & Partial<Animated>` and inserted object of type `Sprite & Animated`,
 the `add` method would return `Sprite & Partial<Animated>` instead of the expected `Sprite & Animated`.
+
+#### `createContext` now accepts an optional `options` object
+
+The `createContext` function now accepts an optional `options` object that can be used to configure the context.
+Currently, the only option is `width` and `height` to set the initial size of the canvas.
+If no options are provided, the canvas will be resized to the window as before.
 
 ### Fixes and improvements
 

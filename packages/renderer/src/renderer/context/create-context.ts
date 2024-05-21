@@ -26,8 +26,6 @@ export type CreateContextOptions = {
  * This function will request a WebGPU adapter and device, and create a WebGPU context for the given canvas.
  * The canvas will be resized to the window size, and the device pixel ratio will be taken into account.
  *
- * @param canvas
- *
  * @throws Error if the WebGPU adapter or context could not be requested.
  */
 export async function createContext(

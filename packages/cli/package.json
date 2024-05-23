@@ -15,7 +15,8 @@
   "dependencies": {
     "yargs": "^17.7.2",
     "@clack/prompts": "^0.7.0",
-    "picocolors": "^1.0.0"
+    "picocolors": "^1.0.0",
+    "esbuild": "^0.21.3"
   },
   "devDependencies": {
     "@types/yargs": "^17.0.32"

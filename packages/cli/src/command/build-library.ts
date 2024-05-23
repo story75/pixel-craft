@@ -1,4 +1,4 @@
-import { $ } from 'bun';
+import { build, BuildOptions, context } from 'esbuild';
 import yargs from 'yargs';
 
 export function buildLibrary(cli: ReturnType<typeof yargs>): void {
@@ -18,13 +18,23 @@ export function buildLibrary(cli: ReturnType<typeof yargs>): void {
         cjs: 'dist/index.js',
         esm: 'dist/esm.js',
       };
-      const command = (format: 'cjs' | 'esm') =>
-        $`esbuild src/index.ts --loader:.wgsl=text --outfile=${files[format]} --bundle --platform=node --format=${format} --sourcemap ${watch ? '--watch' : ''}`;
+      const options = (format: 'cjs' | 'esm'): BuildOptions => ({
+        entryPoints: ['src/index.ts'],
+        outfile: files[format],
+        bundle: true,
+        platform: 'node',
+        format,
+        sourcemap: true,
+        loader: {
+          '.wgsl': 'text',
+        },
+      });
 
       if (!watch) {
-        await Promise.all([command('cjs'), command('esm')]);
+        await Promise.all([build(options('cjs')), build(options('esm'))]);
       } else {
-        await command('esm');
+        const ctx = await context(options('esm'));
+        await ctx.watch();
       }
     },
   );

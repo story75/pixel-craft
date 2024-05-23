@@ -1,4 +1,4 @@
-import { $ } from 'bun';
+import { build, BuildOptions, context } from 'esbuild';
 import yargs from 'yargs';
 
 export function bundle(cli: ReturnType<typeof yargs>): void {
@@ -14,7 +14,22 @@ export function bundle(cli: ReturnType<typeof yargs>): void {
     },
     async (args) => {
       const watch = args['w'] as boolean | undefined;
-      await $`esbuild src/index.ts --outfile=public/dist/bundle.js --bundle ${{ raw: watch ? '--servedir=public --sourcemap --watch' : '' }}`;
+
+      const options: BuildOptions = {
+        entryPoints: ['src/index.ts'],
+        outfile: 'public/dist/bundle.js',
+        bundle: true,
+        sourcemap: watch,
+      };
+
+      if (watch) {
+        const ctx = await context(options);
+        await ctx.serve({
+          servedir: 'public',
+        });
+      } else {
+        await build(options);
+      }
     },
   );
 }

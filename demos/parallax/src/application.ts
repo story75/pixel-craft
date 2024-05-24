@@ -7,6 +7,7 @@ import {
   sprite,
   tilingSprite,
 } from '@pixel-craft/renderer';
+import { Tween, easeInOutQuad } from '@pixel-craft/tweening';
 import Stats from 'stats.js';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
@@ -70,6 +71,15 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   });
   logoSprite.x = canvas.width / 2 - logoSprite.width / 2;
 
+  const tween = new Tween(
+    logoSprite,
+    { y: 50 },
+    easeInOutQuad,
+    4000,
+    true,
+    true,
+  );
+
   const renderPass = pipeline(context);
   const sprites: Sprite[] = [
     skyBackgroundSprite,
@@ -85,6 +95,8 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const draw = function (now: number) {
     timer.update(now);
     stats.begin();
+
+    tween.update(timer.frameTime);
 
     skyBackgroundSprite.offset.x += (backgroundSpeed / 4) * timer.deltaTime;
     skyMoonSprite.offset.x += (backgroundSpeed / 8) * timer.deltaTime;

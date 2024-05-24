@@ -1,5 +1,42 @@
 # Release Notes
 
+## 0.9.1 (24.05.2024)
+
+### Features
+
+#### `frameTime` is now public on `TimerSystem`
+
+The `frameTime` property on the `TimerSystem` is now public and can be accessed directly.
+This property contains the time in milliseconds since the last frame and can be used to update timing sensitive game logic like tweens.
+
+#### Add `@pixel-craft/tweening` package
+
+Introducing the `@pixel-craft/tweening` package. This allows you to create tweens for your game objects.
+A tween is a way to interpolate between two values over time. This can be used to create smooth animations for your game objects.
+
+```ts
+const logoSprite = sprite({
+  texture: logo,
+  z: 0.5,
+  width: logo.width * 4,
+  height: logo.height * 4,
+});
+logoSprite.x = canvas.width / 2 - logoSprite.width / 2;
+
+const tween = new Tween(logoSprite, { y: 50 }, easeInOutQuad, 4000, true, true);
+
+const draw = function (now: number) {
+  timer.update(now);
+  tween.update(timer.frameTime);
+
+  renderPass(sprites);
+  requestAnimationFrame(draw);
+};
+```
+
+The above code will create a sprite and a tween that will move the sprite to the y position of 50 over 4 seconds using the easeInOutQuad easing function.
+When the tween is finished, it will loop back to the start position and repeat the animation forever.
+
 ## 0.9.0 (21.05.2024)
 
 ### Breaking changes

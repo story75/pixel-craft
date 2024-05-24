@@ -10,7 +10,8 @@
     "stats.js": "^0.17.0",
     "@pixel-craft/renderer": "workspace:*",
     "@pixel-craft/pixel-craft": "workspace:*",
-    "@pixel-craft/tweening": "workspace:*"
+    "@pixel-craft/tweening": "workspace:*",
+    "@pixel-craft/audio": "workspace:*"
   },
   "devDependencies": {
     "@types/stats.js": "^0.17.3",

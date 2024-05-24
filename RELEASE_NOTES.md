@@ -1,5 +1,28 @@
 # Release Notes
 
+## 0.9.2 (25.05.2024)
+
+### Features
+
+#### Add `@pixel-craft/audio` package
+
+Introducing the `@pixel-craft/audio` package. This package allows you to play audio in your projects.
+It uses the Web Audio API under the hood and provides a simple interface to load and play audio files.
+
+The package provides a `AudioMixer` class with a master channel as well as sub channels for bgm, sfx and voice.
+
+You can load audio files with the `loadAudio` function and play them with the `play` function like so:
+
+```ts
+const audioMixer = new AudioMixer();
+
+const bgm = await audioMixer.load('assets/jrpg-piano/jrpg-piano.mp3');
+bgm.loop = true;
+audioMixer.play(bgm, 'bgm');
+```
+
+The AudioMixer will automatically unlock the audio context on the first user interaction, so you can play audio without additional restrictions.
+
 ## 0.9.1 (24.05.2024)
 
 ### Features

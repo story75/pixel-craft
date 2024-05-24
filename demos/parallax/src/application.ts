@@ -1,3 +1,4 @@
+import { AudioMixer } from '@pixel-craft/audio';
 import { TimerSystem } from '@pixel-craft/pixel-craft';
 import {
   Sprite,
@@ -11,6 +12,12 @@ import { Tween, easeInOutQuad } from '@pixel-craft/tweening';
 import Stats from 'stats.js';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
+  const audioMixer = new AudioMixer();
+
+  const bgm = await audioMixer.load('assets/jrpg-piano/jrpg-piano.mp3');
+  bgm.loop = true;
+  audioMixer.play(bgm, 'bgm');
+
   const stats = new Stats();
   document.body.appendChild(stats.dom);
 

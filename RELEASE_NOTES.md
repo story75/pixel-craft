@@ -1,5 +1,79 @@
 # Release Notes
 
+## 0.9.3 (26.05.2024)
+
+### Features
+
+#### Add `@pixel-craft/input` package
+
+Introducing the `@pixel-craft/input` package. This package provides an input system for handling keyboard input in your projects.
+The goal is to provide game pad support in the future as well.
+
+The main class is `InputManager` which allows you to define actions and bind them to keys. You can then check if an action is active:
+
+```ts
+import { Actions, InputManager } from '@pixel-craft/input';
+
+// Use default actions and bindings. See the type definition for more information.
+const input = new InputManager();
+
+// check if the action is active right now
+if (input.isActionPressed(Actions.Up)) {
+  // do something
+}
+
+// or  get notified when the action is pressed
+input.observables[Actions.Up].subscribe(() => {
+  // do something
+});
+```
+
+#### Add `@pixel-craft/translation` package
+
+Introducing the `@pixel-craft/translation` package. This package provides a translation system for handling localization in your projects.
+
+The main class is `Translator` which allows you to define translations and get localized strings. You can also change the current language at runtime.
+
+```ts
+import { Translator } from '@pixel-craft/translation';
+
+const translator = new Translator(
+  {
+    en: {
+      hello: 'Hello',
+      world: 'World',
+      nested: {
+        key: 'Nested key',
+      },
+    },
+    de: {
+      hello: 'Hallo',
+      world: 'Welt',
+      nested: {
+        key: 'Verschachtelter Schlüssel',
+      },
+    },
+  },
+  'en',
+);
+
+// get the translation for the current language
+const hello = translator.get('hello'); // 'Hello'
+
+// change the language
+translator.currentLanguage = 'de';
+const nested = translator.get('nested.key'); // 'Verschachtelter Schlüssel'
+```
+
+The package does not assume any specific language keys or structure, so you can define your translations however you like.
+The only requirement is that the translations are provided as an object with language keys and nested keys for the translations.
+
+#### Add `Instance` property to `AudioMixer`
+
+The `Instance` property on the `AudioMixer` class allows you to access it as a singleton instance.
+It is set when the first `AudioMixer` instance is created and can be used to access the instance from anywhere in your project.
+Beware that new instances will overwrite the singleton instance.
+
 ## 0.9.2 (25.05.2024)
 
 ### Features

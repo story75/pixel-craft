@@ -8,6 +8,15 @@
  * The mixer uses common channels like master, background music (BGM), sound effects (SFX), and voice.
  */
 export class AudioMixer {
+  /**
+   * The singleton instance of the AudioMixer
+   *
+   * @remarks
+   * This property is set when the AudioMixer is instantiated the first time.
+   * New instances of the AudioMixer will overwrite the existing instance.
+   */
+  static Instance: AudioMixer | undefined;
+
   private readonly audioContext = new AudioContext();
 
   private readonly masterGain = this.audioContext.createGain();
@@ -31,6 +40,8 @@ export class AudioMixer {
     this.bgmGain.connect(this.masterGain);
     this.sfxGain.connect(this.masterGain);
     this.voiceGain.connect(this.masterGain);
+
+    AudioMixer.Instance = this;
   }
 
   get masterVolume(): number {

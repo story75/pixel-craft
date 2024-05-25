@@ -74,9 +74,15 @@ export default tseslint.config(
           format: ['PascalCase', 'UPPER_CASE'],
         },
         {
+          selector: 'classProperty',
+          modifiers: ['private'],
+          format: ['camelCase', 'UPPER_CASE'],
+          leadingUnderscore: 'allow',
+        },
+        {
           // only allow camelCase, UPPER_CASE or _
           selector: 'variable',
-          format: ['camelCase', 'UPPER_CASE'],
+          format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
           leadingUnderscore: 'allow',
           custom: {
             regex: '^_.+',
@@ -168,7 +174,6 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
     },
   },

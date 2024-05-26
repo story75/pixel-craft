@@ -1,5 +1,42 @@
 # Release Notes
 
+## UNRELEASED
+
+### Features
+
+#### Add `@pixel-craft/timer` package
+
+Introducing the `@pixel-craft/timer` package. This package provides a timer class for your projects.
+It is a simpler version of the previous TimerSystem class and is meant to be a replacement for it.
+
+The main class is `Timer` which allows you to update the timer with the current time and get the delta time since the last update.
+
+```ts
+import { Timer } from '@pixel-craft/timer';
+
+const timer = new Timer();
+
+// can now also be accessed via Timer.Instance
+
+const draw = function (now: number) {
+  timer.update(now);
+  console.log(timer.deltaTime);
+  requestAnimationFrame(draw);
+};
+
+draw(performance.now());
+```
+
+### Fixes and improvements
+
+#### Set Chrome 124 as target for CLI
+
+The `@pixel-craft/cli` package now targets Chrome 124 by default. This ensures that the generated code only transpiles to features that are not supported by Chrome 124 natively.
+The list of unsupported features should be very small, as Chrome 124 is a very modern browser and is needed for the WebGPU API.
+
+Nonetheless, this change ensures that the generated code transpiles decorators which are not supported natively yet.
+This for example enables frameworks like Lit and opens up the possibility to use decorators for the engine itself in the future.
+
 ## 0.9.3 (26.05.2024)
 
 ### Features

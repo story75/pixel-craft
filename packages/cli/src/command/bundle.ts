@@ -20,6 +20,7 @@ export function bundle(cli: ReturnType<typeof yargs>): void {
         outfile: 'public/dist/bundle.js',
         bundle: true,
         sourcemap: watch,
+        target: ['chrome124'],
       };
 
       if (watch) {

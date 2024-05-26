@@ -1,0 +1,20 @@
+import { LitElement, css, html } from 'lit';
+import { customElement } from 'lit/decorators.js';
+
+@customElement('ui-root')
+export class Root extends LitElement {
+  static styles = css`
+    :host {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100dvw;
+      height: 100dvh;
+      overflow: hidden;
+    }
+  `;
+
+  render() {
+    return html`<slot></slot>`;
+  }
+}

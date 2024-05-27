@@ -5,6 +5,7 @@ import { customElement } from 'lit/decorators.js';
 export class Root extends LitElement {
   static styles = css`
     :host {
+      display: flex;
       position: absolute;
       top: 0;
       left: 0;

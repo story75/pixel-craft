@@ -27,6 +27,17 @@ const draw = function (now: number) {
 draw(performance.now());
 ```
 
+#### Allow .png import via CLI
+
+If you use the CLI to build your project, you can now import .png files directly in your code.
+The imported file will be treated as a data url, so use with caution for larger files.
+
+This feature is mainly meant for small images like icons or sprites that you want to include directly in your code e.g. in UI components.
+
+```ts
+
+```
+
 ### Fixes and improvements
 
 #### Set Chrome 124 as target for CLI

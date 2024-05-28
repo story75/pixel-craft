@@ -1,5 +1,6 @@
 import { build, BuildOptions, context } from 'esbuild';
 import yargs from 'yargs';
+import { ESBUILD_LOADER } from './esbuild-loader';
 
 export function buildLibrary(cli: ReturnType<typeof yargs>): void {
   cli.command(
@@ -25,9 +26,7 @@ export function buildLibrary(cli: ReturnType<typeof yargs>): void {
         platform: 'node',
         format,
         sourcemap: true,
-        loader: {
-          '.wgsl': 'text',
-        },
+        loader: ESBUILD_LOADER,
       });
 
       if (!watch) {

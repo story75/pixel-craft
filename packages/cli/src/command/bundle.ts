@@ -1,5 +1,6 @@
 import { build, BuildOptions, context } from 'esbuild';
 import yargs from 'yargs';
+import { ESBUILD_LOADER } from './esbuild-loader';
 
 export function bundle(cli: ReturnType<typeof yargs>): void {
   cli.command(
@@ -21,6 +22,7 @@ export function bundle(cli: ReturnType<typeof yargs>): void {
         bundle: true,
         sourcemap: watch,
         target: ['chrome124'],
+        loader: ESBUILD_LOADER,
       };
 
       if (watch) {

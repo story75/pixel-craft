@@ -1,9 +1,10 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import '../components/pulse-text';
 import './main-menu';
 import './wake-up-prompt';
 
-@customElement('ui-title-screen')
+@customElement('example-ui-title-screen')
 export class TitleScreen extends LitElement {
   static styles = css`
     :host {
@@ -29,7 +30,11 @@ export class TitleScreen extends LitElement {
 
   render() {
     return this.sleeping
-      ? html`<ui-title-screen-wake-up-prompt></ui-title-screen-wake-up-prompt>`
-      : html`<ui-title-screen-main-menu></ui-title-screen-main-menu>`;
+      ? html`<example-ui-title-screen-wake-up-prompt>
+          <pixel-craft-ui-pulse-text
+            text="Press any key"
+          ></pixel-craft-ui-pulse-text>
+        </example-ui-title-screen-wake-up-prompt>`
+      : html`<example-ui-title-screen-main-menu></example-ui-title-screen-main-menu>`;
   }
 }

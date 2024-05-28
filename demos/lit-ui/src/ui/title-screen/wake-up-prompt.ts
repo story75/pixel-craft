@@ -1,7 +1,7 @@
-import { LitElement, css } from 'lit';
+import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-@customElement('ui-title-screen-wake-up-prompt')
+@customElement('example-ui-title-screen-wake-up-prompt')
 export class WakeUpPrompt extends LitElement {
   static styles = css`
     :host {
@@ -9,24 +9,10 @@ export class WakeUpPrompt extends LitElement {
       margin-left: auto;
       margin-right: auto;
       margin-top: 70dvh;
-      color: white;
-      animation: pulse 4s infinite;
-    }
-
-    @keyframes pulse {
-      0% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.2;
-      }
-      100% {
-        opacity: 1;
-      }
     }
   `;
 
   render() {
-    return 'Press any button';
+    return html`<slot></slot>`;
   }
 }

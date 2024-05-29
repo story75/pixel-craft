@@ -1,5 +1,6 @@
 export { type Circle } from './circle';
 export { clamp } from './clamp';
+export { lerp } from './lerp';
 export { type Line } from './line';
 export { Mat4, type Mat4Like } from './mat4';
 export { type Rect } from './rect';

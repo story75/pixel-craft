@@ -1,7 +1,7 @@
 import { application } from './application';
 import { Root } from './ui/components/root';
-import { TitleScreen } from './ui/title-screen/title-screen';
-// import { Settings } from './ui/title-screen/settings';
+// import { TitleScreen } from './ui/title-screen/title-screen';
+import { Settings } from './ui/title-screen/settings';
 
 const canvas = document.getElementsByTagName('canvas')[0];
 application(canvas).catch((e: unknown) => console.error(e));
@@ -16,5 +16,5 @@ Object.entries({
 const root = new Root();
 document.body.appendChild(root);
 
-const titleScreen = new TitleScreen();
+const titleScreen = new Settings();
 root.appendChild(titleScreen);

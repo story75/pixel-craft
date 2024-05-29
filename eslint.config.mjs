@@ -118,6 +118,7 @@ export default tseslint.config(
       '@typescript-eslint/prefer-readonly': 'error',
       '@typescript-eslint/explicit-module-boundary-types': 'error',
       '@typescript-eslint/no-confusing-void-expression': 'off',
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
       'import/no-deprecated': 'off', // disabled because it does not work with eslint v9 yet
       'import/no-extraneous-dependencies': [
         'error',

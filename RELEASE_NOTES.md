@@ -34,8 +34,33 @@ The imported file will be treated as a data url, so use with caution for larger 
 
 This feature is mainly meant for small images like icons or sprites that you want to include directly in your code e.g. in UI components.
 
-```ts
+#### Add `lerp` and `decay` function to `@pixel-craft/math`
 
+The `lerp` function allows you to linearly interpolate between two values. It takes a start value, an end value and a factor between 0 and 1.
+The factor determines how much of the end value is used in the interpolation.
+
+```ts
+import { lerp } from '@pixel-craft/math';
+
+const start = 0;
+const end = 10;
+
+const a = lerp(start, end, 0.5); // 5
+const b = lerp(start, end, 0.1); // 1
+const c = lerp(start, end, 0); // 0
+const d = lerp(start, end, 1); // 10
+```
+
+To account for delta time, you can use the `decay` function instead:
+
+```ts
+import { decay } from '@pixel-craft/math';
+
+const start = 0;
+const end = 10;
+const deltaTime = 0.5;
+
+const result = decay(start, end, 1, deltaTime); // 3.934693402873666
 ```
 
 ### Fixes and improvements

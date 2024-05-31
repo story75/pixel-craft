@@ -7,6 +7,24 @@ import '../components/option-list';
 import '../components/setting';
 import '../components/slider';
 
+type Setting = {
+  label: string;
+} & (OptionList<string> | Slider);
+
+type OptionList<T> = {
+  type: 'option-list';
+  value: T;
+  options: T[];
+};
+
+type Slider = {
+  type: 'slider';
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+};
+
 @customElement('example-ui-title-screen-settings')
 export class Settings extends LitElement {
   static styles = css`
@@ -15,6 +33,11 @@ export class Settings extends LitElement {
       flex-direction: column;
       width: 100dvw;
       height: 100dvh;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      transition: opacity 0.5s;
     }
 
     pixel-craft-ui-container {
@@ -30,11 +53,55 @@ export class Settings extends LitElement {
   `;
 
   @state()
-  private accessor currentSetting = 0;
-  private readonly settings = 5;
+  private accessor settings: Setting[] = [
+    {
+      label: 'Language',
+      type: 'option-list',
+      value: 'English',
+      options: ['English', 'Spanish', 'German'],
+    },
+    {
+      label: 'Font Face',
+      type: 'option-list',
+      value: 'Monocraft',
+      options: ['Monocraft', 'Arial'],
+    },
+    {
+      label: 'Master Volume',
+      type: 'slider',
+      value: 100,
+      min: 0,
+      max: 100,
+      step: 1,
+    },
+    {
+      label: 'BGM Volume',
+      type: 'slider',
+      value: 100,
+      min: 0,
+      max: 100,
+      step: 1,
+    },
+    {
+      label: 'SFX Volume',
+      type: 'slider',
+      value: 100,
+      min: 0,
+      max: 100,
+      step: 1,
+    },
+    {
+      label: 'Voice Volume',
+      type: 'slider',
+      value: 100,
+      min: 0,
+      max: 100,
+      step: 1,
+    },
+  ];
 
   @state()
-  private accessor language = 'English';
+  private accessor currentSetting = 0;
 
   connectedCallback() {
     super.connectedCallback();
@@ -42,69 +109,80 @@ export class Settings extends LitElement {
     InputManager.Instance?.observables['up'].subscribe(() => {
       this.currentSetting = Math.max(this.currentSetting - 1, 0);
     });
+
     InputManager.Instance?.observables['down'].subscribe(() => {
-      this.currentSetting = Math.min(this.currentSetting + 1, this.settings);
+      this.currentSetting = Math.min(
+        this.currentSetting + 1,
+        this.settings.length - 1,
+      );
+    });
+
+    InputManager.Instance?.observables['left'].subscribe(() => {
+      const setting = this.settings[this.currentSetting];
+      if (setting.type === 'option-list') {
+        const index = setting.options.indexOf(setting.value);
+        setting.value =
+          setting.options[
+            (index - 1 + setting.options.length) % setting.options.length
+          ];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      } else if (setting.type === 'slider') {
+        setting.value = Math.max(setting.value - setting.step, setting.min);
+      }
+      this.requestUpdate();
+    });
+
+    InputManager.Instance?.observables['right'].subscribe(() => {
+      const setting = this.settings[this.currentSetting];
+      if (setting.type === 'option-list') {
+        const index = setting.options.indexOf(setting.value);
+        setting.value = setting.options[(index + 1) % setting.options.length];
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      } else if (setting.type === 'slider') {
+        setting.value = Math.min(setting.value + setting.step, setting.max);
+      }
+      this.requestUpdate();
+    });
+
+    InputManager.Instance?.observables['cancel'].subscribe(() => {
+      this.dispatchEvent(new CustomEvent('close'));
     });
   }
 
   render() {
     return html`
       <pixel-craft-ui-container>
-        <pixel-craft-ui-setting
-          label="Language"
-          active=${this.currentSetting === 0 || nothing}
-        >
-          <pixel-craft-ui-option-list>
-            <pixel-craft-ui-option
-              text="English"
-              active=${this.language === 'English' || nothing}
-            ></pixel-craft-ui-option>
-            <pixel-craft-ui-option
-              text="Spanish"
-              active=${this.language === 'Spanish' || nothing}
-            ></pixel-craft-ui-option>
-            <pixel-craft-ui-option
-              text="German"
-              active=${this.language === 'German' || nothing}
-            ></pixel-craft-ui-option>
-          </pixel-craft-ui-option-list>
-        </pixel-craft-ui-setting>
-        <pixel-craft-ui-setting
-          label="Font Face"
-          active=${this.currentSetting === 1 || nothing}
-        >
-          <pixel-craft-ui-option-list>
-            <pixel-craft-ui-option
-              text="Monocraft"
-              active
-            ></pixel-craft-ui-option>
-            <pixel-craft-ui-option text="Arial"></pixel-craft-ui-option>
-          </pixel-craft-ui-option-list>
-        </pixel-craft-ui-setting>
-        <pixel-craft-ui-setting
-          label="Master Volume"
-          active=${this.currentSetting === 2 || nothing}
-        >
-          <pixel-craft-ui-slider></pixel-craft-ui-slider>
-        </pixel-craft-ui-setting>
-        <pixel-craft-ui-setting
-          label="BGM Volume"
-          active=${this.currentSetting === 3 || nothing}
-        >
-          <pixel-craft-ui-slider></pixel-craft-ui-slider>
-        </pixel-craft-ui-setting>
-        <pixel-craft-ui-setting
-          label="SFX Volume"
-          active=${this.currentSetting === 4 || nothing}
-        >
-          <pixel-craft-ui-slider></pixel-craft-ui-slider>
-        </pixel-craft-ui-setting>
-        <pixel-craft-ui-setting
-          label="Voice Volume"
-          active=${this.currentSetting === 5 || nothing}
-        >
-          <pixel-craft-ui-slider></pixel-craft-ui-slider>
-        </pixel-craft-ui-setting>
+        ${this.settings.map((setting, index) => {
+          const active = this.currentSetting === index || nothing;
+          switch (setting.type) {
+            case 'option-list':
+              return html`
+                <pixel-craft-ui-setting label=${setting.label} active=${active}>
+                  <pixel-craft-ui-option-list>
+                    ${setting.options.map((option) => {
+                      return html`
+                        <pixel-craft-ui-option
+                          text=${option}
+                          active=${setting.value === option || nothing}
+                        ></pixel-craft-ui-option>
+                      `;
+                    })}
+                  </pixel-craft-ui-option-list>
+                </pixel-craft-ui-setting>
+              `;
+            case 'slider':
+              return html`
+                <pixel-craft-ui-setting label=${setting.label} active=${active}>
+                  <pixel-craft-ui-slider
+                    value=${setting.value}
+                    min=${setting.min}
+                    max=${setting.max}
+                    step=${setting.step}
+                  ></pixel-craft-ui-slider>
+                </pixel-craft-ui-setting>
+              `;
+          }
+        })}
       </pixel-craft-ui-container>
     `;
   }

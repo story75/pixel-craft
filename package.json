@@ -50,7 +50,7 @@
       "eslint --cache --fix",
       "prettier --cache --cache-strategy metadata --write"
     ],
-    "*.{js,md,json,yml,yaml,html}": [
+    "*.{mjs,js,md,json,yml,yaml,html}": [
       "prettier --cache --cache-strategy metadata --write"
     ]
   }

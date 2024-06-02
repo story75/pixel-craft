@@ -1,5 +1,5 @@
 {
-  "name": "@pixel-craft/demo-lit-ui",
+  "name": "@pixel-craft/demo-level-editor",
   "private": true,
   "scripts": {
     "check": "tsc",

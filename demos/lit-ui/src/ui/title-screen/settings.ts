@@ -163,7 +163,7 @@ export class Settings extends LitElement {
                       return html`
                         <pixel-craft-ui-option
                           text=${option}
-                          active=${setting.value === option || nothing}
+                          ?active=${setting.value === option}
                         ></pixel-craft-ui-option>
                       `;
                     })}

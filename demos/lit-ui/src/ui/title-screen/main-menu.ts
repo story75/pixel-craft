@@ -68,7 +68,7 @@ export class MainMenu extends LitElement {
       this.options,
       (option, index) =>
         html` <pixel-craft-ui-main-menu-option
-          active=${index === this.activeOption || nothing}
+          ?active=${index === this.activeOption}
           text=${option}
         ></pixel-craft-ui-main-menu-option>`,
     )}`;

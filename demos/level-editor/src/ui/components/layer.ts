@@ -1,8 +1,8 @@
 import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-@customElement('pixel-craft-ui-root')
-export class Root extends LitElement {
+@customElement('pixel-craft-editor-layer')
+export class Layer extends LitElement {
   static styles = css`
     :host {
       display: flex;
@@ -12,6 +12,15 @@ export class Root extends LitElement {
       width: 100dvw;
       height: 100dvh;
       overflow: hidden;
+      background: rgba(0, 0, 0, 0.75);
+      opacity: 1;
+      transition: opacity 0.25s;
+    }
+
+    @starting-style {
+      :host {
+        opacity: 0;
+      }
     }
   `;
 

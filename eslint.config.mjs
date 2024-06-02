@@ -48,62 +48,6 @@ export default tseslint.config(
     },
     rules: {
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
-      '@typescript-eslint/naming-convention': [
-        'error',
-        {
-          // only allow camelCase or _
-          selector: 'default',
-          format: ['camelCase'],
-          leadingUnderscore: 'allow',
-          custom: {
-            regex: '^_.+',
-            match: false,
-          },
-        },
-        {
-          selector: 'objectLiteralProperty',
-          format: null,
-        },
-        {
-          selector: 'classProperty',
-          modifiers: ['readonly'],
-          format: ['camelCase', 'UPPER_CASE'],
-        },
-        {
-          selector: 'classProperty',
-          modifiers: ['static'],
-          format: ['PascalCase', 'UPPER_CASE'],
-        },
-        {
-          selector: 'classProperty',
-          modifiers: ['private'],
-          format: ['camelCase', 'UPPER_CASE'],
-          leadingUnderscore: 'allow',
-        },
-        {
-          // only allow camelCase, UPPER_CASE or _
-          selector: 'variable',
-          format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
-          leadingUnderscore: 'allow',
-          custom: {
-            regex: '^_.+',
-            match: false,
-          },
-        },
-        {
-          selector: 'enumMember',
-          format: ['PascalCase'],
-        },
-        {
-          // do not check import format, because we do not control every import
-          selector: 'import',
-          format: null,
-        },
-        {
-          selector: 'typeLike',
-          format: ['PascalCase'],
-        },
-      ],
       '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
       '@typescript-eslint/no-unused-vars': [
         'error',
@@ -116,9 +60,11 @@ export default tseslint.config(
         },
       ],
       '@typescript-eslint/prefer-readonly': 'error',
-      '@typescript-eslint/explicit-module-boundary-types': 'error',
       '@typescript-eslint/no-confusing-void-expression': 'off',
-      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
+      '@typescript-eslint/restrict-template-expressions': [
+        'error',
+        { allowNumber: true },
+      ],
       'import/no-deprecated': 'off', // disabled because it does not work with eslint v9 yet
       'import/no-extraneous-dependencies': [
         'error',
@@ -177,13 +123,6 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-return': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
-    },
-  },
-  {
-    files: ['demos/lit-ui/src/ui/**/*.ts'],
-    rules: {
-      '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/naming-convention': 'off',
     },
   },
 );

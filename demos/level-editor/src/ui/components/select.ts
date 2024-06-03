@@ -48,8 +48,20 @@ export class Select extends LitElement {
   @property({ attribute: false })
   accessor options: Array<string | number> = [];
 
+  private _value: string | number | undefined = undefined;
+
+  get value() {
+    return this._value;
+  }
+
   @property()
-  accessor value: string | number | undefined = undefined;
+  set value(value) {
+    if (value === undefined) {
+      this._value = undefined;
+    } else {
+      this._value = this.type === 'string' ? String(value) : Number(value);
+    }
+  }
 
   @property({ attribute: false })
   accessor formatter: (value: number | string) => string = (value) =>
@@ -60,6 +72,9 @@ export class Select extends LitElement {
 
   @property({ attribute: 'binding-name' })
   accessor bindingName = '';
+
+  @property()
+  accessor type: 'string' | 'number' = 'string';
 
   private readonly onChange = (event: Event) => {
     const target = event.target as HTMLSelectElement;

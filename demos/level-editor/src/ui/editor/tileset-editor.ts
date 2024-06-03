@@ -9,13 +9,13 @@ import '../components/checkerboard';
 import '../components/container';
 import '../components/file-upload';
 import { FileEvent } from '../components/file-upload';
-import '../components/header';
 import '../components/icon';
 import '../components/inspector/inspector';
 import '../components/inspector/inspector-column';
 import '../components/inspector/inspector-row';
 import '../components/layer';
 import '../components/select';
+import { EditorOptions, optionKey, storageKey } from './editor-options';
 
 @customElement('pixel-craft-tileset-editor')
 export class Editor extends LitElement {
@@ -85,7 +85,8 @@ export class Editor extends LitElement {
     }
   `;
 
-  private readonly storageKey = 'pixel-craft-tileset-editor';
+  private readonly storageKey = storageKey;
+  private readonly optionKey = optionKey;
   private image = '';
   private tileset: File | undefined = undefined;
   private zoom = 1;
@@ -95,7 +96,7 @@ export class Editor extends LitElement {
   private height = 0;
   private x = 0;
   private y = 0;
-  private readonly selectedTiles: string[] = [];
+  private selectedTiles: string[] = [];
 
   private readonly onTilesetChange = (file: File | undefined) => {
     this.tileset = file;
@@ -156,6 +157,43 @@ export class Editor extends LitElement {
     this.updateState();
   };
 
+  private readonly onSave = () => {
+    const options: EditorOptions = {
+      tileSize: this.tileSize,
+      margin: this.margin,
+      zoom: this.zoom,
+      selectedTiles: this.selectedTiles,
+      spriteFrames: this.selectedTiles.map((key) => {
+        const [x, y] = key.split(':').map(Number);
+        return {
+          x: this.margin + x * this.tileSize,
+          y: this.margin + y * this.tileSize,
+          width: this.tileSize,
+          height: this.tileSize,
+        };
+      }),
+    };
+
+    localStorage.setItem(this.optionKey, JSON.stringify(options));
+    this.dispatchEvent(new CustomEvent('save', { detail: options }));
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    const options = localStorage.getItem(this.optionKey);
+    if (options) {
+      const { tileSize, margin, zoom, selectedTiles } = JSON.parse(
+        options,
+      ) as EditorOptions;
+      this.tileSize = tileSize;
+      this.margin = margin;
+      this.zoom = zoom;
+      this.selectedTiles = selectedTiles;
+      this.updateState();
+    }
+  }
+
   render() {
     return html`
       <pixel-craft-editor-layer>
@@ -176,6 +214,7 @@ export class Editor extends LitElement {
                       <pixel-craft-inspector-row label="Zoom">
                         <pixel-craft-editor-select
                           @change=${this.onZoomChange}
+                          type="number"
                           value=${this.zoom}
                           .formatter=${(value: number) => `${value}x`}
                           .options=${[1, 2, 4]}
@@ -184,6 +223,7 @@ export class Editor extends LitElement {
                       <pixel-craft-inspector-row label="Tile size">
                         <pixel-craft-editor-select
                           @change=${this.onTileSizeChange}
+                          type="number"
                           value=${this.tileSize}
                           .formatter=${(value: number) => `${value}px`}
                           .options=${[16, 32, 48]}
@@ -192,6 +232,7 @@ export class Editor extends LitElement {
                       <pixel-craft-inspector-row label="Margin">
                         <pixel-craft-editor-select
                           @change=${this.onMarginChange}
+                          type="number"
                           value=${this.margin}
                           .formatter=${(value: number) => `${value}px`}
                           .options=${[0, 16, 32]}
@@ -206,6 +247,7 @@ export class Editor extends LitElement {
                             this.onTilesetChange(event.detail.file)}
                         ></pixel-craft-editor-file-upload>
                         <pixel-craft-editor-button
+                          @click=${this.onSave}
                           class="save"
                           ?disabled=${this.selectedTiles.length === 0}
                         >

@@ -111,6 +111,14 @@ export class FileUpload extends LitElement {
     }
   }
 
+  disconnectedCallback() {
+    if (this.image) {
+      URL.revokeObjectURL(this.image);
+    }
+
+    super.disconnectedCallback();
+  }
+
   render() {
     return html`<label
         class=${classMap({ 'file-upload': true, placeholder: !this.image })}

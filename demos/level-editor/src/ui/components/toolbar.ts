@@ -1,13 +1,15 @@
 import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-@customElement('pixel-craft-editor-header')
-export class Header extends LitElement {
+@customElement('pixel-craft-editor-toolbar')
+export class Toolbar extends LitElement {
   static styles = css`
     :host {
       display: flex;
-      flex-direction: row;
+      position: absolute;
+      flex-direction: column;
       padding: 0.5rem;
+      gap: 0.5rem;
       color: var(--pc-color-light-50);
     }
   `;

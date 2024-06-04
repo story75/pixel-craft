@@ -5,12 +5,7 @@ import { extractReleaseNotes } from './command/extract-release-notes';
 import { releasePackage } from './command/release-package';
 import { watch } from './command/watch';
 
-const cli = yargs(hideBin(Bun.argv))
-  .scriptName('pixel-craft-tooling')
-  .wrap(120)
-  .strict()
-  .version(false)
-  .help(true);
+const cli = yargs(hideBin(Bun.argv)).scriptName('pixel-craft-tooling').wrap(120).strict().version(false).help(true);
 
 const commands = [extractReleaseNotes, releasePackage, watch];
 

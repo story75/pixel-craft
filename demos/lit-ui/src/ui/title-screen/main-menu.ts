@@ -41,10 +41,7 @@ export class MainMenu extends LitElement {
         return;
       }
 
-      this.activeOption = Math.min(
-        this.activeOption + 1,
-        this.options.length - 1,
-      );
+      this.activeOption = Math.min(this.activeOption + 1, this.options.length - 1);
     });
 
     InputManager.Instance?.observables['accept'].subscribe(() => {

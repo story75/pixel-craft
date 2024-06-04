@@ -29,9 +29,7 @@ export class Composer<InitialState, NextState> {
     public readonly fn: (s: InitialState) => NextState,
   ) {}
 
-  public next<NewState>(
-    fn: (s: NextState) => NewState,
-  ): Composer<InitialState, NewState> {
+  public next<NewState>(fn: (s: NextState) => NewState): Composer<InitialState, NewState> {
     return new Composer(this.s, (s) => fn(this.fn(s)));
   }
 

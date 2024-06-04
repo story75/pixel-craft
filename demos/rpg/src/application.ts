@@ -34,9 +34,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const textureLoader = createTextureLoader(context.device);
   const [atlas, atlasCharacters] = await Promise.all([
     textureLoader('assets/0x72_DungeonTilesetII_v1.7/atlas_floor-16x16.png'),
-    textureLoader(
-      'assets/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7.png',
-    ),
+    textureLoader('assets/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7.png'),
   ]);
 
   const entityStore = new EntityStore<Entity>();
@@ -160,9 +158,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   };
 
   const dinoSystem = (state: TimeState) => {
-    const velocity = new Vector2(input)
-      .normal()
-      .multiply(dino.movementSpeed * state.deltaTime);
+    const velocity = new Vector2(input).normal().multiply(dino.movementSpeed * state.deltaTime);
     dino.velocity = velocity;
     dino.x += velocity.x;
     dino.y += velocity.y;

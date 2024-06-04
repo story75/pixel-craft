@@ -36,17 +36,13 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     lastFrame: 0,
   });
 
-  const assertRendererState = <T extends object>(
-    state: T,
-  ): T & RendererState => ({
+  const assertRendererState = <T extends object>(state: T): T & RendererState => ({
     ...state,
     renderPass: pipeline(context),
     context,
   });
 
-  const state = new Composer({ foo: 'bar' }, assertTimeState)
-    .next(assertRendererState)
-    .execute();
+  const state = new Composer({ foo: 'bar' }, assertTimeState).next(assertRendererState).execute();
 
   const timeSystem = (state: TimeState) => {
     state.frameTime = state.now - state.lastFrame;

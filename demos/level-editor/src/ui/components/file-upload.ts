@@ -23,11 +23,7 @@ export class FileUpload extends LitElement {
       color: var(--pc-color-light-100);
 
       &:hover {
-        background-color: color-mix(
-          in srgb,
-          var(--pc-color-dark-300),
-          white 10%
-        );
+        background-color: color-mix(in srgb, var(--pc-color-dark-300), white 10%);
       }
     }
 
@@ -120,9 +116,7 @@ export class FileUpload extends LitElement {
   }
 
   render() {
-    return html`<label
-        class=${classMap({ 'file-upload': true, placeholder: !this.image })}
-      >
+    return html`<label class=${classMap({ 'file-upload': true, placeholder: !this.image })}>
         <input type="file" accept=".png" @change=${this.onFileInputChange} />
 
         ${this.image
@@ -130,9 +124,7 @@ export class FileUpload extends LitElement {
           : html`<span>${this.label}</span>`}
       </label>
       ${this.image
-        ? html`<pixel-craft-editor-icon
-            class="delete"
-            @click=${() => this.onFileChange(undefined)}
+        ? html`<pixel-craft-editor-icon class="delete" @click=${() => this.onFileChange(undefined)}
             ></pixel-craft-editor-icon
           >`
         : ''} `;

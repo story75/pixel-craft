@@ -6,10 +6,7 @@ type Uniform = {
 /**
  * Defines a projection view matrix bind group.
  */
-export function projectionViewMatrix(
-  device: GPUDevice,
-  projectionViewMatrixUniformBuffer: GPUBuffer,
-): Uniform {
+export function projectionViewMatrix(device: GPUDevice, projectionViewMatrixUniformBuffer: GPUBuffer): Uniform {
   const projectionViewMatrixLayout = device.createBindGroupLayout({
     entries: [
       {

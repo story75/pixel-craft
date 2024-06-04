@@ -64,8 +64,7 @@ export class Select extends LitElement {
   }
 
   @property({ attribute: false })
-  accessor formatter: (value: number | string) => string = (value) =>
-    String(value);
+  accessor formatter: (value: number | string) => string = (value) => String(value);
 
   @property({ attribute: false })
   accessor binding: Record<string, unknown> | undefined = undefined;
@@ -105,9 +104,7 @@ export class Select extends LitElement {
         ${map(
           this.options,
           (option) => html`
-            <option value=${option} ?selected=${option === this.value}>
-              ${this.formatter(option)}
-            </option>
+            <option value=${option} ?selected=${option === this.value}>${this.formatter(option)}</option>
           `,
         )}
       </select>

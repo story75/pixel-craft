@@ -66,8 +66,7 @@ export class Translator {
    */
   translate(key: string): string {
     const parts = key.includes('.') ? key.split('.') : [key];
-    let current: string | Translation =
-      this.translations[this._currentLanguage];
+    let current: string | Translation = this.translations[this._currentLanguage];
 
     for (const part of parts) {
       if (typeof current === 'object' && part in current) {

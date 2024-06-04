@@ -7,12 +7,8 @@ import { Transition, TransitionType } from './transition';
  * An animator system is responsible to change the frame of an animated sprite.
  */
 export class Animator {
-  static createAnimated<T>(
-    options: Pick<Animated<T>, 'animations' | 'transitions'>,
-  ): Animated<T> {
-    const entryTransition = options.transitions.find(
-      (transition) => transition.from.type === TransitionType.Entry,
-    );
+  static createAnimated<T>(options: Pick<Animated<T>, 'animations' | 'transitions'>): Animated<T> {
+    const entryTransition = options.transitions.find((transition) => transition.from.type === TransitionType.Entry);
     if (!entryTransition) {
       throw new Error('No entry transition found!');
     }
@@ -24,49 +20,28 @@ export class Animator {
       animation,
       animations: options.animations,
       transitions: options.transitions,
-      possibleTransitions: Animator.findPossibleTransitions<T>(
-        options.transitions,
-        animation,
-      ),
+      possibleTransitions: Animator.findPossibleTransitions<T>(options.transitions, animation),
     };
   }
 
-  static findPossibleTransitions<T>(
-    transitions: Array<Transition<T>>,
-    newAnimation: Animation,
-  ): Array<Transition<T>> {
+  static findPossibleTransitions<T>(transitions: Array<Transition<T>>, newAnimation: Animation): Array<Transition<T>> {
     return transitions.filter((transition) => {
       if (transition.from.type === TransitionType.Any) {
-        return (
-          transition.to !== newAnimation.name || newAnimation.interruptible
-        );
+        return transition.to !== newAnimation.name || newAnimation.interruptible;
       }
-      return (
-        transition.from.type === TransitionType.Animation &&
-        transition.from.animation === newAnimation.name
-      );
+      return transition.from.type === TransitionType.Animation && transition.from.animation === newAnimation.name;
     });
   }
 
-  update<T>(
-    sprite: Pick<Sprite, 'frame'>,
-    animated: Animated<T>,
-    state: T,
-    deltaTime: number,
-  ): void {
-    const transition = animated.possibleTransitions.find((transition) =>
-      transition.condition(state),
-    );
+  update<T>(sprite: Pick<Sprite, 'frame'>, animated: Animated<T>, state: T, deltaTime: number): void {
+    const transition = animated.possibleTransitions.find((transition) => transition.condition(state));
 
     if (transition) {
       const newAnimation = animated.animations[transition.to];
       this.animate(sprite, animated, newAnimation);
     }
 
-    if (
-      !animated.animation.loop &&
-      animated.animationFrame === animated.animation.animationFrames.length - 1
-    ) {
+    if (!animated.animation.loop && animated.animationFrame === animated.animation.animationFrames.length - 1) {
       return;
     }
 
@@ -89,15 +64,8 @@ export class Animator {
     animated.animation.onFrame?.(animated.animationFrame);
   }
 
-  animate<T>(
-    sprite: Pick<Sprite, 'frame'>,
-    animated: Animated<T>,
-    animation: Animation,
-  ): void {
-    animated.possibleTransitions = Animator.findPossibleTransitions<T>(
-      animated.transitions,
-      animation,
-    );
+  animate<T>(sprite: Pick<Sprite, 'frame'>, animated: Animated<T>, animation: Animation): void {
+    animated.possibleTransitions = Animator.findPossibleTransitions<T>(animated.transitions, animation);
     animated.animation = animation;
     animated.animationFrame = 0;
     animated.animationTimer = 0;

@@ -2,10 +2,7 @@ import { Animated, Animation, Animator } from '@pixel-craft/animator';
 import { Sprite, sprite } from '@pixel-craft/renderer';
 import { animatedSpriteSheet } from './animated-sprite-sheet';
 
-type Options<T extends Record<string, unknown>> = Pick<
-  Partial<Sprite>,
-  'x' | 'y' | 'z'
-> &
+type Options<T extends Record<string, unknown>> = Pick<Partial<Sprite>, 'x' | 'y' | 'z'> &
   Pick<Animated<T & Sprite>, 'transitions'> & {
     /**
      * The width of each frame for the sprite in pixels

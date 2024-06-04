@@ -7,10 +7,7 @@
  * @param file - The file to save. If empty, the file will be removed from local storage
  * @param path - The local storage path to save the file to
  */
-export const saveFile = (
-  file: File | undefined,
-  path: string,
-): Promise<void> => {
+export const saveFile = (file: File | undefined, path: string): Promise<void> => {
   if (!file) {
     localStorage.removeItem(path);
     return Promise.resolve();

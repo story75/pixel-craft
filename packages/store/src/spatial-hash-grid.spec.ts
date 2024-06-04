@@ -54,12 +54,7 @@ describe('SpatialHashGrid', () => {
     const searchCell0 = grid.query(0, 0, singleCellSize, singleCellSize);
     expect(searchCell0).toEqual([a, b]);
 
-    const searchCell1 = grid.query(
-      singleCellSize + 1,
-      0,
-      singleCellSize,
-      singleCellSize,
-    );
+    const searchCell1 = grid.query(singleCellSize + 1, 0, singleCellSize, singleCellSize);
     expect(searchCell1).toEqual([b]);
 
     const searchAll = grid.query(0, 0, 5 << grid.cellSize, 5 << grid.cellSize);
@@ -79,31 +74,15 @@ describe('SpatialHashGrid', () => {
     grid.forEach((cell) => {
       cellsAfterUpdate.push(cell);
     });
-    expect(cellsAfterUpdate.filter((c) => c.length)).toEqual([
-      [a],
-      [c, b],
-      [b],
-      [b],
-      [b],
-    ]);
+    expect(cellsAfterUpdate.filter((c) => c.length)).toEqual([[a], [c, b], [b], [b], [b]]);
     // re-query by area
     const searchUpdatedCell0 = grid.query(0, 0, singleCellSize, singleCellSize);
     expect(searchUpdatedCell0).toEqual([a]);
 
-    const searchUpdatedCell1 = grid.query(
-      singleCellSize + 1,
-      0,
-      singleCellSize,
-      singleCellSize,
-    );
+    const searchUpdatedCell1 = grid.query(singleCellSize + 1, 0, singleCellSize, singleCellSize);
     expect(searchUpdatedCell1).toEqual([]);
 
-    const searchUpdatedAll = grid.query(
-      0,
-      0,
-      5 << grid.cellSize,
-      5 << grid.cellSize,
-    );
+    const searchUpdatedAll = grid.query(0, 0, 5 << grid.cellSize, 5 << grid.cellSize);
     expect(searchUpdatedAll).toEqual([a, b, c]);
 
     // remove b
@@ -118,20 +97,10 @@ describe('SpatialHashGrid', () => {
     const searchRemovedCell0 = grid.query(0, 0, singleCellSize, singleCellSize);
     expect(searchRemovedCell0).toEqual([a]);
 
-    const searchRemovedCell1 = grid.query(
-      singleCellSize + 1,
-      0,
-      singleCellSize,
-      singleCellSize,
-    );
+    const searchRemovedCell1 = grid.query(singleCellSize + 1, 0, singleCellSize, singleCellSize);
     expect(searchRemovedCell1).toEqual([]);
 
-    const searchRemovedAll = grid.query(
-      0,
-      0,
-      5 << grid.cellSize,
-      5 << grid.cellSize,
-    );
+    const searchRemovedAll = grid.query(0, 0, 5 << grid.cellSize, 5 << grid.cellSize);
     expect(searchRemovedAll).toEqual([a, c]);
 
     // clear all
@@ -146,12 +115,7 @@ describe('SpatialHashGrid', () => {
     const searchClearedCell0 = grid.query(0, 0, singleCellSize, singleCellSize);
     expect(searchClearedCell0).toEqual([]);
 
-    const searchClearedAll = grid.query(
-      0,
-      0,
-      5 << grid.cellSize,
-      5 << grid.cellSize,
-    );
+    const searchClearedAll = grid.query(0, 0, 5 << grid.cellSize, 5 << grid.cellSize);
     expect(searchClearedAll).toEqual([]);
   });
 });

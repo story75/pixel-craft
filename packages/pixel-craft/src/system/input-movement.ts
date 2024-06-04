@@ -29,9 +29,7 @@ export class InputMovementSystem implements System {
 
   update(): void {
     for (const moveable of this.moveables) {
-      const velocity = new Vector2(this.input)
-        .normal()
-        .multiply(moveable.movementSpeed * this.timer.deltaTime);
+      const velocity = new Vector2(this.input).normal().multiply(moveable.movementSpeed * this.timer.deltaTime);
       moveable.velocity = velocity;
       moveable.x += velocity.x;
       moveable.y += velocity.y;

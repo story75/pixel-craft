@@ -20,9 +20,8 @@ export const StartPage: Component = () => {
           <div className="max-w-md">
             <h1 className="text-5xl font-bold">Hello there</h1>
             <p className="py-6">
-              Start by selecting a sprite sheet to define your tiles and then
-              move on to the editor. <br /> You can jump back anytime to update
-              to your tiles.
+              Start by selecting a sprite sheet to define your tiles and then move on to the editor. <br /> You can jump
+              back anytime to update to your tiles.
             </p>
             <input
               type="file"

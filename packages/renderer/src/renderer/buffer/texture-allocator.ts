@@ -12,16 +12,10 @@ export function textureAllocator(device: GPUDevice) {
     const texture = device.createTexture({
       size: [data.width, data.height, 1],
       format: 'rgba8unorm',
-      usage:
-        GPUTextureUsage.TEXTURE_BINDING |
-        GPUTextureUsage.COPY_DST |
-        GPUTextureUsage.RENDER_ATTACHMENT,
+      usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT,
     });
 
-    device.queue.copyExternalImageToTexture({ source: data }, { texture }, [
-      data.width,
-      data.height,
-    ]);
+    device.queue.copyExternalImageToTexture({ source: data }, { texture }, [data.width, data.height]);
 
     return texture;
   };

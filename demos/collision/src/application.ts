@@ -37,13 +37,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const spriteQuery = entityStore.with('texture');
 
   spriteQuery.onAdd.subscribe((entity) => {
-    spatialHashGrid.add(
-      entity.x,
-      entity.y,
-      entity.width,
-      entity.height,
-      entity,
-    );
+    spatialHashGrid.add(entity.x, entity.y, entity.width, entity.height, entity);
   });
 
   const assertTimeState = <T extends object>(state: T): T & TimeState => ({
@@ -54,17 +48,13 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     lastFrame: 0,
   });
 
-  const assertRendererState = <T extends object>(
-    state: T,
-  ): T & RendererState => ({
+  const assertRendererState = <T extends object>(state: T): T & RendererState => ({
     ...state,
     renderPass: pipeline(context),
     context,
   });
 
-  const state = new Composer({ foo: 'bar' }, assertTimeState)
-    .next(assertRendererState)
-    .execute();
+  const state = new Composer({ foo: 'bar' }, assertTimeState).next(assertRendererState).execute();
 
   const timeSystem = (state: TimeState) => {
     state.frameTime = state.now - state.lastFrame;
@@ -140,13 +130,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     timeSystem,
     () => {
       for (const sprite of spriteQuery) {
-        spatialHashGrid.update(
-          sprite.x,
-          sprite.y,
-          sprite.width,
-          sprite.height,
-          sprite,
-        );
+        spatialHashGrid.update(sprite.x, sprite.y, sprite.width, sprite.height, sprite);
       }
       spatialHashGrid.forEach((entities) => {
         const length = entities.length;
@@ -170,9 +154,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       });
     },
     () => {
-      player.velocity = player.velocity.add(
-        new Vector2({ x: input.x, y: input.y }),
-      );
+      player.velocity = player.velocity.add(new Vector2({ x: input.x, y: input.y }));
       if (player.velocity.length() > 5) {
         player.velocity = player.velocity.normal().multiply(5);
       }

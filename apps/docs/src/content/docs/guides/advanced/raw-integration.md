@@ -84,12 +84,7 @@ A sprite is created with the `sprite` function. It takes a mandatory `texture` p
 You could also omit using the texture loader in your project if you instruct your bundler to inline the images in your bundle e.g. as base64 strings, but I would strongly recommend against this.
 
 ```ts ins={4-5,14-24}
-import {
-  createContext,
-  pipeline,
-  createTextureLoader,
-  sprite,
-} from '@pixel-craft/renderer';
+import { createContext, pipeline, createTextureLoader, sprite } from '@pixel-craft/renderer';
 
 export async function application(): Promise<void> {
   const canvas = document.getElementsByTagName('canvas')[0]!;
@@ -126,12 +121,7 @@ caching in the engine it is also way easier to reason about the code and to debu
 :::
 
 ```ts collapse={9-20} ins={22-27}
-import {
-  createContext,
-  pipeline,
-  createTextureLoader,
-  sprite,
-} from '@pixel-craft/renderer';
+import { createContext, pipeline, createTextureLoader, sprite } from '@pixel-craft/renderer';
 
 export async function application(): Promise<void> {
   const canvas = document.getElementsByTagName('canvas')[0]!;

@@ -47,9 +47,7 @@ describe('Composer', () => {
     });
 
     const initialState = { foo: 'bar' };
-    const composed = new Composer(initialState, assertTimeState)
-      .next(assertBusyState)
-      .execute();
+    const composed = new Composer(initialState, assertTimeState).next(assertBusyState).execute();
 
     expect(composed).toEqual({
       ...initialState,

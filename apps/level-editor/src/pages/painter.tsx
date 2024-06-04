@@ -1,11 +1,4 @@
-import {
-  RenderPass,
-  Sprite,
-  createContext,
-  createTextureLoader,
-  pipeline,
-  sprite,
-} from '@pixel-craft/renderer';
+import { RenderPass, Sprite, createContext, createTextureLoader, pipeline, sprite } from '@pixel-craft/renderer';
 import { EntityStore } from '@pixel-craft/store';
 import type { Component } from 'solid-js';
 import { createSignal } from 'solid-js';
@@ -102,9 +95,7 @@ export const PainterPage: Component = () => {
         ...s.mapOptions,
         width: Number(target.value),
         layers: s.mapOptions.layers.map(() =>
-          [...new Array(Number(target.value))].map(() => [
-            ...new Array(s.mapOptions.height),
-          ]),
+          [...new Array(Number(target.value))].map(() => [...new Array(s.mapOptions.height)]),
         ),
       },
     }));
@@ -119,9 +110,7 @@ export const PainterPage: Component = () => {
         ...s.mapOptions,
         height: Number(target.value),
         layers: s.mapOptions.layers.map(() =>
-          [...new Array(s.mapOptions.width)].map(() => [
-            ...new Array(Number(target.value)),
-          ]),
+          [...new Array(s.mapOptions.width)].map(() => [...new Array(Number(target.value))]),
         ),
       },
     }));
@@ -134,9 +123,7 @@ export const PainterPage: Component = () => {
         ...s.mapOptions,
         layers: [
           ...s.mapOptions.layers,
-          [...new Array(s.mapOptions.width)].map(() => [
-            ...new Array(s.mapOptions.height),
-          ]),
+          [...new Array(s.mapOptions.width)].map(() => [...new Array(s.mapOptions.height)]),
         ],
       },
     }));
@@ -272,10 +259,7 @@ export const PainterPage: Component = () => {
                 background: `url(${spriteImageURL})`,
                 'background-position': `-${f.x}px -${f.y}px`,
                 filter: activeTile() === i() ? 'none' : 'grayscale(1)',
-                outline:
-                  activeTile() === i()
-                    ? '1px solid rgba(255,0,0,0.4)'
-                    : '1px solid transparent',
+                outline: activeTile() === i() ? '1px solid rgba(255,0,0,0.4)' : '1px solid transparent',
                 'outline-offset': '4px',
               }}
             ></div>
@@ -300,22 +284,14 @@ export const PainterPage: Component = () => {
                         width: `${tileWidth}px`,
                         height: `${tileHeight}px`,
                         'image-rendering': 'pixelated',
-                        background:
-                          tileIndex !== undefined
-                            ? `url(${spriteImageURL})`
-                            : 'rgba(0, 0, 0, 0.5)',
+                        background: tileIndex !== undefined ? `url(${spriteImageURL})` : 'rgba(0, 0, 0, 0.5)',
                         'background-position':
                           tileIndex !== undefined
                             ? `-${state.spriteFrames[tileIndex].x}px -${state.spriteFrames[tileIndex].y}px`
                             : 'initial',
                       }}
                     >
-                      <Show
-                        when={
-                          activeLayer() > 0 &&
-                          previousLayer()[x()][y()] !== undefined
-                        }
-                      >
+                      <Show when={activeLayer() > 0 && previousLayer()[x()][y()] !== undefined}>
                         <div
                           style={{
                             'box-sizing': 'border-box',

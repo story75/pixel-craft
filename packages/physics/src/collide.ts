@@ -36,9 +36,7 @@ export function collide(a: PhysicsBody, b: PhysicsBody): void {
   // Update the velocity of the bodies
   const elasticity = Math.max(a.elasticity, b.elasticity);
   const velocityDot = a.velocity.subtract(b.velocity).dot(overlap);
-  const impulse = overlap.multiply(
-    (velocityDot * -(1 + elasticity)) / (1 / a.mass + 1 / b.mass),
-  );
+  const impulse = overlap.multiply((velocityDot * -(1 + elasticity)) / (1 / a.mass + 1 / b.mass));
   if (!a.static) {
     const velocity = a.velocity.add(impulse.multiply(1 / a.mass));
     a.velocity.x = velocity.x;

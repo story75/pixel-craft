@@ -31,9 +31,7 @@ export class TitleScreen extends LitElement {
   render() {
     return this.sleeping
       ? html`<example-ui-title-screen-wake-up-prompt>
-          <pixel-craft-ui-pulse-text
-            text="Press any key"
-          ></pixel-craft-ui-pulse-text>
+          <pixel-craft-ui-pulse-text text="Press any key"></pixel-craft-ui-pulse-text>
         </example-ui-title-screen-wake-up-prompt>`
       : html`<example-ui-title-screen-main-menu></example-ui-title-screen-main-menu>`;
   }

@@ -1,11 +1,7 @@
 /**
  * Convert a Union Type like FOO | Bar to Foo & Bar
  */
-type UnionToIntersection<U> = (
-  U extends object ? (k: U) => void : never
-) extends (k: infer I) => void
-  ? I
-  : never;
+type UnionToIntersection<U> = (U extends object ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 
 /**
  * A simple function that allows you to compose multiple objects together in a type-safe way.
@@ -24,9 +20,7 @@ type UnionToIntersection<U> = (
  * ]);
  * ```
  */
-export function composed<T extends object>(
-  components: T[],
-): UnionToIntersection<T> {
+export function composed<T extends object>(components: T[]): UnionToIntersection<T> {
   return components.reduce((acc, component) => {
     return {
       ...acc,

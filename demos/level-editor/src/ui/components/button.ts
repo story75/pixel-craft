@@ -13,8 +13,8 @@ export class Button extends LitElement {
       cursor: pointer;
       color: var(--pc-color-light-50);
       transition:
-        color 0.1s,
-        background-color 0.1s;
+        color 0.2s,
+        background-color 0.2s;
     }
 
     :host(:hover) {
@@ -28,11 +28,7 @@ export class Button extends LitElement {
     :host([disabled]) {
       cursor: not-allowed;
       color: var(--pc-color-light-100);
-      background-color: color-mix(
-        in srgb,
-        var(--pc-color-dark-300),
-        transparent 40%
-      );
+      background-color: color-mix(in srgb, var(--pc-color-dark-300), transparent 40%);
     }
   `;
 

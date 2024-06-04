@@ -120,9 +120,7 @@ export type TilingSprite = Sprite & {
  * The frame will automatically be set to the entire texture, if not specified.
  * The origin will automatically be set to the top left corner of the sprite, if not specified.
  */
-export function sprite(
-  data: Pick<Sprite, 'texture'> & Omit<Partial<Sprite>, 'texture'>,
-): Sprite {
+export function sprite(data: Pick<Sprite, 'texture'> & Omit<Partial<Sprite>, 'texture'>): Sprite {
   return {
     texture: data.texture,
     width: data.width ?? data.frame?.width ?? data.texture.width,

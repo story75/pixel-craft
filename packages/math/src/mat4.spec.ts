@@ -20,9 +20,7 @@ describe('look at', () => {
     const object = new Vector3({ x: 0, y: 0, z: -1 });
     const up = new Vector3({ x: 0, y: 1, z: 0 });
 
-    expect(Mat4.lookAt(camera, object, up)).toEqual(
-      new Mat4([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0, -0, -1, 1]),
-    );
+    expect(Mat4.lookAt(camera, object, up)).toEqual(new Mat4([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0, -0, -1, 1]));
   });
 });
 

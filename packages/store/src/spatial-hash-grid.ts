@@ -29,13 +29,7 @@ export class SpatialHashGrid<T> {
     private readonly hash: (x: number, y: number) => Hash = mortonZOrder,
   ) {}
 
-  public add(
-    x: number,
-    y: number,
-    width: number,
-    height: number,
-    entity: T,
-  ): T {
+  public add(x: number, y: number, width: number, height: number, entity: T): T {
     const [left, top, right, bottom] = this.getCellBounds(x, y, width, height);
     const metadata: Metadata = {
       cells: new Map(),
@@ -71,12 +65,7 @@ export class SpatialHashGrid<T> {
     }
 
     const [left, top, right, bottom] = this.getCellBounds(x, y, width, height);
-    if (
-      metadata.left === left &&
-      metadata.top === top &&
-      metadata.right === right &&
-      metadata.bottom === bottom
-    ) {
+    if (metadata.left === left && metadata.top === top && metadata.right === right && metadata.bottom === bottom) {
       return entity;
     }
 

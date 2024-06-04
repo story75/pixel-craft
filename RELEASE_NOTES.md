@@ -956,11 +956,7 @@ The `projectionViewMatrixUniformBuffer` is now also created during the `createCo
 ```ts
 // Before
 const { device, context } = await createContext(canvas);
-const projectionViewMatrixUniformBuffer = projectionViewMatrix(
-  device,
-  canvas.width,
-  canvas.height,
-);
+const projectionViewMatrixUniformBuffer = projectionViewMatrix(device, canvas.width, canvas.height);
 const renderPass = pipeline(device, context, projectionViewMatrixUniformBuffer);
 ```
 
@@ -1040,11 +1036,7 @@ The function will return a promise that resolves to the `GPUDevice` and `GPUCanv
 You can create a view projection matrix by providing a `GPUDevice` and the canvas bounds to `projectionViewMatrix` like so:
 
 ```ts
-const projectionViewMatrixUniformBuffer = projectionViewMatrix(
-  device,
-  canvas.width,
-  canvas.height,
-);
+const projectionViewMatrixUniformBuffer = projectionViewMatrix(device, canvas.width, canvas.height);
 ```
 
 This will create a view projection matrix uniform buffer that you can use in your shaders or pass to the default pipeline.

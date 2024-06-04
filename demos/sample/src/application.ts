@@ -6,14 +6,7 @@ import {
   RenderSystem,
   TimerSystem,
 } from '@pixel-craft/pixel-craft';
-import {
-  Sprite,
-  canvasText,
-  createFontLoader,
-  createTextureLoader,
-  sprite,
-  tilingSprite,
-} from '@pixel-craft/renderer';
+import { Sprite, canvasText, createFontLoader, createTextureLoader, sprite, tilingSprite } from '@pixel-craft/renderer';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const app = await Application.create(canvas);
@@ -27,10 +20,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const textureLoader = createTextureLoader(app.context.device);
   const tex = await textureLoader('assets/pixel-craft/pixel-prowlers.png');
 
-  const [x, y] = [
-    canvas.width / 2 - tex.width / 2,
-    canvas.height / 2 - tex.height / 2,
-  ];
+  const [x, y] = [canvas.width / 2 - tex.width / 2, canvas.height / 2 - tex.height / 2];
 
   const rotatingSprites: Sprite[] = [
     sprite({

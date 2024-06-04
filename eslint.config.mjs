@@ -16,13 +16,7 @@ export default tseslint.config(
     },
   },
   {
-    ignores: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/assets/**',
-      '**/*.d.ts',
-      'eslint.config.mjs',
-    ],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/assets/**', '**/*.d.ts', 'eslint.config.mjs'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
@@ -38,11 +32,7 @@ export default tseslint.config(
       },
       parserOptions: {
         allowAutomaticSingleRunInference: true,
-        project: [
-          './tsconfig.json',
-          './packages/*/tsconfig.json',
-          './apps/*/tsconfig.json',
-        ],
+        project: ['./tsconfig.json', './packages/*/tsconfig.json', './apps/*/tsconfig.json'],
         tsconfigRootDir: __dirname,
       },
     },
@@ -61,20 +51,12 @@ export default tseslint.config(
       ],
       '@typescript-eslint/prefer-readonly': 'error',
       '@typescript-eslint/no-confusing-void-expression': 'off',
-      '@typescript-eslint/restrict-template-expressions': [
-        'error',
-        { allowNumber: true },
-      ],
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
       'import/no-deprecated': 'off', // disabled because it does not work with eslint v9 yet
       'import/no-extraneous-dependencies': [
         'error',
         {
-          devDependencies: [
-            '**/*.test.js',
-            '**/*.spec.js',
-            '**/*.test.ts',
-            '**/*.spec.ts',
-          ],
+          devDependencies: ['**/*.test.js', '**/*.spec.js', '**/*.test.ts', '**/*.spec.ts'],
         },
       ],
       'no-console': 'error',

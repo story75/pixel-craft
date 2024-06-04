@@ -43,14 +43,7 @@ export function releasePackage(cli: ReturnType<typeof yargs>): void {
       if (content.publishConfig) {
         // this is a subset of the values pnpm allows
         // see https://pnpm.io/package_json#publishconfig
-        const allowedPublishConfigKeys = [
-          'bin',
-          'main',
-          'types',
-          'typings',
-          'module',
-          'browser',
-        ] as const;
+        const allowedPublishConfigKeys = ['bin', 'main', 'types', 'typings', 'module', 'browser'] as const;
 
         for (const key of allowedPublishConfigKeys) {
           if (content.publishConfig[key]) {

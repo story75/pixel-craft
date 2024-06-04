@@ -6,10 +6,7 @@ type Uniform = {
 /**
  * Defines a camera transform bind group.
  */
-export function cameraTransform(
-  device: GPUDevice,
-  transformUniformBuffer: GPUBuffer,
-): Uniform {
+export function cameraTransform(device: GPUDevice, transformUniformBuffer: GPUBuffer): Uniform {
   const cameraTransformLayout = device.createBindGroupLayout({
     entries: [
       {

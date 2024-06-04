@@ -183,9 +183,7 @@ export class Editor extends LitElement {
 
     const options = localStorage.getItem(this.optionKey);
     if (options) {
-      const { tileSize, margin, zoom, selectedTiles } = JSON.parse(
-        options,
-      ) as EditorOptions;
+      const { tileSize, margin, zoom, selectedTiles } = JSON.parse(options) as EditorOptions;
       this.tileSize = tileSize;
       this.margin = margin;
       this.zoom = zoom;
@@ -202,8 +200,7 @@ export class Editor extends LitElement {
             ? nothing
             : html` <pixel-craft-editor-file-upload
                 storage-key=${this.storageKey}
-                @file=${(event: FileEvent) =>
-                  this.onTilesetChange(event.detail.file)}
+                @file=${(event: FileEvent) => this.onTilesetChange(event.detail.file)}
               ></pixel-craft-editor-file-upload>`}
           ${!this.tileset
             ? nothing
@@ -243,8 +240,7 @@ export class Editor extends LitElement {
                       <pixel-craft-inspector-row vertical-center>
                         <pixel-craft-editor-file-upload
                           storage-key=${this.storageKey}
-                          @file=${(event: FileEvent) =>
-                            this.onTilesetChange(event.detail.file)}
+                          @file=${(event: FileEvent) => this.onTilesetChange(event.detail.file)}
                         ></pixel-craft-editor-file-upload>
                         <pixel-craft-editor-button
                           @click=${this.onSave}
@@ -261,9 +257,7 @@ export class Editor extends LitElement {
                   <div
                     class="tileset"
                     style=${styleMap({
-                      padding: this.margin
-                        ? `${this.margin * this.zoom}px`
-                        : undefined,
+                      padding: this.margin ? `${this.margin * this.zoom}px` : undefined,
                     })}
                   >
                     ${map(
@@ -276,9 +270,7 @@ export class Editor extends LitElement {
                               <div
                                 class=${classMap({
                                   tile: true,
-                                  selected: this.selectedTiles.includes(
-                                    this.tileKey(x, y),
-                                  ),
+                                  selected: this.selectedTiles.includes(this.tileKey(x, y)),
                                 })}
                                 @click=${() => this.onTileClick(x, y)}
                               ></div>
@@ -288,9 +280,7 @@ export class Editor extends LitElement {
                       `,
                     )}
                   </div>
-                  <pixel-craft-editor-checkerboard
-                    size=${this.tileSize * this.zoom}
-                  >
+                  <pixel-craft-editor-checkerboard size=${this.tileSize * this.zoom}>
                     <img
                       src="${this.image}"
                       alt=${this.tileset.name}

@@ -25,13 +25,7 @@ export class MainMenu extends LitElement {
         rgba(0, 0, 0, 0) 60%
       );
       border-bottom: 0.05rem solid;
-      border-image: linear-gradient(
-          90deg,
-          transparent 15%,
-          var(--color-inverse) 50%,
-          transparent 85%
-        )
-        30;
+      border-image: linear-gradient(90deg, transparent 15%, var(--color-inverse) 50%, transparent 85%) 30;
 
       &:before {
         content: '';

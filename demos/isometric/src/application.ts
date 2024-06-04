@@ -33,9 +33,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const textureLoader = createTextureLoader(context.device);
   const [atlas, atlasCharacters] = await Promise.all([
     textureLoader('assets/scrabling-isometric-tileset/spritesheet.png'),
-    textureLoader(
-      'assets/Small-8-Direction-Characters_by_AxulArt/Small-8-Direction-Characters_by_AxulArt.png',
-    ),
+    textureLoader('assets/Small-8-Direction-Characters_by_AxulArt/Small-8-Direction-Characters_by_AxulArt.png'),
   ]);
 
   const entityStore = new EntityStore<Entity>();
@@ -173,9 +171,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   for (const direction of directions) {
     const index = directions.indexOf(direction);
-    character.animations[`idle-${direction}`].animationFrames = [
-      { x: index * 16, y: 10 * 24, width: 16, height: 24 },
-    ];
+    character.animations[`idle-${direction}`].animationFrames = [{ x: index * 16, y: 10 * 24, width: 16, height: 24 }];
 
     character.animations[direction].animationFrames = [
       { x: index * 16, y: 9 * 24, width: 16, height: 24 },
@@ -204,9 +200,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   };
 
   const characterSystem = (state: TimeState) => {
-    const velocity = new Vector2(input)
-      .normal()
-      .multiply(character.movementSpeed * state.deltaTime);
+    const velocity = new Vector2(input).normal().multiply(character.movementSpeed * state.deltaTime);
     character.velocity = velocity;
     character.x += velocity.x;
     character.y += velocity.y;

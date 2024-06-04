@@ -1,9 +1,4 @@
-import {
-  Animated,
-  Animation,
-  Animator,
-  Transition,
-} from '@pixel-craft/animator';
+import { Animated, Animation, Animator, Transition } from '@pixel-craft/animator';
 import { Sprite } from '@pixel-craft/renderer';
 import { System } from './system';
 import { TimerSystem } from './timer';
@@ -19,16 +14,11 @@ export class AnimatorSystem implements System {
     private readonly animator: Animator = new Animator(),
   ) {}
 
-  static createAnimated<T>(
-    options: Pick<Animated<T>, 'animations' | 'transitions'>,
-  ): Animated<T> {
+  static createAnimated<T>(options: Pick<Animated<T>, 'animations' | 'transitions'>): Animated<T> {
     return Animator.createAnimated<T>(options);
   }
 
-  static findPossibleTransitions<T>(
-    transitions: Array<Transition<T>>,
-    newAnimation: Animation,
-  ): Array<Transition<T>> {
+  static findPossibleTransitions<T>(transitions: Array<Transition<T>>, newAnimation: Animation): Array<Transition<T>> {
     return Animator.findPossibleTransitions<T>(transitions, newAnimation);
   }
 

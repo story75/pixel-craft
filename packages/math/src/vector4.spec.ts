@@ -12,9 +12,7 @@ describe('Vector4', () => {
 
   it('should multiply a vector by a matrix', () => {
     const v = new Vector4({ x: 1, y: 2, z: 3, w: 4 });
-    const m = new Float32Array([
-      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-    ]);
+    const m = new Float32Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
     const result = v.multiply(m);
     expect(result.x).toBe(30);
     expect(result.y).toBe(70);

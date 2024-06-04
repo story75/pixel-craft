@@ -47,9 +47,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   const [atlasFloor, atlasCharacters] = await Promise.all([
     app.loadTexture('assets/0x72_DungeonTilesetII_v1.7/atlas_floor-16x16.png'),
-    app.loadTexture(
-      'assets/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7.png',
-    ),
+    app.loadTexture('assets/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7.png'),
   ]);
 
   const tileSize = 16;
@@ -173,10 +171,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   await app.addSystems(
     new (class implements System {
       update() {
-        playerLight.position = [
-          dino.x + dino.width / 2,
-          dino.y + dino.height / 2 + 5,
-        ];
+        playerLight.position = [dino.x + dino.width / 2, dino.y + dino.height / 2 + 5];
         app.context.pointLight.updateLight(playerLight);
 
         pulsingLight.intensity = Math.sin(performance.now() / 1000) * 2;

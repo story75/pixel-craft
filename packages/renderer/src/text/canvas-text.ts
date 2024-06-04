@@ -39,8 +39,7 @@ export type CanvasText = Sprite & {
  * Canvas text will use linear filter sampling by default. This will make the text look crisp, but may result in blurry text when the text is scaled.
  */
 export function canvasText(
-  data: Pick<CanvasText, 'text' | 'font'> &
-    Omit<Partial<CanvasText>, 'texture' | 'text' | 'font'>,
+  data: Pick<CanvasText, 'text' | 'font'> & Omit<Partial<CanvasText>, 'texture' | 'text' | 'font'>,
   device: GPUDevice,
 ): CanvasText {
   const allocator = textureAllocator(device);
@@ -80,8 +79,7 @@ export function canvasText(
     // resize canvas to match text size
     // this will reset the context, so we need to set everything again
     canvas.width = rect.actualBoundingBoxRight - rect.actualBoundingBoxLeft; // left may be negative, so we need to subtract it
-    canvas.height =
-      rect.actualBoundingBoxDescent - rect.actualBoundingBoxAscent; // ascent may be negative, so we need to subtract it
+    canvas.height = rect.actualBoundingBoxDescent - rect.actualBoundingBoxAscent; // ascent may be negative, so we need to subtract it
 
     configureContext();
     context.fillText(text.text, 0, 0);
@@ -106,10 +104,7 @@ export function canvasText(
       const traps: Array<keyof CanvasText> = ['text', 'font'];
       const ret = Reflect.set(target, property, value);
 
-      if (
-        typeof property === 'string' &&
-        traps.includes(property as keyof CanvasText)
-      ) {
+      if (typeof property === 'string' && traps.includes(property as keyof CanvasText)) {
         render();
       }
 

@@ -4,10 +4,7 @@ import { PhysicsBody } from './body';
 import { collide } from './collide';
 
 describe('collide', () => {
-  const setup = (
-    aOverwrite: Partial<PhysicsBody> = {},
-    bOverwrite: Partial<PhysicsBody> = {},
-  ) => {
+  const setup = (aOverwrite: Partial<PhysicsBody> = {}, bOverwrite: Partial<PhysicsBody> = {}) => {
     const a: PhysicsBody = {
       x: 0,
       y: 0,
@@ -44,14 +41,9 @@ describe('collide', () => {
   });
 
   it('will move the bodies apart', () => {
-    const { a, b, cloneA, cloneB, overlap } = setup(
-      { static: false },
-      { static: false },
-    );
+    const { a, b, cloneA, cloneB, overlap } = setup({ static: false }, { static: false });
 
-    const impulse = overlap.multiply(
-      (a.velocity.subtract(b.velocity).dot(overlap) * -2) / 2,
-    );
+    const impulse = overlap.multiply((a.velocity.subtract(b.velocity).dot(overlap) * -2) / 2);
 
     collide(cloneA, cloneB);
 
@@ -67,14 +59,9 @@ describe('collide', () => {
   });
 
   it('will only move body a if b is static', () => {
-    const { a, b, cloneA, cloneB, overlap } = setup(
-      { static: false },
-      { static: true },
-    );
+    const { a, b, cloneA, cloneB, overlap } = setup({ static: false }, { static: true });
 
-    const impulse = overlap.multiply(
-      (a.velocity.subtract(b.velocity).dot(overlap) * -2) / 2,
-    );
+    const impulse = overlap.multiply((a.velocity.subtract(b.velocity).dot(overlap) * -2) / 2);
 
     collide(cloneA, cloneB);
 
@@ -87,14 +74,9 @@ describe('collide', () => {
   });
 
   it('will only move body b if a is static', () => {
-    const { a, b, cloneA, cloneB, overlap } = setup(
-      { static: true },
-      { static: false },
-    );
+    const { a, b, cloneA, cloneB, overlap } = setup({ static: true }, { static: false });
 
-    const impulse = overlap.multiply(
-      (a.velocity.subtract(b.velocity).dot(overlap) * -2) / 2,
-    );
+    const impulse = overlap.multiply((a.velocity.subtract(b.velocity).dot(overlap) * -2) / 2);
 
     collide(cloneA, cloneB);
 
@@ -107,14 +89,9 @@ describe('collide', () => {
   });
 
   it('will move the bodies apart (with mass)', () => {
-    const { a, b, cloneA, cloneB, overlap } = setup(
-      { static: false, mass: 2 },
-      { static: false, mass: 4 },
-    );
+    const { a, b, cloneA, cloneB, overlap } = setup({ static: false, mass: 2 }, { static: false, mass: 4 });
 
-    const impulse = overlap.multiply(
-      (a.velocity.subtract(b.velocity).dot(overlap) * -2) / 0.75,
-    );
+    const impulse = overlap.multiply((a.velocity.subtract(b.velocity).dot(overlap) * -2) / 0.75);
 
     collide(cloneA, cloneB);
 
@@ -123,23 +100,16 @@ describe('collide', () => {
     expect(cloneA.x).toEqual(positionA.x);
     expect(cloneA.y).toEqual(positionA.y);
 
-    expect(cloneB.velocity).toEqual(
-      b.velocity.subtract(impulse.multiply(0.25)),
-    );
+    expect(cloneB.velocity).toEqual(b.velocity.subtract(impulse.multiply(0.25)));
     const positionB = new Vector2(b).subtract(overlap.multiply(0.25));
     expect(cloneB.x).toEqual(positionB.x);
     expect(cloneB.y).toEqual(positionB.y);
   });
 
   it('will move the bodies apart (with elasticity)', () => {
-    const { a, b, cloneA, cloneB, overlap } = setup(
-      { static: false, elasticity: 2 },
-      { static: false, elasticity: 4 },
-    );
+    const { a, b, cloneA, cloneB, overlap } = setup({ static: false, elasticity: 2 }, { static: false, elasticity: 4 });
 
-    const impulse = overlap.multiply(
-      (a.velocity.subtract(b.velocity).dot(overlap) * -5) / 2,
-    );
+    const impulse = overlap.multiply((a.velocity.subtract(b.velocity).dot(overlap) * -5) / 2);
 
     collide(cloneA, cloneB);
 
@@ -160,9 +130,7 @@ describe('collide', () => {
       { static: false, mass: 4, elasticity: 4 },
     );
 
-    const impulse = overlap.multiply(
-      (a.velocity.subtract(b.velocity).dot(overlap) * -5) / 0.75,
-    );
+    const impulse = overlap.multiply((a.velocity.subtract(b.velocity).dot(overlap) * -5) / 0.75);
 
     collide(cloneA, cloneB);
 
@@ -171,9 +139,7 @@ describe('collide', () => {
     expect(cloneA.x).toEqual(positionA.x);
     expect(cloneA.y).toEqual(positionA.y);
 
-    expect(cloneB.velocity).toEqual(
-      b.velocity.subtract(impulse.multiply(0.25)),
-    );
+    expect(cloneB.velocity).toEqual(b.velocity.subtract(impulse.multiply(0.25)));
     const positionB = new Vector2(b).subtract(overlap.multiply(0.25));
     expect(cloneB.x).toEqual(positionB.x);
     expect(cloneB.y).toEqual(positionB.y);

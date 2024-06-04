@@ -111,20 +111,14 @@ export class Settings extends LitElement {
     });
 
     InputManager.Instance?.observables['down'].subscribe(() => {
-      this.currentSetting = Math.min(
-        this.currentSetting + 1,
-        this.settings.length - 1,
-      );
+      this.currentSetting = Math.min(this.currentSetting + 1, this.settings.length - 1);
     });
 
     InputManager.Instance?.observables['left'].subscribe(() => {
       const setting = this.settings[this.currentSetting];
       if (setting.type === 'option-list') {
         const index = setting.options.indexOf(setting.value);
-        setting.value =
-          setting.options[
-            (index - 1 + setting.options.length) % setting.options.length
-          ];
+        setting.value = setting.options[(index - 1 + setting.options.length) % setting.options.length];
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       } else if (setting.type === 'slider') {
         setting.value = Math.max(setting.value - setting.step, setting.min);

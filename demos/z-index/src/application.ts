@@ -8,9 +8,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   app.context.camera.zoom({ x: 4, y: 4 });
 
-  const texture = await app.loadTexture(
-    'assets/pixel-craft/pixel-prowlers.png',
-  );
+  const texture = await app.loadTexture('assets/pixel-craft/pixel-prowlers.png');
   const sprites = 10;
 
   for (let i = 0; i < sprites; i++) {

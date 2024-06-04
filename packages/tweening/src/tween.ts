@@ -67,10 +67,7 @@ export class Tween<T extends Record<string, unknown>> {
       return;
     }
 
-    this.progress =
-      this.direction === Direction.Forward
-        ? this.progress + dt
-        : this.progress - dt;
+    this.progress = this.direction === Direction.Forward ? this.progress + dt : this.progress - dt;
     const progressPercentage = clamp(this.progress / this.duration, 0, 1);
     const t = this.easing(progressPercentage);
 
@@ -87,10 +84,7 @@ export class Tween<T extends Record<string, unknown>> {
       }
 
       if (this.pingPong) {
-        this.direction =
-          this.direction === Direction.Forward
-            ? Direction.Backward
-            : Direction.Forward;
+        this.direction = this.direction === Direction.Forward ? Direction.Backward : Direction.Forward;
       }
 
       this.progress = this.direction === Direction.Forward ? 0 : this.duration;

@@ -1,9 +1,4 @@
-import {
-  createContext,
-  createTextureLoader,
-  TextureLoader,
-  WebGPUContext,
-} from '@pixel-craft/renderer';
+import { createContext, createTextureLoader, TextureLoader, WebGPUContext } from '@pixel-craft/renderer';
 import { CreateHookContext, System } from './system/system';
 
 type HookList = keyof Required<Omit<System, 'createSystem'>>;

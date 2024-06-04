@@ -54,19 +54,12 @@ export const SpriteSheetPage: Component = () => {
     }));
   };
 
-  const zoomedTileSize = () =>
-    state.spriteSheetOptions.tileSize * state.spriteSheetOptions.zoom;
+  const zoomedTileSize = () => state.spriteSheetOptions.tileSize * state.spriteSheetOptions.zoom;
   const activeTilesLength = () => state.spriteSheetOptions.activeTiles.length;
   const tileCountX = () =>
-    Math.floor(
-      (imageWidth() - state.spriteSheetOptions.margin * 2) /
-        state.spriteSheetOptions.tileSize,
-    );
+    Math.floor((imageWidth() - state.spriteSheetOptions.margin * 2) / state.spriteSheetOptions.tileSize);
   const tileCountY = () =>
-    Math.floor(
-      (imageHeight() - state.spriteSheetOptions.margin * 2) /
-        state.spriteSheetOptions.tileSize,
-    );
+    Math.floor((imageHeight() - state.spriteSheetOptions.margin * 2) / state.spriteSheetOptions.tileSize);
 
   const tileKey = (x: number, y: number) => `${x}:${y}`;
 
@@ -165,11 +158,7 @@ export const SpriteSheetPage: Component = () => {
             )}
           </For>
         </div>
-        <button
-          className="btn btn-primary"
-          disabled={activeTilesLength() === 0}
-          on:click={onSaveTiles}
-        >
+        <button className="btn btn-primary" disabled={activeTilesLength() === 0} on:click={onSaveTiles}>
           Save tiles
         </button>
       </div>
@@ -194,18 +183,12 @@ export const SpriteSheetPage: Component = () => {
                             'box-sizing': 'border-box',
                             width: `${zoomedTileSize()}px`,
                             height: `${zoomedTileSize()}px`,
-                            border:
-                              state.spriteSheetOptions.activeTiles.includes(
-                                tileKey(x(), y()),
-                              )
-                                ? `${state.spriteSheetOptions.zoom}px solid rgba(255, 0, 0, 0.4)`
-                                : 'none',
-                            background:
-                              state.spriteSheetOptions.activeTiles.includes(
-                                tileKey(x(), y()),
-                              )
-                                ? `rgba(0, 0, 0, 0)`
-                                : `rgba(0, 0, 0, 0.4)`,
+                            border: state.spriteSheetOptions.activeTiles.includes(tileKey(x(), y()))
+                              ? `${state.spriteSheetOptions.zoom}px solid rgba(255, 0, 0, 0.4)`
+                              : 'none',
+                            background: state.spriteSheetOptions.activeTiles.includes(tileKey(x(), y()))
+                              ? `rgba(0, 0, 0, 0)`
+                              : `rgba(0, 0, 0, 0.4)`,
                           }}
                         >
                           {x}

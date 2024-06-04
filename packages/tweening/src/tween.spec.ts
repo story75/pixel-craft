@@ -58,14 +58,7 @@ describe('Tween', () => {
     const target = { x: 0, y: 0 };
     const duration = 1000;
 
-    const tween = new Tween(
-      target,
-      { x: 100 },
-      easeInOutQuad,
-      duration,
-      true,
-      true,
-    );
+    const tween = new Tween(target, { x: 100 }, easeInOutQuad, duration, true, true);
 
     expect(target.x).toBe(0);
     tween.update(duration / 4);

@@ -16,9 +16,7 @@ export function watch(cli: ReturnType<typeof yargs>): void {
     },
     (args) => {
       const glob = new Glob('packages/*/package.json');
-      const watcherPatterns = Array.from(glob.scanSync()).map((file) =>
-        join(dirname(file), 'src/**/*'),
-      );
+      const watcherPatterns = Array.from(glob.scanSync()).map((file) => join(dirname(file), 'src/**/*'));
 
       const demo = args['demo'] as string | undefined;
       if (demo) {

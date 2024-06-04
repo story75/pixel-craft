@@ -1,10 +1,4 @@
-import {
-  Mat4,
-  Vector2,
-  Vector2Like,
-  Vector3,
-  Vector4,
-} from '@pixel-craft/math';
+import { Mat4, Vector2, Vector2Like, Vector3, Vector4 } from '@pixel-craft/math';
 import { uniformBufferAllocator } from '../buffer/uniform-buffer-allocator';
 
 export type Camera = {
@@ -22,17 +16,11 @@ export type Camera = {
  * The projection view matrix is calculated using the given width and height.
  * The buffer is written to the GPU queue on creation.
  */
-export function createCamera(
-  device: GPUDevice,
-  width: number,
-  height: number,
-): Camera {
+export function createCamera(device: GPUDevice, width: number, height: number): Camera {
   const projectionViewMatrixUniformBuffer = uniformBufferAllocator(device)(
     new Float32Array(16 * Float32Array.BYTES_PER_ELEMENT),
   );
-  const transformUniformBuffer = uniformBufferAllocator(device)(
-    new Float32Array(4 * Float32Array.BYTES_PER_ELEMENT),
-  );
+  const transformUniformBuffer = uniformBufferAllocator(device)(new Float32Array(4 * Float32Array.BYTES_PER_ELEMENT));
 
   const scaling = new Vector3({ x: 1, y: 1, z: 1 });
   const position = new Vector2({ x: 0, y: 0 });
@@ -63,16 +51,9 @@ export function createCamera(
       w: 1,
     }).multiply(projectionMatrix);
 
-    const projectionViewMatrix = new Mat4(viewMatrix)
-      .multiply(projectionMatrix)
-      .translate(translation)
-      .scale(scaling);
+    const projectionViewMatrix = new Mat4(viewMatrix).multiply(projectionMatrix).translate(translation).scale(scaling);
 
-    device.queue.writeBuffer(
-      projectionViewMatrixUniformBuffer,
-      0,
-      projectionViewMatrix,
-    );
+    device.queue.writeBuffer(projectionViewMatrixUniformBuffer, 0, projectionViewMatrix);
     device.queue.writeBuffer(
       transformUniformBuffer,
       0,

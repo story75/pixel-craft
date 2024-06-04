@@ -100,15 +100,9 @@ export function pipeline({
     label: 'gBuffer',
   });
 
-  const projectionViewMatrixUniform = projectionViewMatrix(
-    device,
-    camera.projectionViewMatrixUniformBuffer,
-  );
+  const projectionViewMatrixUniform = projectionViewMatrix(device, camera.projectionViewMatrixUniformBuffer);
 
-  const cameraTransformUniform = cameraTransform(
-    device,
-    camera.transformUniformBuffer,
-  );
+  const cameraTransformUniform = cameraTransform(device, camera.transformUniformBuffer);
 
   const textureUniform = texture(device);
 
@@ -123,10 +117,7 @@ export function pipeline({
   );
 
   const pipelineLayout = device.createPipelineLayout({
-    bindGroupLayouts: [
-      projectionViewMatrixUniform.layout,
-      textureUniform.layout,
-    ],
+    bindGroupLayouts: [projectionViewMatrixUniform.layout, textureUniform.layout],
   });
 
   const pipelineShaderModule = device.createShaderModule({
@@ -172,11 +163,7 @@ export function pipeline({
   const parallaxPipeline = pipeline('vs_main', 'fs_repeating');
   const lightsPipeline = device.createRenderPipeline({
     layout: device.createPipelineLayout({
-      bindGroupLayouts: [
-        projectionViewMatrixUniform.layout,
-        cameraTransformUniform.layout,
-        lightsUniform.layout,
-      ],
+      bindGroupLayouts: [projectionViewMatrixUniform.layout, cameraTransformUniform.layout, lightsUniform.layout],
     }),
     vertex: {
       module: lightsShaderModule,
@@ -201,11 +188,7 @@ export function pipeline({
   const vertexBufferAlloc = vertexBufferAllocator(device);
   const indexBuffer = indexBufferAllocator(device)(indices);
 
-  const vertexBuffers = [
-    vertexBufferAlloc(
-      new Float32Array(MAX_SPRITES_PER_BATCH * FLOATS_PER_SPRITE),
-    ),
-  ];
+  const vertexBuffers = [vertexBufferAlloc(new Float32Array(MAX_SPRITES_PER_BATCH * FLOATS_PER_SPRITE))];
 
   const textureBindGroups = new Map<GPUTexture, GPUBindGroup>();
   const defaultSampler = nearestSampler(device);
@@ -364,8 +347,7 @@ export function pipeline({
     }
 
     const commandEncoder = device.createCommandEncoder();
-    const pipelinePassEncoder =
-      commandEncoder.beginRenderPass(renderPassDescriptor);
+    const pipelinePassEncoder = commandEncoder.beginRenderPass(renderPassDescriptor);
 
     const usedVertexBuffers: GPUBuffer[] = [];
 
@@ -373,9 +355,7 @@ export function pipeline({
       for (const batch of batches) {
         let vertexBuffer = vertexBuffers.pop();
         if (!vertexBuffer) {
-          vertexBuffer = vertexBufferAlloc(
-            new Float32Array(MAX_SPRITES_PER_BATCH * FLOATS_PER_SPRITE),
-          );
+          vertexBuffer = vertexBufferAlloc(new Float32Array(MAX_SPRITES_PER_BATCH * FLOATS_PER_SPRITE));
         }
         device.queue.writeBuffer(vertexBuffer, 0, batch.vertices);
         usedVertexBuffers.push(vertexBuffer);
@@ -388,10 +368,7 @@ export function pipeline({
         pipelinePassEncoder.setPipeline(batch.pipeline);
         pipelinePassEncoder.setIndexBuffer(indexBuffer, 'uint16');
         pipelinePassEncoder.setVertexBuffer(0, vertexBuffer);
-        pipelinePassEncoder.setBindGroup(
-          0,
-          projectionViewMatrixUniform.bindGroup,
-        );
+        pipelinePassEncoder.setBindGroup(0, projectionViewMatrixUniform.bindGroup);
         pipelinePassEncoder.setBindGroup(1, textureBindGroup);
         pipelinePassEncoder.drawIndexed(6 * batch.instances);
       }
@@ -409,8 +386,7 @@ export function pipeline({
         },
       ],
     };
-    const lightsPassEncoder =
-      commandEncoder.beginRenderPass(lightsPassDescriptor);
+    const lightsPassEncoder = commandEncoder.beginRenderPass(lightsPassDescriptor);
     lightsPassEncoder.setPipeline(lightsPipeline);
     lightsPassEncoder.setBindGroup(0, projectionViewMatrixUniform.bindGroup);
     lightsPassEncoder.setBindGroup(1, cameraTransformUniform.bindGroup);

@@ -4,15 +4,13 @@ import { Store } from './store';
 /**
  * Create a cache key for a query configuration.
  */
-const cacheKey = (config: QueryConfiguration) =>
-  `${config.with.join()}-${config.without.join()}`;
+const cacheKey = (config: QueryConfiguration) => `${config.with.join()}-${config.without.join()}`;
 
 /**
  * Normalize the properties in a query configuration.
  */
 const normalize = (config: QueryConfiguration) => {
-  const filter = (properties: IndexType[]) =>
-    Array.from(new Set(properties.filter((p) => Boolean(p)).sort()));
+  const filter = (properties: IndexType[]) => Array.from(new Set(properties.filter((p) => Boolean(p)).sort()));
 
   return {
     with: filter(config.with),
@@ -20,10 +18,7 @@ const normalize = (config: QueryConfiguration) => {
   };
 };
 
-class EntityQuery<T extends Record<IndexType, unknown>>
-  extends Store<T>
-  implements Query<T>
-{
+class EntityQuery<T extends Record<IndexType, unknown>> extends Store<T> implements Query<T> {
   constructor(
     public readonly key: string,
     private readonly store: EntityStore<Record<IndexType, unknown>>,
@@ -86,10 +81,7 @@ class EntityQuery<T extends Record<IndexType, unknown>>
   }
 }
 
-export class EntityStore<T extends Record<IndexType, unknown>>
-  extends Store<T>
-  implements Query<T>
-{
+export class EntityStore<T extends Record<IndexType, unknown>> extends Store<T> implements Query<T> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private readonly queries = new Set<EntityQuery<any>>();
 
@@ -97,9 +89,7 @@ export class EntityStore<T extends Record<IndexType, unknown>>
     super();
 
     this.onAdd.subscribe((entity) => this.evaluate(entity));
-    this.onRemove.subscribe((entity) =>
-      this.queries.forEach((query) => query.remove(entity)),
-    );
+    this.onRemove.subscribe((entity) => this.queries.forEach((query) => query.remove(entity)));
   }
 
   /**
@@ -153,9 +143,7 @@ export class EntityStore<T extends Record<IndexType, unknown>>
    *
    * @internal
    */
-  query<N extends Record<IndexType, unknown>>(
-    config: QueryConfiguration,
-  ): EntityQuery<N> {
+  query<N extends Record<IndexType, unknown>>(config: QueryConfiguration): EntityQuery<N> {
     const normalized = normalize(config);
     const key = cacheKey(normalized);
 
@@ -165,11 +153,7 @@ export class EntityStore<T extends Record<IndexType, unknown>>
       }
     }
 
-    const query = new EntityQuery<N>(
-      key,
-      this as EntityStore<Record<IndexType, unknown>>,
-      normalized,
-    );
+    const query = new EntityQuery<N>(key, this as EntityStore<Record<IndexType, unknown>>, normalized);
     this.queries.add(query);
     return query;
   }

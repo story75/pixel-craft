@@ -23,9 +23,7 @@ export type PointLight = {
 export type PointLightSystem = {
   storageBuffer: GPUBuffer;
   amountUniformBuffer: GPUBuffer;
-  addLight: (
-    light: Pick<PointLight, 'position'> & Partial<PointLight>,
-  ) => PointLight;
+  addLight: (light: Pick<PointLight, 'position'> & Partial<PointLight>) => PointLight;
   updateLight: (light: PointLight) => PointLight;
   removeLight: (light: PointLight) => void;
 };
@@ -41,26 +39,17 @@ const FLOATS_PER_LIGHT = 8; // 3 for color, 1 for intensity, 2 for position, 2 f
  */
 export function createPointLight(device: GPUDevice): PointLightSystem {
   const maxLights = 1000; // start off with a large number of lights
-  const storage = new Float32Array(
-    maxLights * FLOATS_PER_LIGHT * Float32Array.BYTES_PER_ELEMENT,
-  );
+  const storage = new Float32Array(maxLights * FLOATS_PER_LIGHT * Float32Array.BYTES_PER_ELEMENT);
 
   const storageBuffer = storageBufferAllocator(device)(storage);
-  const amountUniformBuffer = uniformBufferAllocator(device)(
-    new Uint32Array([0]),
-  ); // single uint32
+  const amountUniformBuffer = uniformBufferAllocator(device)(new Uint32Array([0])); // single uint32
 
   const store = new Store<PointLight>();
   store.onShuffle.subscribe((light) => {
     updateLight(light);
   });
 
-  const writeLength = () =>
-    device.queue.writeBuffer(
-      amountUniformBuffer,
-      0,
-      new Uint32Array([store.size]),
-    );
+  const writeLength = () => device.queue.writeBuffer(amountUniformBuffer, 0, new Uint32Array([store.size]));
   writeLength();
 
   const updateLight = (light: PointLight) => {
@@ -75,17 +64,11 @@ export function createPointLight(device: GPUDevice): PointLightSystem {
     storage.set(light.position, offset + 4);
     storage.set([light.radius], offset + 6);
 
-    device.queue.writeBuffer(
-      storageBuffer,
-      offset,
-      storage.subarray(offset, offset + FLOATS_PER_LIGHT),
-    );
+    device.queue.writeBuffer(storageBuffer, offset, storage.subarray(offset, offset + FLOATS_PER_LIGHT));
     return light;
   };
 
-  const setDefaults = (
-    light: Pick<PointLight, 'position'> & Partial<PointLight>,
-  ): PointLight => {
+  const setDefaults = (light: Pick<PointLight, 'position'> & Partial<PointLight>): PointLight => {
     light.radius = light.radius ?? 40;
     light.intensity = light.intensity ?? 1;
     light.color = light.color ?? [1, 1, 1];
@@ -96,9 +79,7 @@ export function createPointLight(device: GPUDevice): PointLightSystem {
   return {
     storageBuffer,
     amountUniformBuffer,
-    addLight: (
-      inputLight: Pick<PointLight, 'position'> & Partial<PointLight>,
-    ): PointLight => {
+    addLight: (inputLight: Pick<PointLight, 'position'> & Partial<PointLight>): PointLight => {
       if (store.size >= maxLights) {
         // TODO: Grow the buffer
         throw new Error('Too many lights!');

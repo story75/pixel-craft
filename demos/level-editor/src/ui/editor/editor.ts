@@ -254,7 +254,8 @@ export class Editor extends LitElement {
 
     const context = await createContext(this.canvas);
     const textureLoader = createTextureLoader(context.device);
-    const texture = await textureLoader(tileset);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const texture = await textureLoader(tileset!);
     const renderPass = pipeline(context);
 
     this.renderPass = () => {

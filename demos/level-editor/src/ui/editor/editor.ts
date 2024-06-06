@@ -10,7 +10,7 @@ import { when } from 'lit/directives/when.js';
 import { loadFile } from '../../file-storage';
 import '../components/icon';
 import '../components/toolbar';
-import { EditorOptions, optionKey, storageKey } from './editor-options';
+import { editorState } from './editor-state';
 import './tileset-editor';
 
 @customElement('pixel-craft-editor')
@@ -68,7 +68,10 @@ export class Editor extends LitElement {
     .painter {
       display: flex;
       flex-direction: column;
+      max-width: 90dvw;
+      max-height: 90dvh;
       margin: auto;
+      overflow: auto;
 
       .tile .tile {
         opacity: 0.3;
@@ -129,8 +132,7 @@ export class Editor extends LitElement {
   accessor canvas!: HTMLCanvasElement;
   private renderPass!: () => void;
 
-  private readonly storageKey = storageKey;
-  private readonly optionKey = optionKey;
+  private readonly state = editorState;
 
   private isRightMouseDown = false;
   private isMouseDown = false;
@@ -150,8 +152,8 @@ export class Editor extends LitElement {
   @state()
   private accessor currentTile = 0;
 
-  private readonly width = 30;
-  private readonly height = 25;
+  private readonly width = 50;
+  private readonly height = 50;
   private image = '';
   private palette: Rect[] = [];
   // eslint-disable-next-line @typescript-eslint/array-type
@@ -275,7 +277,7 @@ export class Editor extends LitElement {
             sprites.push(
               sprite({
                 texture,
-                x: tileSize * 7 + ((layerCorrectedX * tileSize) / 2 + (layerCorrectedY * -tileSize) / 2),
+                x: tileSize * (this.width / 2) + ((layerCorrectedX * tileSize) / 2 + (layerCorrectedY * -tileSize) / 2),
                 y: (layerCorrectedX * tileSize) / 4 + (layerCorrectedY * tileSize) / 4,
                 frame: this.palette[tileIndex],
               }),

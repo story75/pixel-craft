@@ -15,7 +15,7 @@ import '../components/inspector/inspector-column';
 import '../components/inspector/inspector-row';
 import '../components/layer';
 import '../components/select';
-import { EditorOptions, optionKey, storageKey } from './editor-options';
+import { editorState } from './editor-state';
 
 @customElement('pixel-craft-tileset-editor')
 export class Editor extends LitElement {
@@ -85,36 +85,25 @@ export class Editor extends LitElement {
     }
   `;
 
-  private readonly storageKey = storageKey;
-  private readonly optionKey = optionKey;
-  private image = '';
-  private tileset: File | undefined = undefined;
-  private zoom = 1;
-  private tileSize = 32;
-  private margin = 0;
+  private readonly state = editorState;
+
   private width = 0;
   private height = 0;
   private x = 0;
   private y = 0;
-  private selectedTiles: string[] = [];
 
   private readonly onTilesetChange = (file: File | undefined) => {
-    this.tileset = file;
-    if (this.image && !this.tileset) {
-      URL.revokeObjectURL(this.image);
-    }
-    this.image = this.tileset ? URL.createObjectURL(this.tileset) : '';
-    this.requestUpdate();
+    this.state.tilesetFile = file;
   };
 
   private readonly updateState = () => {
-    const doubledMargin = this.margin * 2;
+    const doubledMargin = this.state.margin * 2;
 
-    this.x = (this.width - doubledMargin) / this.tileSize;
-    this.y = (this.height - doubledMargin) / this.tileSize;
+    this.x = (this.width - doubledMargin) / this.state.tileSize;
+    this.y = (this.height - doubledMargin) / this.state.tileSize;
 
-    this.style.setProperty('--zoom', `${this.zoom}px`);
-    this.style.setProperty('--tile-size', `${this.tileSize * this.zoom}px`);
+    this.style.setProperty('--zoom', `${this.state.zoom}px`);
+    this.style.setProperty('--tile-size', `${this.state.tileSize * this.state.zoom}px`);
     this.requestUpdate();
   };
 
@@ -129,80 +118,62 @@ export class Editor extends LitElement {
 
   private readonly onTileClick = (x: number, y: number) => {
     const key = this.tileKey(x, y);
-    const index = this.selectedTiles.indexOf(key);
+    const index = this.state.selectedTiles.indexOf(key);
 
     if (index !== -1) {
-      this.selectedTiles.splice(index, 1);
+      this.state.selectedTiles = this.state.selectedTiles.toSpliced(index, 1);
     } else {
-      this.selectedTiles.push(key);
+      this.state.selectedTiles = [...this.state.selectedTiles, key];
     }
-    this.requestUpdate();
   };
 
   private readonly onZoomChange = (event: Event) => {
     const target = event.target as HTMLSelectElement;
-    this.zoom = Number(target.value);
-    this.updateState();
+    this.state.zoom = Number(target.value);
   };
 
   private readonly onTileSizeChange = (event: Event) => {
     const target = event.target as HTMLSelectElement;
-    this.tileSize = Number(target.value);
-    this.updateState();
+    this.state.tileSize = Number(target.value);
   };
 
   private readonly onMarginChange = (event: Event) => {
     const target = event.target as HTMLSelectElement;
-    this.margin = Number(target.value);
-    this.updateState();
+    this.state.margin = Number(target.value);
   };
 
   private readonly onSave = () => {
-    const options: EditorOptions = {
-      tileSize: this.tileSize,
-      margin: this.margin,
-      zoom: this.zoom,
-      selectedTiles: this.selectedTiles,
-      spriteFrames: this.selectedTiles.map((key) => {
-        const [x, y] = key.split(':').map(Number);
-        return {
-          x: this.margin + x * this.tileSize,
-          y: this.margin + y * this.tileSize,
-          width: this.tileSize,
-          height: this.tileSize,
-        };
-      }),
-    };
+    this.state.palette = this.state.selectedTiles.map((key) => {
+      const [x, y] = key.split(':').map(Number);
+      return {
+        x: this.state.margin + x * this.state.tileSize,
+        y: this.state.margin + y * this.state.tileSize,
+        width: this.state.tileSize,
+        height: this.state.tileSize,
+      };
+    });
 
-    localStorage.setItem(this.optionKey, JSON.stringify(options));
-    this.dispatchEvent(new CustomEvent('save', { detail: options }));
+    this.dispatchEvent(new CustomEvent('save'));
   };
 
   connectedCallback() {
     super.connectedCallback();
 
-    const options = localStorage.getItem(this.optionKey);
-    if (options) {
-      const { tileSize, margin, zoom, selectedTiles } = JSON.parse(options) as EditorOptions;
-      this.tileSize = tileSize;
-      this.margin = margin;
-      this.zoom = zoom;
-      this.selectedTiles = selectedTiles;
+    this.state.addEventListener('change', () => {
       this.updateState();
-    }
+    });
   }
 
   render() {
     return html`
       <pixel-craft-editor-layer>
         <pixel-craft-editor-container>
-          ${this.tileset
+          ${this.state.tilesetFile
             ? nothing
             : html` <pixel-craft-editor-file-upload
-                storage-key=${this.storageKey}
                 @file=${(event: FileEvent) => this.onTilesetChange(event.detail.file)}
               ></pixel-craft-editor-file-upload>`}
-          ${!this.tileset
+          ${!this.state.tilesetFile
             ? nothing
             : html`
                 <pixel-craft-inspector>
@@ -212,7 +183,7 @@ export class Editor extends LitElement {
                         <pixel-craft-editor-select
                           @change=${this.onZoomChange}
                           type="number"
-                          value=${this.zoom}
+                          value=${this.state.zoom}
                           .formatter=${(value: number) => `${value}x`}
                           .options=${[1, 2, 4]}
                         ></pixel-craft-editor-select>
@@ -221,7 +192,7 @@ export class Editor extends LitElement {
                         <pixel-craft-editor-select
                           @change=${this.onTileSizeChange}
                           type="number"
-                          value=${this.tileSize}
+                          value=${this.state.tileSize}
                           .formatter=${(value: number) => `${value}px`}
                           .options=${[16, 32, 48]}
                         ></pixel-craft-editor-select>
@@ -230,7 +201,7 @@ export class Editor extends LitElement {
                         <pixel-craft-editor-select
                           @change=${this.onMarginChange}
                           type="number"
-                          value=${this.margin}
+                          value=${this.state.margin}
                           .formatter=${(value: number) => `${value}px`}
                           .options=${[0, 16, 32]}
                         ></pixel-craft-editor-select>
@@ -239,13 +210,13 @@ export class Editor extends LitElement {
                     <pixel-craft-inspector-column fill>
                       <pixel-craft-inspector-row vertical-center>
                         <pixel-craft-editor-file-upload
-                          storage-key=${this.storageKey}
+                          .file=${this.state.tilesetFile}
                           @file=${(event: FileEvent) => this.onTilesetChange(event.detail.file)}
                         ></pixel-craft-editor-file-upload>
                         <pixel-craft-editor-button
                           @click=${this.onSave}
                           class="save"
-                          ?disabled=${this.selectedTiles.length === 0}
+                          ?disabled=${this.state.selectedTiles.length === 0}
                         >
                           <pixel-craft-editor-icon></pixel-craft-editor-icon>
                         </pixel-craft-editor-button>
@@ -257,7 +228,7 @@ export class Editor extends LitElement {
                   <div
                     class="tileset"
                     style=${styleMap({
-                      padding: this.margin ? `${this.margin * this.zoom}px` : undefined,
+                      padding: this.state.margin ? `${this.state.margin * this.state.zoom}px` : undefined,
                     })}
                   >
                     ${map(
@@ -270,7 +241,7 @@ export class Editor extends LitElement {
                               <div
                                 class=${classMap({
                                   tile: true,
-                                  selected: this.selectedTiles.includes(this.tileKey(x, y)),
+                                  selected: this.state.selectedTiles.includes(this.tileKey(x, y)),
                                 })}
                                 @click=${() => this.onTileClick(x, y)}
                               ></div>
@@ -280,11 +251,11 @@ export class Editor extends LitElement {
                       `,
                     )}
                   </div>
-                  <pixel-craft-editor-checkerboard size=${this.tileSize * this.zoom}>
+                  <pixel-craft-editor-checkerboard size=${this.state.tileSize * this.state.zoom}>
                     <img
-                      src="${this.image}"
-                      alt=${this.tileset.name}
-                      style=${styleMap({ zoom: this.zoom })}
+                      src="${this.state.tilesetImage}"
+                      alt=${this.state.tilesetFile.name}
+                      style=${styleMap({ zoom: this.state.zoom })}
                       @load=${this.onTilesetLoad}
                     />
                   </pixel-craft-editor-checkerboard>

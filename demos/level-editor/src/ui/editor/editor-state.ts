@@ -28,7 +28,7 @@ export class EditorState extends State {
 
   @property
   @store()
-  accessor spriteFrames: Rect[] = [];
+  accessor palette: Rect[] = [];
 
   @property
   @store()
@@ -53,11 +53,11 @@ export class EditorState extends State {
 
   @property
   @store()
-  accessor showGrid = true;
+  accessor showGrid = false;
 
   @property
   @store()
-  accessor showPalette = true;
+  accessor showPalette = false;
 
   @property
   @store()
@@ -82,19 +82,77 @@ export class EditorState extends State {
       this.isRightMouseDown = false;
     });
 
+    const updateImage = () => {
+      if (this.tilesetImage) {
+        URL.revokeObjectURL(this.tilesetImage);
+      }
+      this.tilesetImage = this.tilesetFile ? URL.createObjectURL(this.tilesetFile) : '';
+    };
+
     this.addEventListener('change', (event) => {
       if (event.detail.property === 'tilesetFile') {
-        if (this.tilesetImage) {
-          URL.revokeObjectURL(this.tilesetImage);
-        }
-        this.tilesetImage = this.tilesetFile ? URL.createObjectURL(this.tilesetFile) : '';
+        updateImage();
       }
     });
 
-    if (this.map.length === 0) {
-      this.map = [[...new Array(this.width)].map(() => [...new Array(this.height)])];
-    }
+    updateImage();
   }
+
+  readonly openTilesetInspector = () => {
+    this.showTilesetInspector = true;
+  };
+
+  readonly closeTilesetInspector = () => {
+    this.showTilesetInspector = false;
+
+    if (this.palette.length !== 0) {
+      if (this.map.length === 0) {
+        this.map = [[...new Array(this.width)].map(() => [...new Array(this.height)])];
+      }
+      this.showPalette = true;
+      this.showGrid = true;
+    }
+  };
+
+  readonly toggleGrid = () => {
+    this.showGrid = !this.showGrid;
+  };
+
+  readonly togglePalette = () => {
+    this.showPalette = !this.showPalette;
+  };
+
+  readonly setActiveLayer = (layer: number) => {
+    this.selectedLayer = layer;
+  };
+
+  readonly addLayer = () => {
+    this.map.push([...new Array(this.width)].map(() => [...new Array(this.height)]));
+  };
+
+  readonly removeLayer = () => {
+    if (this.map.length === 1) {
+      return;
+    }
+
+    this.map.pop();
+  };
+
+  readonly selectTile = (i: number) => {
+    this.selectedTileIndex = i;
+  };
+
+  readonly paintTile = (x: number, y: number, mode: 'auto' | 'add' | 'remove' = 'auto') => {
+    if (mode === 'auto') {
+      if (!this.isMouseDown) {
+        return;
+      }
+
+      mode = this.isRightMouseDown ? 'remove' : 'add';
+    }
+
+    this.map[this.selectedLayer][x][y] = mode === 'add' ? this.selectedTileIndex : undefined;
+  };
 }
 
 export const editorState = new EditorState();

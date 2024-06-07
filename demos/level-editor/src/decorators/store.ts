@@ -25,12 +25,22 @@ export function store<This, Value>(key?: string) {
       },
       init(value: Value): Value {
         const stored = localStorage.getItem(storageKey);
-        if (stored) {
-          if (stored.startsWith('data:')) {
-            return stringToFile(stored) as unknown as Value;
-          }
+        if (!stored) {
+          return value;
+        }
+
+        if (!stored.startsWith('data:')) {
           return JSON.parse(stored) as Value;
         }
+
+        stringToFile(stored)
+          .then((data) => {
+            // call through this to trigger the setter, using the target would bypass the setter
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (this as any)[context.name] = data as Value;
+          })
+          .catch((e: unknown) => void e);
+
         return value;
       },
     };

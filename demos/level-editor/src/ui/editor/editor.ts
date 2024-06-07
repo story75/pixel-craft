@@ -1,13 +1,11 @@
-import { Rect } from '@pixel-craft/math';
 import { Sprite, createContext, createTextureLoader, pipeline, sprite } from '@pixel-craft/renderer';
 import { LitElement, css, html } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { map } from 'lit/directives/map.js';
 import { range } from 'lit/directives/range.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { when } from 'lit/directives/when.js';
-import { loadFile } from '../../file-storage';
 import '../components/icon';
 import '../components/toolbar';
 import { editorState } from './editor-state';
@@ -131,142 +129,55 @@ export class Editor extends LitElement {
 
   accessor canvas!: HTMLCanvasElement;
   private renderPass!: () => void;
+  private texture: GPUTexture | undefined;
 
   private readonly state = editorState;
 
-  private isRightMouseDown = false;
-  private isMouseDown = false;
-
-  @state()
-  private accessor painting = true;
-
-  @state()
-  private accessor showOverlay = true;
-
-  @state()
-  private accessor showPalette = true;
-
-  @state()
-  private accessor currentLayer = 0;
-
-  @state()
-  private accessor currentTile = 0;
-
-  private readonly width = 50;
-  private readonly height = 50;
-  private image = '';
-  private palette: Rect[] = [];
-  // eslint-disable-next-line @typescript-eslint/array-type
-  private map: (number | undefined)[][][] = [];
-
-  private readonly openTilesetEditor = () => {
-    this.painting = false;
-  };
-
-  private readonly closeTilesetEditor = () => {
-    this.painting = true;
-  };
-
-  private readonly toggleOverlay = () => {
-    this.showOverlay = !this.showOverlay;
-  };
-
-  private readonly togglePalette = () => {
-    this.showPalette = !this.showPalette;
-  };
-
-  private readonly setActiveLayer = (layer: number) => {
-    this.currentLayer = layer;
-  };
-
-  private readonly addLayer = () => {
-    this.map.push([...new Array(this.width)].map(() => [...new Array(this.height)]));
-    this.requestUpdate();
-  };
-
-  private readonly removeLayer = () => {
-    if (this.map.length === 1) {
-      return;
-    }
-
-    this.map.pop();
-    this.requestUpdate();
-  };
-
-  private readonly onPaletteTileClick = (i: number) => {
-    this.currentTile = i;
-  };
-
-  private readonly onPainterTileClick = (x: number, y: number, mode: 'auto' | 'add' | 'remove' = 'auto') => {
-    if (mode === 'auto') {
-      if (!this.isMouseDown) {
-        return;
-      }
-
-      mode = this.isRightMouseDown ? 'remove' : 'add';
-    }
-
-    this.map[this.currentLayer][x][y] = mode === 'add' ? this.currentTile : undefined;
-    this.requestUpdate();
-    this.renderPass();
-  };
-
   private readonly getTileStyle = (layer: number, x: number, y: number) => {
-    const tileIndex = this.map[layer]?.[x]?.[y];
-    if (tileIndex === undefined) {
+    const tileIndex = this.state.map[layer]?.[x]?.[y];
+    if (!tileIndex && tileIndex !== 0) {
       return {};
     }
 
     return {
-      background: `url(${this.image})`,
-      'background-position': `-${this.palette[tileIndex].x}px -${this.palette[tileIndex].y}px`,
+      background: `url(${this.state.tilesetImage})`,
+      'background-position': `-${this.state.palette[tileIndex].x}px -${this.state.palette[tileIndex].y}px`,
     };
+  };
+
+  readonly paintTile = (x: number, y: number, mode: 'auto' | 'add' | 'remove' = 'auto') => {
+    this.state.paintTile(x, y, mode);
+    this.requestUpdate();
+    this.renderPass();
   };
 
   async connectedCallback() {
     super.connectedCallback();
 
-    document.addEventListener('contextmenu', (event) => {
-      this.isRightMouseDown = true;
-      event.preventDefault();
-      return false;
-    });
-    document.addEventListener('mousedown', () => {
-      this.isMouseDown = true;
-    });
-    document.addEventListener('mouseup', () => {
-      this.isMouseDown = false;
-      this.isRightMouseDown = false;
-    });
-
-    const tileset = await loadFile(this.storageKey);
-    if (tileset) {
-      this.image = URL.createObjectURL(tileset);
-    }
-
-    const options = localStorage.getItem(this.optionKey);
-    let tileSize = 32;
-    if (options) {
-      const parsed = JSON.parse(options) as EditorOptions;
-      this.palette = parsed.spriteFrames;
-      tileSize = parsed.tileSize;
-    }
-
-    this.map = [[...new Array(this.width)].map(() => [...new Array(this.height)])];
-
     const context = await createContext(this.canvas);
     const textureLoader = createTextureLoader(context.device);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const texture = await textureLoader(tileset!);
     const renderPass = pipeline(context);
 
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    this.state.addEventListener('change', async (event) => {
+      if (event.detail.property === 'tilesetFile' && event.detail.value instanceof File) {
+        this.texture = await textureLoader(event.detail.value);
+      }
+
+      this.requestUpdate();
+    });
+
     this.renderPass = () => {
+      if (!this.texture) {
+        return;
+      }
+
       const sprites: Sprite[] = [];
 
-      for (let layer = 0; layer < this.map.length; layer++) {
-        for (let y = 0; y < this.height; y++) {
-          for (let x = 0; x < this.width; x++) {
-            const tileIndex = this.map[layer][x][y];
+      for (let layer = 0; layer < this.state.map.length; layer++) {
+        for (let y = 0; y < this.state.height; y++) {
+          for (let x = 0; x < this.state.width; x++) {
+            const tileIndex = this.state.map[layer][x][y];
             if (tileIndex === undefined) {
               continue;
             }
@@ -276,10 +187,12 @@ export class Editor extends LitElement {
 
             sprites.push(
               sprite({
-                texture,
-                x: tileSize * (this.width / 2) + ((layerCorrectedX * tileSize) / 2 + (layerCorrectedY * -tileSize) / 2),
-                y: (layerCorrectedX * tileSize) / 4 + (layerCorrectedY * tileSize) / 4,
-                frame: this.palette[tileIndex],
+                texture: this.texture,
+                x:
+                  this.state.tileSize * (this.state.width / 2) +
+                  ((layerCorrectedX * this.state.tileSize) / 2 + (layerCorrectedY * -this.state.tileSize) / 2),
+                y: (layerCorrectedX * this.state.tileSize) / 4 + (layerCorrectedY * this.state.tileSize) / 4,
+                frame: this.state.palette[tileIndex],
               }),
             );
           }
@@ -295,17 +208,20 @@ export class Editor extends LitElement {
   render() {
     return html`
       <pixel-craft-editor-toolbar>
-        <pixel-craft-editor-button @click=${this.openTilesetEditor}>
+        <pixel-craft-editor-button @click=${this.state.openTilesetInspector}>
           <pixel-craft-editor-icon></pixel-craft-editor-icon>
         </pixel-craft-editor-button>
-        <pixel-craft-editor-button class=${classMap({ active: this.showOverlay })} @click=${this.toggleOverlay}>
+        <pixel-craft-editor-button class=${classMap({ active: this.state.showGrid })} @click=${this.state.toggleGrid}>
           ${when(
-            this.showOverlay,
+            this.state.showGrid,
             () => html` <pixel-craft-editor-icon></pixel-craft-editor-icon>`,
             () => html` <pixel-craft-editor-icon></pixel-craft-editor-icon>`,
           )}
         </pixel-craft-editor-button>
-        <pixel-craft-editor-button class=${classMap({ active: this.showPalette })} @click=${this.togglePalette}>
+        <pixel-craft-editor-button
+          class=${classMap({ active: this.state.showPalette })}
+          @click=${this.state.togglePalette}
+        >
           <pixel-craft-editor-icon></pixel-craft-editor-icon>
         </pixel-craft-editor-button>
         <pixel-craft-editor-button>
@@ -313,15 +229,15 @@ export class Editor extends LitElement {
         </pixel-craft-editor-button>
       </pixel-craft-editor-toolbar>
 
-      <div class=${classMap({ palette: true, hide: !this.showPalette })}>
+      <div class=${classMap({ palette: true, hide: !this.state.showPalette })}>
         ${map(
-          this.palette,
+          this.state.palette,
           (rect, i) =>
             html` <div
-              @click=${() => this.onPaletteTileClick(i)}
-              class=${classMap({ tile: true, active: this.currentTile === i })}
+              @click=${() => this.state.selectTile(i)}
+              class=${classMap({ tile: true, active: this.state.selectedTileIndex === i })}
               style=${styleMap({
-                background: `url(${this.image})`,
+                background: `url(${this.state.tilesetImage})`,
                 'background-position': `-${rect.x}px -${rect.y}px`,
               })}
             ></div>`,
@@ -329,29 +245,30 @@ export class Editor extends LitElement {
       </div>
 
       ${when(
-        this.painting,
+        !this.state.showTilesetInspector,
         () =>
-          html` <div class=${classMap({ painter: true, hide: !this.showOverlay })}>
+          html` <div class=${classMap({ painter: true, hide: !this.state.showGrid })}>
               ${map(
-                range(this.height),
+                range(this.state.height),
                 (y) => html`
                   <div class="row">
                     ${map(
-                      range(this.width),
+                      range(this.state.width),
                       (x) =>
                         html` <div
                           class="tile"
-                          @mousemove=${() => this.onPainterTileClick(x, y)}
-                          @click=${() => this.onPainterTileClick(x, y, 'add')}
-                          @contextmenu=${() => this.onPainterTileClick(x, y, 'remove')}
-                          style=${styleMap(this.getTileStyle(this.currentLayer, x, y))}
+                          @mousemove=${() => this.paintTile(x, y)}
+                          @click=${() => this.paintTile(x, y, 'add')}
+                          @contextmenu=${() => this.paintTile(x, y, 'remove')}
+                          style=${styleMap(this.getTileStyle(this.state.selectedLayer, x, y))}
                         >
                           ${when(
-                            this.currentLayer > 0 && this.map[this.currentLayer - 1][x][y] !== undefined,
+                            this.state.selectedLayer > 0 &&
+                              this.state.map[this.state.selectedLayer - 1][x][y] !== undefined,
                             () =>
                               html`<div
                                 class="tile"
-                                style=${styleMap(this.getTileStyle(this.currentLayer - 1, x, y))}
+                                style=${styleMap(this.getTileStyle(this.state.selectedLayer - 1, x, y))}
                               ></div>`,
                           )}
                         </div>`,
@@ -361,24 +278,25 @@ export class Editor extends LitElement {
               )}
             </div>
             <div class="layer-navigation">
-              <pixel-craft-editor-button @click=${this.removeLayer}>
+              <pixel-craft-editor-button @click=${this.state.removeLayer}>
                 <pixel-craft-editor-icon></pixel-craft-editor-icon>
               </pixel-craft-editor-button>
               ${map(
-                range(this.map.length),
+                range(this.state.map.length),
                 (i) =>
                   html` <pixel-craft-editor-button
-                    class=${classMap({ active: i === this.currentLayer })}
-                    @click=${() => this.setActiveLayer(i)}
+                    class=${classMap({ active: i === this.state.selectedLayer })}
+                    @click=${() => this.state.setActiveLayer(i)}
                   >
                     <span>${i + 1}</span>
                   </pixel-craft-editor-button>`,
               )}
-              <pixel-craft-editor-button @click=${this.addLayer}>
+              <pixel-craft-editor-button @click=${this.state.addLayer}>
                 <pixel-craft-editor-icon></pixel-craft-editor-icon>
               </pixel-craft-editor-button>
             </div>`,
-        () => html` <pixel-craft-tileset-editor @save=${this.closeTilesetEditor}></pixel-craft-tileset-editor>`,
+        () =>
+          html` <pixel-craft-tileset-editor @save=${this.state.closeTilesetInspector}></pixel-craft-tileset-editor>`,
       )}
     `;
   }

@@ -68,8 +68,18 @@ export class FileUpload extends LitElement {
   @property({ attribute: 'storage-key' })
   accessor storageKey = '';
 
+  private _file: File | undefined = undefined;
+
+  get file() {
+    return this._file;
+  }
+
   @property({ attribute: false })
-  accessor file: File | undefined = undefined;
+  set file(value: File | undefined) {
+    if (this._file !== value) {
+      this.onFileChange(value);
+    }
+  }
 
   @state()
   private accessor image = '';
@@ -80,7 +90,7 @@ export class FileUpload extends LitElement {
   };
 
   private readonly onFileChange = (file: File | undefined) => {
-    this.file = file;
+    this._file = file;
     if (this.image && !this.file) {
       URL.revokeObjectURL(this.image);
     }
@@ -124,9 +134,9 @@ export class FileUpload extends LitElement {
           : html`<span>${this.label}</span>`}
       </label>
       ${this.image
-        ? html`<pixel-craft-editor-icon class="delete" @click=${() => this.onFileChange(undefined)}
-            ></pixel-craft-editor-icon
-          >`
+        ? html` <pixel-craft-editor-icon class="delete" @click=${() => this.onFileChange(undefined)}
+            >
+          </pixel-craft-editor-icon>`
         : ''} `;
   }
 }

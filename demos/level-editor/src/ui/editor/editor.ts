@@ -145,7 +145,17 @@ export class Editor extends LitElement {
     };
   };
 
-  readonly paintTile = (x: number, y: number, mode: 'auto' | 'add' | 'remove' = 'auto') => {
+  private readonly addLayer = () => {
+    this.state.addLayer();
+    this.requestUpdate();
+  };
+
+  private readonly removeLayer = () => {
+    this.state.removeLayer();
+    this.requestUpdate();
+  };
+
+  private readonly paintTile = (x: number, y: number, mode: 'auto' | 'add' | 'remove' = 'auto') => {
     this.state.paintTile(x, y, mode);
     this.requestUpdate();
     this.renderPass();
@@ -267,7 +277,7 @@ export class Editor extends LitElement {
                             this.state.selectedLayer > 0 &&
                               this.state.map[this.state.selectedLayer - 1][x][y] !== undefined,
                             () =>
-                              html`<div
+                              html` <div
                                 class="tile"
                                 style=${styleMap(this.getTileStyle(this.state.selectedLayer - 1, x, y))}
                               ></div>`,
@@ -279,7 +289,7 @@ export class Editor extends LitElement {
               )}
             </div>
             <div class="layer-navigation">
-              <pixel-craft-editor-button @click=${this.state.removeLayer}>
+              <pixel-craft-editor-button @click=${this.removeLayer}>
                 <pixel-craft-editor-icon></pixel-craft-editor-icon>
               </pixel-craft-editor-button>
               ${map(
@@ -292,7 +302,7 @@ export class Editor extends LitElement {
                     <span>${i + 1}</span>
                   </pixel-craft-editor-button>`,
               )}
-              <pixel-craft-editor-button @click=${this.state.addLayer}>
+              <pixel-craft-editor-button @click=${this.addLayer}>
                 <pixel-craft-editor-icon></pixel-craft-editor-icon>
               </pixel-craft-editor-button>
             </div>`,

@@ -202,6 +202,7 @@ export class Editor extends LitElement {
       renderPass(sprites.reverse());
     };
 
+    this.renderPass();
     this.requestUpdate();
   }
 

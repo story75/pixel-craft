@@ -38,7 +38,7 @@ export default tseslint.config(
     },
     rules: {
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
-      '@typescript-eslint/array-type': ['error', { default: 'array-simple' }],
+      '@typescript-eslint/array-type': ['error', { default: 'array' }],
       '@typescript-eslint/no-unused-vars': [
         'error',
         {

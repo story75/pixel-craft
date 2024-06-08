@@ -1,7 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { loadFile, saveFile } from '../../file-storage';
 import './icon';
 
 export type FileEvent = CustomEvent<{ file: File | undefined }>;
@@ -65,9 +64,6 @@ export class FileUpload extends LitElement {
   @property()
   accessor label = 'Please upload a tileset';
 
-  @property({ attribute: 'storage-key' })
-  accessor storageKey = '';
-
   private _file: File | undefined = undefined;
 
   get file() {
@@ -95,27 +91,8 @@ export class FileUpload extends LitElement {
       URL.revokeObjectURL(this.image);
     }
     this.image = this.file ? URL.createObjectURL(this.file) : '';
-
-    const event = new CustomEvent('file', { detail: { file: this.file } });
-
-    if (this.storageKey) {
-      saveFile(this.file, this.storageKey)
-        .then(() => this.dispatchEvent(event))
-        .catch(() => void 0);
-    } else {
-      this.dispatchEvent(event);
-    }
+    this.dispatchEvent(new CustomEvent('file', { detail: { file: this.file } }));
   };
-
-  connectedCallback() {
-    super.connectedCallback();
-
-    if (this.storageKey) {
-      loadFile(this.storageKey)
-        .then((file) => this.onFileChange(file))
-        .catch(() => void 0);
-    }
-  }
 
   disconnectedCallback() {
     if (this.image) {

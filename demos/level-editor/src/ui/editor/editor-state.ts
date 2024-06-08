@@ -1,66 +1,65 @@
 import { Rect } from '@pixel-craft/math';
-import { property, State } from '@pixel-craft/state';
-import { store } from '../../decorators/store';
+import { State, forceMetadata, forcePersistValues, loadPersistedValues, persist, property } from '@pixel-craft/state';
 
+@forceMetadata
 export class EditorState extends State {
   @property
-  @store()
+  @persist()
   accessor tilesetFile: File | undefined;
 
   @property
   accessor tilesetImage: string = '';
 
   @property
-  @store()
+  @persist()
   accessor tileSize = 32;
 
   @property
-  @store()
+  @persist()
   accessor margin = 0;
 
   @property
-  @store()
+  @persist()
   accessor zoom = 1;
 
   @property
-  @store()
+  @persist()
   accessor selectedTiles: string[] = [];
 
   @property
-  @store()
+  @persist()
   accessor palette: Rect[] = [];
 
   @property
-  @store()
+  @persist()
   accessor selectedTileIndex = 0;
 
   @property
-  @store()
+  @persist()
   accessor selectedLayer = 0;
 
   @property
-  @store()
+  @persist()
   accessor width = 25;
 
   @property
-  @store()
+  @persist()
   accessor height = 25;
 
   @property
-  @store()
-  // eslint-disable-next-line @typescript-eslint/array-type
-  accessor map: (number | undefined)[][][] = [];
+  @persist()
+  accessor map: (number | undefined | null)[][][] = [];
 
   @property
-  @store()
+  @persist()
   accessor showGrid = false;
 
   @property
-  @store()
+  @persist()
   accessor showPalette = false;
 
   @property
-  @store()
+  @persist()
   accessor showTilesetInspector = false;
 
   accessor isRightMouseDown = false;
@@ -80,6 +79,9 @@ export class EditorState extends State {
     document.addEventListener('mouseup', () => {
       this.isMouseDown = false;
       this.isRightMouseDown = false;
+    });
+    window.addEventListener('beforeunload', () => {
+      forcePersistValues(this);
     });
 
     const updateImage = () => {
@@ -156,3 +158,4 @@ export class EditorState extends State {
 }
 
 export const editorState = new EditorState();
+(() => void loadPersistedValues(editorState))();

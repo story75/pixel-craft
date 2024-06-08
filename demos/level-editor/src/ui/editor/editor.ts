@@ -178,7 +178,7 @@ export class Editor extends LitElement {
         for (let y = 0; y < this.state.height; y++) {
           for (let x = 0; x < this.state.width; x++) {
             const tileIndex = this.state.map[layer][x][y];
-            if (tileIndex === undefined) {
+            if (!tileIndex && tileIndex !== 0) {
               continue;
             }
 

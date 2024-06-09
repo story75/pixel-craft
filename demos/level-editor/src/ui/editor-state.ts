@@ -62,6 +62,10 @@ export class EditorState extends State {
   @persist()
   accessor showTilesetInspector = false;
 
+  @property
+  @persist()
+  accessor showMapSize = false;
+
   accessor isRightMouseDown = false;
   accessor isMouseDown = false;
 
@@ -116,6 +120,14 @@ export class EditorState extends State {
     }
   };
 
+  readonly openMapSize = () => {
+    this.showMapSize = true;
+  };
+
+  readonly closeMapSize = () => {
+    this.showMapSize = false;
+  };
+
   readonly toggleGrid = () => {
     this.showGrid = !this.showGrid;
   };
@@ -154,6 +166,25 @@ export class EditorState extends State {
     }
 
     this.map[this.selectedLayer][x][y] = mode === 'add' ? this.selectedTileIndex : undefined;
+  };
+
+  readonly resizeMap = (width: number, height: number) => {
+    this.width = width;
+    this.height = height;
+
+    this.map = this.map.map((layer) => {
+      const newLayer = [...new Array(width)].map(() => [...new Array(height)]);
+      for (let x = 0; x < Math.min(width, layer.length); x++) {
+        for (let y = 0; y < Math.min(height, layer[x].length); y++) {
+          newLayer[x][y] = layer[x][y];
+        }
+      }
+      return newLayer;
+    });
+  };
+
+  readonly isModalOpen = () => {
+    return this.showTilesetInspector || this.showMapSize;
   };
 }
 

@@ -1,4 +1,4 @@
-import { Editor } from './ui/editor/editor';
+import { Editor } from './ui/editor';
 
 const canvas = document.getElementsByTagName('canvas')[0];
 

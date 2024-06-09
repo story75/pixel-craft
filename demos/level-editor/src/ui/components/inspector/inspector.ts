@@ -8,7 +8,6 @@ export class Inspector extends LitElement {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-      margin-bottom: 1rem;
       background: var(--pc-color-dark-200);
       padding: 0.5rem 1rem;
     }

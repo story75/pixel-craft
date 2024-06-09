@@ -15,10 +15,11 @@ import '../components/inspector/inspector-column';
 import '../components/inspector/inspector-row';
 import '../components/layer';
 import '../components/select';
-import { editorState } from './editor-state';
+import { SelectChangeEvent } from '../components/select';
+import { editorState } from '../editor-state';
 
-@customElement('pixel-craft-tileset-editor')
-export class Editor extends LitElement {
+@customElement('pixel-craft-modal-tileset-editor')
+export class TilesetEditor extends LitElement {
   static styles = css`
     :host {
       --tile-size: 32px;
@@ -32,6 +33,10 @@ export class Editor extends LitElement {
       width: 100dvw;
       height: 100dvh;
       overflow: hidden;
+    }
+
+    pixel-craft-inspector {
+      margin-bottom: 1rem;
     }
 
     pixel-craft-editor-container {
@@ -127,19 +132,16 @@ export class Editor extends LitElement {
     }
   };
 
-  private readonly onZoomChange = (event: Event) => {
-    const target = event.target as HTMLSelectElement;
-    this.state.zoom = Number(target.value);
+  private readonly onZoomChange = (event: SelectChangeEvent) => {
+    this.state.zoom = Number(event.detail);
   };
 
-  private readonly onTileSizeChange = (event: Event) => {
-    const target = event.target as HTMLSelectElement;
-    this.state.tileSize = Number(target.value);
+  private readonly onTileSizeChange = (event: SelectChangeEvent) => {
+    this.state.tileSize = Number(event.detail);
   };
 
-  private readonly onMarginChange = (event: Event) => {
-    const target = event.target as HTMLSelectElement;
-    this.state.margin = Number(target.value);
+  private readonly onMarginChange = (event: SelectChangeEvent) => {
+    this.state.margin = Number(event.detail);
   };
 
   private readonly onSave = () => {

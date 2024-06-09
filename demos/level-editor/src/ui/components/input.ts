@@ -1,33 +1,16 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { map } from 'lit/directives/map.js';
 
-export type SelectChangeEvent = CustomEvent<string | number>;
+export type InputChangeEvent = CustomEvent<string | number>;
 
-@customElement('pixel-craft-editor-select')
-export class Select extends LitElement {
+@customElement('pixel-craft-editor-input')
+export class Input extends LitElement {
   static styles = css`
     :host {
       display: inline-flex;
     }
 
-    label {
-      position: relative;
-      display: inline-flex;
-
-      &::after {
-        content: '▼';
-        position: absolute;
-        right: 0.5rem;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 0.5rem;
-        color: var(--pc-color-light-100);
-        pointer-events: none;
-      }
-    }
-
-    select {
+    input {
       padding: 0.5rem;
       background: var(--pc-color-dark-100);
       min-width: 10rem;
@@ -47,9 +30,6 @@ export class Select extends LitElement {
   @property()
   accessor disabled = false;
 
-  @property({ attribute: false })
-  accessor options: (string | number)[] = [];
-
   private _value: string | number | undefined = undefined;
 
   get value() {
@@ -61,7 +41,7 @@ export class Select extends LitElement {
     if (value === undefined) {
       this._value = undefined;
     } else {
-      this._value = this.type === 'string' ? String(value) : Number(value);
+      this._value = this.type === 'number' ? Number(value) : this.formatter(value);
     }
   }
 
@@ -75,7 +55,10 @@ export class Select extends LitElement {
   accessor bindingName = '';
 
   @property()
-  accessor type: 'string' | 'number' = 'string';
+  accessor placeholder = '';
+
+  @property()
+  accessor type: 'text' | 'password' | 'number' = 'text';
 
   private readonly onChange = (event: Event) => {
     const target = event.target as HTMLSelectElement;
@@ -101,15 +84,11 @@ export class Select extends LitElement {
   }
 
   render() {
-    return html`<label>
-      <select @change=${this.onChange}>
-        ${map(
-          this.options,
-          (option) => html`
-            <option value=${option} ?selected=${option === this.value}>${this.formatter(option)}</option>
-          `,
-        )}
-      </select>
-    </label>`;
+    return html`<input
+      type=${this.type}
+      value=${this.value}
+      placeholder=${this.placeholder}
+      @change=${this.onChange}
+    />`;
   }
 }

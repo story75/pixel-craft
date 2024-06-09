@@ -6,10 +6,10 @@ import { map } from 'lit/directives/map.js';
 import { range } from 'lit/directives/range.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { when } from 'lit/directives/when.js';
-import '../components/icon';
-import '../components/toolbar';
+import './components/icon';
 import { editorState } from './editor-state';
-import './tileset-editor';
+import './modals/map-size';
+import './modals/tileset-editor';
 
 @customElement('pixel-craft-editor')
 export class Editor extends LitElement {
@@ -27,7 +27,14 @@ export class Editor extends LitElement {
       overflow: hidden;
     }
 
-    pixel-craft-editor-toolbar {
+    .toolbar {
+      display: flex;
+      position: absolute;
+      flex-direction: column;
+      padding: 0.5rem;
+      gap: 0.5rem;
+      color: var(--pc-color-light-50);
+
       .active {
         background-color: var(--pc-color-primary-300);
       }
@@ -218,7 +225,7 @@ export class Editor extends LitElement {
 
   render() {
     return html`
-      <pixel-craft-editor-toolbar>
+      <div class="toolbar">
         <pixel-craft-editor-button @click=${this.state.openTilesetInspector}>
           <pixel-craft-editor-icon></pixel-craft-editor-icon>
         </pixel-craft-editor-button>
@@ -235,10 +242,10 @@ export class Editor extends LitElement {
         >
           <pixel-craft-editor-icon></pixel-craft-editor-icon>
         </pixel-craft-editor-button>
-        <pixel-craft-editor-button>
+        <pixel-craft-editor-button @click=${this.state.openMapSize}>
           <pixel-craft-editor-icon></pixel-craft-editor-icon>
         </pixel-craft-editor-button>
-      </pixel-craft-editor-toolbar>
+      </div>
 
       <div class=${classMap({ palette: true, hide: !this.state.showPalette })}>
         ${map(
@@ -256,7 +263,7 @@ export class Editor extends LitElement {
       </div>
 
       ${when(
-        !this.state.showTilesetInspector,
+        !this.state.isModalOpen(),
         () =>
           html` <div class=${classMap({ painter: true, hide: !this.state.showGrid })}>
               ${map(
@@ -306,8 +313,22 @@ export class Editor extends LitElement {
                 <pixel-craft-editor-icon></pixel-craft-editor-icon>
               </pixel-craft-editor-button>
             </div>`,
+      )}
+      ${when(
+        this.state.showTilesetInspector,
         () =>
-          html` <pixel-craft-tileset-editor @save=${this.state.closeTilesetInspector}></pixel-craft-tileset-editor>`,
+          html`<pixel-craft-modal-tileset-editor
+            @save=${this.state.closeTilesetInspector}
+          ></pixel-craft-modal-tileset-editor>`,
+      )}
+      ${when(
+        this.state.showMapSize,
+        () =>
+          html`<pixel-craft-modal-map-size
+            width=${this.state.width}
+            height=${this.state.height}
+            @save=${this.state.closeMapSize}
+          ></pixel-craft-modal-map-size>`,
       )}
     `;
   }

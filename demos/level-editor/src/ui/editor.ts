@@ -16,6 +16,7 @@ export class Editor extends LitElement {
     :host {
       --tile-size: 32px;
 
+      pointer-events: none;
       display: flex;
       flex-direction: column;
       position: absolute;
@@ -27,6 +28,7 @@ export class Editor extends LitElement {
     }
 
     .toolbar {
+      pointer-events: auto;
       display: flex;
       position: absolute;
       flex-direction: column;
@@ -40,6 +42,7 @@ export class Editor extends LitElement {
     }
 
     .layer-navigation {
+      pointer-events: auto;
       display: flex;
       position: absolute;
       flex-direction: row;
@@ -70,6 +73,7 @@ export class Editor extends LitElement {
     }
 
     .painter {
+      pointer-events: auto;
       display: flex;
       flex-direction: column;
       max-width: 90dvw;
@@ -83,6 +87,7 @@ export class Editor extends LitElement {
     }
 
     .palette {
+      pointer-events: auto;
       display: grid;
       position: absolute;
       grid-template-columns: repeat(6, 1fr);

@@ -15,11 +15,15 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const cameraSpeed = 10;
   let cameraZoom = 1;
 
-  document.addEventListener('wheel', (event) => {
-    const scaled = event.deltaY / 100;
-    cameraZoom = Math.min(Math.max(cameraZoom + scaled, 1), 8);
-    context.camera.zoom({ x: cameraZoom, y: cameraZoom });
-  });
+  canvas.addEventListener(
+    'wheel',
+    (event) => {
+      const scaled = event.deltaY / 100;
+      cameraZoom = Math.min(Math.max(cameraZoom + scaled, 1), 8);
+      context.camera.zoom({ x: cameraZoom, y: cameraZoom });
+    },
+    { passive: true },
+  );
 
   const state = editorState;
   let texture: GPUTexture | undefined;

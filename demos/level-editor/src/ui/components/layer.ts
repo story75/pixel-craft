@@ -15,6 +15,7 @@ export class Layer extends LitElement {
       background: rgba(0, 0, 0, 0.75);
       opacity: 1;
       transition: opacity 0.25s;
+      pointer-events: auto;
     }
 
     @starting-style {

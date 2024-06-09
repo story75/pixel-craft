@@ -113,7 +113,7 @@ export class EditorState extends State {
 
     if (this.palette.length !== 0) {
       if (this.map.length === 0) {
-        this.map = [[...new Array(this.width)].map(() => [...new Array(this.height)])];
+        this.resizeMap(this.width, this.height);
       }
       this.showPalette = true;
       this.showGrid = true;
@@ -141,7 +141,14 @@ export class EditorState extends State {
   };
 
   readonly addLayer = () => {
-    this.map.push([...new Array(this.width)].map(() => [...new Array(this.height)]));
+    const layer: (number | undefined)[][] = [];
+    for (let x = 0; x < this.width; x++) {
+      layer.push([]);
+      for (let y = 0; y < this.height; y++) {
+        layer[x].push(undefined);
+      }
+    }
+    this.map.push(layer);
   };
 
   readonly removeLayer = () => {
@@ -172,15 +179,18 @@ export class EditorState extends State {
     this.width = width;
     this.height = height;
 
-    this.map = this.map.map((layer) => {
-      const newLayer = [...new Array(width)].map(() => [...new Array(height)]);
-      for (let x = 0; x < Math.min(width, layer.length); x++) {
-        for (let y = 0; y < Math.min(height, layer[x].length); y++) {
-          newLayer[x][y] = layer[x][y];
+    const layers = this.map.length || 1;
+    const newMap: (number | undefined)[][][] = [];
+    for (let i = 0; i < layers; i++) {
+      newMap.push([]);
+      for (let x = 0; x < width; x++) {
+        newMap[i].push([]);
+        for (let y = 0; y < height; y++) {
+          newMap[i][x].push(this.map[i][x][y] ?? undefined);
         }
       }
-      return newLayer;
-    });
+    }
+    this.map = newMap;
   };
 
   readonly isModalOpen = () => {

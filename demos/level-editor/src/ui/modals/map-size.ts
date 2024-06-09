@@ -1,5 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { editorState } from '../../editor-state';
 import '../components/button';
 import '../components/container';
 import '../components/icon';
@@ -9,7 +10,6 @@ import '../components/inspector/inspector';
 import '../components/inspector/inspector-column';
 import '../components/inspector/inspector-row';
 import '../components/layer';
-import { editorState } from '../editor-state';
 
 @customElement('pixel-craft-modal-map-size')
 export class MapSize extends LitElement {

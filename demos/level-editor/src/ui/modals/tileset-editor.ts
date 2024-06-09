@@ -4,6 +4,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { map } from 'lit/directives/map.js';
 import { range } from 'lit/directives/range.js';
 import { styleMap } from 'lit/directives/style-map.js';
+import { editorState } from '../../editor-state';
 import '../components/button';
 import '../components/checkerboard';
 import '../components/container';
@@ -16,7 +17,6 @@ import '../components/inspector/inspector-row';
 import '../components/layer';
 import '../components/select';
 import { SelectChangeEvent } from '../components/select';
-import { editorState } from '../editor-state';
 
 @customElement('pixel-craft-modal-tileset-editor')
 export class TilesetEditor extends LitElement {

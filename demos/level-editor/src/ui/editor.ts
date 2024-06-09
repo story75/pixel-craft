@@ -1,4 +1,3 @@
-import { Sprite, createContext, createTextureLoader, pipeline, sprite } from '@pixel-craft/renderer';
 import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
@@ -6,8 +5,8 @@ import { map } from 'lit/directives/map.js';
 import { range } from 'lit/directives/range.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { when } from 'lit/directives/when.js';
+import { editorState } from '../editor-state';
 import './components/icon';
-import { editorState } from './editor-state';
 import './modals/map-size';
 import './modals/tileset-editor';
 
@@ -134,10 +133,6 @@ export class Editor extends LitElement {
     }
   `;
 
-  accessor canvas!: HTMLCanvasElement;
-  private renderPass!: () => void;
-  private texture: GPUTexture | undefined;
-
   private readonly state = editorState;
 
   private readonly getTileStyle = (layer: number, x: number, y: number) => {
@@ -165,61 +160,15 @@ export class Editor extends LitElement {
   private readonly paintTile = (x: number, y: number, mode: 'auto' | 'add' | 'remove' = 'auto') => {
     this.state.paintTile(x, y, mode);
     this.requestUpdate();
-    this.renderPass();
   };
 
-  async connectedCallback() {
+  connectedCallback() {
     super.connectedCallback();
 
-    const context = await createContext(this.canvas);
-    const textureLoader = createTextureLoader(context.device);
-    const renderPass = pipeline(context);
-
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    this.state.addEventListener('change', async (event) => {
-      if (event.detail.property === 'tilesetFile' && event.detail.value instanceof File) {
-        this.texture = await textureLoader(event.detail.value);
-      }
-
+    this.state.addEventListener('change', () => {
       this.requestUpdate();
     });
 
-    this.renderPass = () => {
-      if (!this.texture) {
-        return;
-      }
-
-      const sprites: Sprite[] = [];
-
-      for (let layer = 0; layer < this.state.map.length; layer++) {
-        for (let y = 0; y < this.state.height; y++) {
-          for (let x = 0; x < this.state.width; x++) {
-            const tileIndex = this.state.map[layer][x][y];
-            if (!tileIndex && tileIndex !== 0) {
-              continue;
-            }
-
-            const layerCorrectedX = x - layer;
-            const layerCorrectedY = y - layer;
-
-            sprites.push(
-              sprite({
-                texture: this.texture,
-                x:
-                  this.state.tileSize * (this.state.width / 2) +
-                  ((layerCorrectedX * this.state.tileSize) / 2 + (layerCorrectedY * -this.state.tileSize) / 2),
-                y: (layerCorrectedX * this.state.tileSize) / 4 + (layerCorrectedY * this.state.tileSize) / 4,
-                frame: this.state.palette[tileIndex],
-              }),
-            );
-          }
-        }
-      }
-
-      renderPass(sprites.reverse());
-    };
-
-    this.renderPass();
     this.requestUpdate();
   }
 

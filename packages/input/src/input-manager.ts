@@ -47,7 +47,7 @@ export class InputManager<CustomActions extends string = string> {
   public readonly observables: Record<Actions | CustomActions, Observable>;
 
   constructor(
-    private readonly actions: Array<Actions | CustomActions> = Object.values(Actions),
+    private readonly actions: (Actions | CustomActions)[] = Object.values(Actions),
     private readonly bindings: Partial<Record<Actions | CustomActions, string[]>> = {
       [Actions.Up]: ['ArrowUp', 'KeyW'],
       [Actions.Down]: ['ArrowDown', 'KeyS'],

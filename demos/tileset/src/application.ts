@@ -21,7 +21,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const animator = new AnimatorSystem(timer);
   const movement = new InputMovementSystem(input, timer);
   const flipper = new (class implements System {
-    private readonly moveables: Array<Sprite & Moveable> = [];
+    private readonly moveables: (Sprite & Moveable)[] = [];
 
     addGameObject(sprite: Record<string, unknown>) {
       if ('velocity' in sprite && 'texture' in sprite) {

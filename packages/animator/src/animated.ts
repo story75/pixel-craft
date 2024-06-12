@@ -32,7 +32,7 @@ export type Animated<T = unknown> = {
    * The transitions are evaluated in the order they are defined.
    * Only the entry transition is special and takes precedence over all other transitions.
    */
-  transitions: Array<Transition<T>>;
+  transitions: Transition<T>[];
 
   /**
    * The possible transitions for the current animation.
@@ -40,5 +40,5 @@ export type Animated<T = unknown> = {
    * @remarks
    * This is used as a cache to avoid recalculating the all transitions every frame, but just the possible ones.
    */
-  possibleTransitions: Array<Transition<T>>;
+  possibleTransitions: Transition<T>[];
 };

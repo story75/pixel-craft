@@ -6,8 +6,8 @@ type Payload = [foo: number, bar: string];
 describe('Observable', () => {
   it('creates a working instance', () => {
     const received: Payload[] = [];
-    const subscribers: Array<Observer<Payload>> = [];
-    const unsubbed: Array<Observer<Payload>> = [];
+    const subscribers: Observer<Payload>[] = [];
+    const unsubbed: Observer<Payload>[] = [];
 
     const observer = (foo: number, bar: string) => received.push([foo, bar]);
 
@@ -37,7 +37,7 @@ describe('Observable', () => {
   it('can clear an instance', () => {
     const receivedA: Payload[] = [];
     const receivedB: Payload[] = [];
-    const unsubbed: Array<Observer<Payload>> = [];
+    const unsubbed: Observer<Payload>[] = [];
 
     const observerA = (foo: number, bar: string) => receivedA.push([foo, bar]);
     const observerB = (foo: number, bar: string) => receivedB.push([foo, bar]);

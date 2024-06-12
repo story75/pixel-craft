@@ -7,7 +7,7 @@ import { TimerSystem } from './timer';
  * An animator system is responsible to change the frame of an animated sprite.
  */
 export class AnimatorSystem implements System {
-  private readonly sprites: Array<Sprite & Animated> = [];
+  private readonly sprites: (Sprite & Animated)[] = [];
 
   constructor(
     private readonly timer: TimerSystem,
@@ -18,7 +18,7 @@ export class AnimatorSystem implements System {
     return Animator.createAnimated<T>(options);
   }
 
-  static findPossibleTransitions<T>(transitions: Array<Transition<T>>, newAnimation: Animation): Array<Transition<T>> {
+  static findPossibleTransitions<T>(transitions: Transition<T>[], newAnimation: Animation): Transition<T>[] {
     return Animator.findPossibleTransitions<T>(transitions, newAnimation);
   }
 

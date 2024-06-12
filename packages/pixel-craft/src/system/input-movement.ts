@@ -13,7 +13,7 @@ export type Moveable = {
  * An input camera system is responsible to move the camera based on the input.
  */
 export class InputMovementSystem implements System {
-  private readonly moveables: Array<Sprite & Moveable> = [];
+  private readonly moveables: (Sprite & Moveable)[] = [];
 
   constructor(
     private readonly input: InputSystem,

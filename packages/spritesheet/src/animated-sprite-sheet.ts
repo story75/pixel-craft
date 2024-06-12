@@ -24,7 +24,7 @@ type Options = {
   /**
    * The animations to parse
    */
-  animations: Array<{
+  animations: {
     /**
      * The name of the animation
      */
@@ -55,7 +55,7 @@ type Options = {
      * If not provided, the column will start from 0.
      */
     startFrame?: number;
-  }>;
+  }[];
 };
 
 /**

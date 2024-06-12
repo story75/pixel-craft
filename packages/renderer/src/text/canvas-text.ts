@@ -101,7 +101,7 @@ export function canvasText(
   // use a proxy to re-render the text whenever a text related property changes
   return new Proxy(text, {
     set: (target, property, value) => {
-      const traps: Array<keyof CanvasText> = ['text', 'font'];
+      const traps: (keyof CanvasText)[] = ['text', 'font'];
       const ret = Reflect.set(target, property, value);
 
       if (typeof property === 'string' && traps.includes(property as keyof CanvasText)) {

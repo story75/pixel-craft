@@ -4,7 +4,7 @@ import { CreateHookContext, System } from './system/system';
 type HookList = keyof Required<Omit<System, 'createSystem'>>;
 
 type Hooks = {
-  [hook in HookList]: Array<NonNullable<System[hook]>>;
+  [hook in HookList]: NonNullable<System[hook]>[];
 };
 
 /**
@@ -148,7 +148,7 @@ export class Application {
    * This will call the addGameObject hook of all systems.
    * The game object can be any type of object, and it's up to the systems to decide how to handle it.
    */
-  addGameObjects(...gameObjects: Array<Record<string, unknown>>): void {
+  addGameObjects(...gameObjects: Record<string, unknown>[]): void {
     for (const gameObject of gameObjects) {
       for (const hook of this.hooks.addGameObject) {
         hook(gameObject);
@@ -163,7 +163,7 @@ export class Application {
    * This will call the removeGameObject hook of all systems.
    * The game object can be any type of object, and it's up to the systems to decide how to handle it.
    */
-  removeGameObjects(...gameObjects: Array<Record<string, unknown>>): void {
+  removeGameObjects(...gameObjects: Record<string, unknown>[]): void {
     for (const gameObject of gameObjects) {
       for (const hook of this.hooks.removeGameObject) {
         hook(gameObject);

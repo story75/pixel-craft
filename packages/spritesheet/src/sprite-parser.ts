@@ -22,7 +22,7 @@ type Options<T extends Record<string, unknown>> = Pick<Partial<Sprite>, 'x' | 'y
     /**
      * The animations
      */
-    animations: Array<{
+    animations: {
       /**
        * The name of the animation
        */
@@ -71,7 +71,7 @@ type Options<T extends Record<string, unknown>> = Pick<Partial<Sprite>, 'x' | 'y
        * If not provided, the column will start from 0.
        */
       startFrame?: number;
-    }>;
+    }[];
   };
 
 export function spriteParser<T extends Record<string, unknown>>(

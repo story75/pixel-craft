@@ -24,7 +24,7 @@ export class Animator {
     };
   }
 
-  static findPossibleTransitions<T>(transitions: Array<Transition<T>>, newAnimation: Animation): Array<Transition<T>> {
+  static findPossibleTransitions<T>(transitions: Transition<T>[], newAnimation: Animation): Transition<T>[] {
     return transitions.filter((transition) => {
       if (transition.from.type === TransitionType.Any) {
         return transition.to !== newAnimation.name || newAnimation.interruptible;

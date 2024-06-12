@@ -5,7 +5,7 @@ import { map } from 'lit/directives/map.js';
 import { range } from 'lit/directives/range.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { when } from 'lit/directives/when.js';
-import { editorState } from '../editor-state';
+import { PaintMode, editorState } from '../editor-state';
 import './components/icon';
 import './modals/map-size';
 import './modals/tileset-editor';
@@ -86,19 +86,17 @@ export class Editor extends LitElement {
       }
     }
 
-    .palette {
+    .element-grid {
       pointer-events: auto;
       display: grid;
       position: absolute;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 0.5rem;
       padding: 0.5rem;
       background-color: var(--pc-color-dark-300);
       border-radius: 0.25rem;
-      bottom: 0.5rem;
-      left: 0.5rem;
 
-      .tile {
+      .element {
         filter: grayscale(1);
         transition:
           filter 0.2s,
@@ -109,6 +107,20 @@ export class Editor extends LitElement {
         filter: none;
         outline: 1px solid rgba(255, 0, 0, 0.4);
         outline-offset: 4px;
+      }
+    }
+
+    .palette {
+      bottom: 0.5rem;
+      left: 0.5rem;
+    }
+
+    .tools {
+      top: 0.5rem;
+      right: 0.5rem;
+
+      .active {
+        background-color: var(--pc-color-primary-300);
       }
     }
 
@@ -162,7 +174,7 @@ export class Editor extends LitElement {
     this.requestUpdate();
   };
 
-  private readonly paintTile = (x: number, y: number, mode: 'auto' | 'add' | 'remove' = 'auto') => {
+  private readonly paintTile = (x: number, y: number, mode: PaintMode = 'auto') => {
     this.state.paintTile(x, y, mode);
     this.requestUpdate();
   };
@@ -196,23 +208,39 @@ export class Editor extends LitElement {
         >
           <pixel-craft-editor-icon></pixel-craft-editor-icon>
         </pixel-craft-editor-button>
+        <pixel-craft-editor-button class=${classMap({ active: this.state.showTools })} @click=${this.state.toggleTools}>
+          <pixel-craft-editor-icon></pixel-craft-editor-icon>
+        </pixel-craft-editor-button>
         <pixel-craft-editor-button @click=${this.state.openMapSize}>
           <pixel-craft-editor-icon></pixel-craft-editor-icon>
         </pixel-craft-editor-button>
       </div>
 
-      <div class=${classMap({ palette: true, hide: !this.state.showPalette })}>
+      <div class=${classMap({ 'element-grid': true, palette: true, hide: !this.state.showPalette })}>
         ${map(
           this.state.palette,
           (rect, i) =>
             html` <div
               @click=${() => this.state.selectTile(i)}
-              class=${classMap({ tile: true, active: this.state.selectedTileIndex === i })}
+              class=${classMap({ element: true, tile: true, active: this.state.selectedTileIndex === i })}
               style=${styleMap({
                 background: `url(${this.state.tilesetImage})`,
                 'background-position': `-${rect.x}px -${rect.y}px`,
               })}
             ></div>`,
+        )}
+      </div>
+
+      <div class=${classMap({ 'element-grid': true, tools: true, hide: !this.state.showTools })}>
+        ${map(
+          this.state.tools,
+          (tool, i) =>
+            html` <pixel-craft-editor-button
+              @click=${() => this.state.selectTool(i)}
+              class=${classMap({ element: true, active: this.state.selectedToolIndex === i })}
+            >
+              <pixel-craft-editor-icon>${tool.icon}</pixel-craft-editor-icon>
+            </pixel-craft-editor-button>`,
         )}
       </div>
 
@@ -271,14 +299,14 @@ export class Editor extends LitElement {
       ${when(
         this.state.showTilesetInspector,
         () =>
-          html`<pixel-craft-modal-tileset-editor
+          html` <pixel-craft-modal-tileset-editor
             @save=${this.state.closeTilesetInspector}
           ></pixel-craft-modal-tileset-editor>`,
       )}
       ${when(
         this.state.showMapSize,
         () =>
-          html`<pixel-craft-modal-map-size
+          html` <pixel-craft-modal-map-size
             width=${this.state.width}
             height=${this.state.height}
             @save=${this.state.closeMapSize}

@@ -1,7 +1,10 @@
 import { Rect } from '@pixel-craft/math';
-import { State, forceMetadata, forcePersistValues, loadPersistedValues, persist, property } from '@pixel-craft/state';
+import { State, forcePersistValues, loadPersistedValues, persist, property } from '@pixel-craft/state';
 
-@forceMetadata
+export type PaintMode = 'auto' | 'add' | 'remove';
+
+type Tool = { name: string; icon: string; executor: (x: number, y: number, mode: 'add' | 'remove') => void };
+
 export class EditorState extends State {
   @property
   @persist()
@@ -36,6 +39,10 @@ export class EditorState extends State {
 
   @property
   @persist()
+  accessor selectedToolIndex = 0;
+
+  @property
+  @persist()
   accessor selectedLayer = 0;
 
   @property
@@ -57,6 +64,10 @@ export class EditorState extends State {
   @property
   @persist()
   accessor showPalette = false;
+
+  @property
+  @persist()
+  accessor showTools = false;
 
   @property
   @persist()
@@ -104,6 +115,24 @@ export class EditorState extends State {
     updateImage();
   }
 
+  readonly tools: Tool[] = [
+    {
+      name: 'Brush',
+      icon: '',
+      executor: (x, y, mode) => {
+        this.map[this.selectedLayer][x][y] = mode === 'add' ? this.selectedTileIndex : undefined;
+      },
+    },
+    {
+      name: 'Bucket-Fill',
+      icon: '',
+      executor: (x, y, mode) => {
+        // TODO: implement me; flood fill from x,y
+        this.map[this.selectedLayer][x][y] = mode === 'add' ? this.selectedTileIndex : undefined;
+      },
+    },
+  ];
+
   readonly openTilesetInspector = () => {
     this.showTilesetInspector = true;
   };
@@ -116,6 +145,7 @@ export class EditorState extends State {
         this.addLayer();
       }
       this.showPalette = true;
+      this.showTools = true;
       this.showGrid = true;
     }
   };
@@ -134,6 +164,10 @@ export class EditorState extends State {
 
   readonly togglePalette = () => {
     this.showPalette = !this.showPalette;
+  };
+
+  readonly toggleTools = () => {
+    this.showTools = !this.showTools;
   };
 
   readonly setActiveLayer = (layer: number) => {
@@ -163,7 +197,11 @@ export class EditorState extends State {
     this.selectedTileIndex = i;
   };
 
-  readonly paintTile = (x: number, y: number, mode: 'auto' | 'add' | 'remove' = 'auto') => {
+  readonly selectTool = (i: number) => {
+    this.selectedToolIndex = i;
+  };
+
+  readonly paintTile = (x: number, y: number, mode: PaintMode = 'auto') => {
     if (mode === 'auto') {
       if (!this.isMouseDown) {
         return;
@@ -172,7 +210,7 @@ export class EditorState extends State {
       mode = this.isRightMouseDown ? 'remove' : 'add';
     }
 
-    this.map[this.selectedLayer][x][y] = mode === 'add' ? this.selectedTileIndex : undefined;
+    this.tools[this.selectedToolIndex].executor(x, y, mode);
   };
 
   readonly resizeMap = (width: number, height: number) => {

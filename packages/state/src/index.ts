@@ -1,4 +1,3 @@
-export { forceMetadata } from './decorators/force-metadata';
 export {
   forcePersistValues,
   loadPersistedValues,

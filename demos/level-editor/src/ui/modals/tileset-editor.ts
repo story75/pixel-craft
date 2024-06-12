@@ -144,7 +144,13 @@ export class TilesetEditor extends LitElement {
     this.state.margin = Number(event.detail);
   };
 
+  private readonly saveDisabled = () => this.state.selectedTiles.length === 0;
+
   private readonly onSave = () => {
+    if (this.saveDisabled()) {
+      return;
+    }
+
     this.state.palette = this.state.selectedTiles.map((key) => {
       const [x, y] = key.split(':').map(Number);
       return {
@@ -215,11 +221,7 @@ export class TilesetEditor extends LitElement {
                           .file=${this.state.tilesetFile}
                           @file=${(event: FileEvent) => this.onTilesetChange(event.detail.file)}
                         ></pixel-craft-editor-file-upload>
-                        <pixel-craft-editor-button
-                          @click=${this.onSave}
-                          class="save"
-                          ?disabled=${this.state.selectedTiles.length === 0}
-                        >
+                        <pixel-craft-editor-button @click=${this.onSave} class="save" ?disabled=${this.saveDisabled()}>
                           <pixel-craft-editor-icon></pixel-craft-editor-icon>
                         </pixel-craft-editor-button>
                       </pixel-craft-inspector-row>

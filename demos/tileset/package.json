@@ -12,7 +12,6 @@
     "@pixel-craft/renderer": "workspace:*"
   },
   "devDependencies": {
-    "@types/stats.js": "^0.17.3",
     "@pixel-craft/cli": "workspace:*"
   }
 }

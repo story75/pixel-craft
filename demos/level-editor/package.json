@@ -14,7 +14,7 @@
     "@pixel-craft/input": "workspace:*",
     "@pixel-craft/math": "workspace:*",
     "@pixel-craft/state": "workspace:*",
-    "lit": "^3.1.3"
+    "lit": "^3.1.4"
   },
   "devDependencies": {
     "@pixel-craft/cli": "workspace:*"

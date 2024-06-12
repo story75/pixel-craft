@@ -113,7 +113,7 @@ export class EditorState extends State {
 
     if (this.palette.length !== 0) {
       if (this.map.length === 0) {
-        this.resizeMap(this.width, this.height);
+        this.addLayer();
       }
       this.showPalette = true;
       this.showGrid = true;
@@ -179,7 +179,7 @@ export class EditorState extends State {
     this.width = width;
     this.height = height;
 
-    const layers = this.map.length || 1;
+    const layers = this.map.length;
     const newMap: (number | undefined)[][][] = [];
     for (let i = 0; i < layers; i++) {
       newMap.push([]);

@@ -1,21 +1,21 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "globalDependencies": ["package.json", "bun.lockb", "tsconfig.json"],
+  "tasks": {
     "check": {
       "dependsOn": ["^check"],
       "outputs": ["dist/**/*.d.ts"],
-      "outputMode": "errors-only"
+      "outputLogs": "errors-only"
     },
     "build": {
       "dependsOn": ["^build", "check"],
       "outputs": ["dist/index.js", "dist/esm.js"],
-      "outputMode": "errors-only"
+      "outputLogs": "errors-only"
     },
     "release": {
       "dependsOn": ["build"],
       "cache": false,
-      "outputMode": "errors-only"
+      "outputLogs": "errors-only"
     }
-  },
-  "globalDependencies": ["package.json", "package-lock.json", "tsconfig.json"]
+  }
 }

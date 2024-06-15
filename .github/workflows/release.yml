@@ -17,15 +17,11 @@ jobs:
           echo "$RELEASE_NOTES" >> "$GITHUB_ENV"
           echo 'EOF' >> "$GITHUB_ENV"
 
-      - uses: actions/create-release@v1
+      - uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
           body: ${{ env.RELEASE_NOTES }}
-          draft: false
-          prerelease: false
 
   publish:
     name: Publish NPM package
@@ -37,6 +33,8 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       # run scripts
       - run: bun install --frozen-lockfile
       - run: bun release

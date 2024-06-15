@@ -33,8 +33,6 @@ jobs:
         with:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       # run scripts
       - run: bun install --frozen-lockfile
       - run: bun release

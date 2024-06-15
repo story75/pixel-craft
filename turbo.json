@@ -15,7 +15,8 @@
     "release": {
       "dependsOn": ["build"],
       "cache": false,
-      "outputLogs": "errors-only"
+      "outputLogs": "errors-only",
+      "env": ["NODE_AUTH_TOKEN", "PUBLISH_VERSION"]
     }
   }
 }

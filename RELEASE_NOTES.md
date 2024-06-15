@@ -4,6 +4,36 @@
 
 ### Features
 
+#### Add `@pixel-craft/grid` package
+
+Introducing the `@pixel-craft/grid` package. This package provides function to create and modify 2D grids in your projects.
+Notable functions include:
+
+- `randomGrid`: Create a binary 2D grid with random values using a rng function per cell
+- `smoothGrid`: Smooth a 2D grid by comparing the count of neighboring cells
+- `randomWalker`: Create a binary 2D grid with random values using a random walker algorithm
+- `floodFill`: Gather a list of regions in a 2D grid with the same value via flood fill
+
+#### Add `random` and `randomInRange` function to `@pixel-craft/math
+
+The `random` function allows you to generate a random float between 0 and 1, which can be seeded with a value.
+The `randomInRange` function allows you to generate a random integer between a min and max value, by providing a random function.
+
+```ts
+import { random, randomInRange } from '@pixel-craft/math';
+
+const rng = random('mySeed');
+const a = rng(); // 0.613856305135414
+const b = rng(); // 0.8101961102802306
+
+const rngInRange = () => randomInRange(rng, 10, 20);
+const c = rngInRange(); // 11
+const d = rngInRange(); // 12
+```
+
+All functions inside the engine that require random numbers will accept a random function as an argument, so you can provide your own random function.
+This is handy for tests and also allows you the freedom to use your own random number generator, but for most cases the default random function should be more than sufficient.
+
 #### Add `@pixel-craft/timer` package
 
 Introducing the `@pixel-craft/timer` package. This package provides a timer class for your projects.

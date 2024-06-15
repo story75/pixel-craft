@@ -1,6 +1,6 @@
 # Release Notes
 
-## UNRELEASED
+## 0.9.4 (15.06.2024)
 
 ### Features
 

@@ -12,7 +12,7 @@ Notable functions include:
 - `randomGrid`: Create a binary 2D grid with random values using a rng function per cell
 - `smoothGrid`: Smooth a 2D grid by comparing the count of neighboring cells
 - `randomWalker`: Create a binary 2D grid with random values using a random walker algorithm
-- `floodFill`: Gather a list of regions in a 2D grid with the same value via flood fill
+- `getRegions` & `getRegion`: Gather a list of regions in a 2D grid with the same value via flood fill
 
 #### Add `random` and `randomInRange` function to `@pixel-craft/math
 

@@ -1,5 +1,3 @@
-import { BinaryGrid } from './binary-grid';
-
 /**
  * Basic cell definition to work with tile processing inside flood fill
  */
@@ -17,7 +15,7 @@ export type Cell = {
   /**
    * Type of the tile.
    */
-  type: 0 | 1;
+  type: number;
 };
 
 /**
@@ -45,7 +43,7 @@ function cellIndex(c: Cell) {
  *
  * @returns List of every cell in this room
  */
-function getRegion(grid: BinaryGrid, startCell: Cell): Cell[] {
+export function getRegion(grid: number[][], startCell: Cell): Cell[] {
   const cells: Cell[] = [];
   const queue: Cell[] = [];
   const processed = new Set<string>();
@@ -97,7 +95,7 @@ function getRegion(grid: BinaryGrid, startCell: Cell): Cell[] {
  *
  * @returns List of every room which in turn contains every cell of the room
  */
-export function floodFill(grid: BinaryGrid, searchType: Cell['type']): Cell[][] {
+export function getRegions(grid: number[][], searchType: Cell['type']): Cell[][] {
   const regions: Cell[][] = [];
   const processed = new Set<string>();
   const gridWidth = grid.length;

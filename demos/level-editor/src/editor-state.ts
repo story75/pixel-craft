@@ -1,3 +1,4 @@
+import { getRegion } from '@pixel-craft/grid';
 import { Rect } from '@pixel-craft/math';
 import { State, forcePersistValues, loadPersistedValues, persist, property } from '@pixel-craft/state';
 
@@ -127,8 +128,18 @@ export class EditorState extends State {
       name: 'Bucket-Fill',
       icon: '',
       executor: (x, y, mode) => {
-        // TODO: implement me; flood fill from x,y
-        this.map[this.selectedLayer][x][y] = mode === 'add' ? this.selectedTileIndex : undefined;
+        const copy: number[][] = [];
+        for (let i = 0; i < this.width; i++) {
+          copy.push([]);
+          for (let j = 0; j < this.height; j++) {
+            copy[i].push(this.map[this.selectedLayer][i][j] ?? -1);
+          }
+        }
+
+        const cells = getRegion(copy, { x, y, type: copy[x][y] });
+        for (const cell of cells) {
+          this.map[this.selectedLayer][cell.x][cell.y] = mode === 'add' ? this.selectedTileIndex : undefined;
+        }
       },
     },
   ];

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { BinaryGrid } from './binary-grid';
-import { floodFill } from './flood-fill';
+import { getRegions } from './flood-fill';
 
 describe('floodFill', () => {
   const grid: BinaryGrid = [
@@ -16,7 +16,7 @@ describe('floodFill', () => {
   ];
 
   it('should find every room of the same tile type (filled tile)', () => {
-    const regions = floodFill(grid, 1);
+    const regions = getRegions(grid, 1);
 
     expect(regions).toEqual([
       [
@@ -267,7 +267,7 @@ describe('floodFill', () => {
   });
 
   it('should find every room of the same tile type (empty tile)', () => {
-    const regions = floodFill(grid, 0);
+    const regions = getRegions(grid, 0);
 
     expect(regions).toEqual([
       [

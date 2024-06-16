@@ -1,6 +1,14 @@
 import { getRegion } from '@pixel-craft/grid';
 import { Rect } from '@pixel-craft/math';
-import { State, forcePersistValues, loadPersistedValues, persist, property } from '@pixel-craft/state';
+import {
+  State,
+  fileToString,
+  forcePersistValues,
+  loadPersistedValues,
+  persist,
+  property,
+  stringToFile,
+} from '@pixel-craft/state';
 
 export type PaintMode = 'auto' | 'add' | 'remove';
 
@@ -77,6 +85,10 @@ export class EditorState extends State {
   @property
   @persist()
   accessor showMapSize = false;
+
+  @property
+  @persist()
+  accessor showSettings = false;
 
   accessor isRightMouseDown = false;
   accessor isMouseDown = false;
@@ -169,6 +181,14 @@ export class EditorState extends State {
     this.showMapSize = false;
   };
 
+  readonly openSettings = () => {
+    this.showSettings = true;
+  };
+
+  readonly closeSettings = () => {
+    this.showSettings = false;
+  };
+
   readonly toggleGrid = () => {
     this.showGrid = !this.showGrid;
   };
@@ -244,6 +264,67 @@ export class EditorState extends State {
 
   readonly isModalOpen = () => {
     return this.showTilesetInspector || this.showMapSize;
+  };
+
+  readonly reset = () => {
+    this.selectedLayer = 0;
+    this.width = 25;
+    this.height = 25;
+    this.map = [];
+    this.addLayer();
+  };
+
+  readonly save = async () => {
+    if (!this.tilesetFile) {
+      return;
+    }
+
+    const data = {
+      width: this.width,
+      height: this.height,
+      map: this.map,
+      palette: this.palette,
+      tileSize: this.tileSize,
+      margin: this.margin,
+      zoom: this.zoom,
+      selectedTiles: this.selectedTiles,
+      tilesetFile: await fileToString(this.tilesetFile),
+    };
+    const blob = new Blob([JSON.stringify(data, null, 4)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'level.json';
+    a.click();
+  };
+
+  readonly upload = () => {
+    return new Promise<void>((resolve) => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = async () => {
+        const file = input.files?.[0];
+        if (!file) {
+          resolve();
+          return;
+        }
+
+        const stringData = await file.text();
+        const data = JSON.parse(stringData);
+        this.width = data.width;
+        this.height = data.height;
+        this.map = data.map;
+        this.palette = data.palette;
+        this.tileSize = data.tileSize;
+        this.margin = data.margin;
+        this.zoom = data.zoom;
+        this.selectedTiles = data.selectedTiles;
+        this.tilesetFile = await stringToFile(data.tilesetFile);
+        resolve();
+      };
+      input.click();
+    });
   };
 }
 

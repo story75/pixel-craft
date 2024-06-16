@@ -8,6 +8,7 @@ import { when } from 'lit/directives/when.js';
 import { PaintMode, editorState } from '../editor-state';
 import './components/icon';
 import './modals/map-size';
+import './modals/settings';
 import './modals/tileset-editor';
 
 @customElement('pixel-craft-editor')
@@ -192,6 +193,9 @@ export class Editor extends LitElement {
   render() {
     return html`
       <div class="toolbar">
+        <pixel-craft-editor-button @click=${this.state.openSettings}>
+          <pixel-craft-editor-icon></pixel-craft-editor-icon>
+        </pixel-craft-editor-button>
         <pixel-craft-editor-button @click=${this.state.openTilesetInspector}>
           <pixel-craft-editor-icon></pixel-craft-editor-icon>
         </pixel-craft-editor-button>
@@ -299,7 +303,7 @@ export class Editor extends LitElement {
       ${when(
         this.state.showTilesetInspector,
         () =>
-          html` <pixel-craft-modal-tileset-editor
+          html`<pixel-craft-modal-tileset-editor
             @save=${this.state.closeTilesetInspector}
           ></pixel-craft-modal-tileset-editor>`,
       )}
@@ -311,6 +315,15 @@ export class Editor extends LitElement {
             height=${this.state.height}
             @save=${this.state.closeMapSize}
           ></pixel-craft-modal-map-size>`,
+      )}
+      ${when(
+        this.state.showSettings,
+        () =>
+          html`<pixel-craft-modal-settings
+            @reset=${this.state.closeSettings}
+            @save=${this.state.closeSettings}
+            @upload=${this.state.closeSettings}
+          ></pixel-craft-modal-settings>`,
       )}
     `;
   }

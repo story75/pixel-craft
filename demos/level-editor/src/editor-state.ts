@@ -252,7 +252,7 @@ export class EditorState extends State {
       for (let x = 0; x < width; x++) {
         newMap[i].push([]);
         for (let y = 0; y < height; y++) {
-          newMap[i][x].push(this.map[i][x][y] ?? undefined);
+          newMap[i][x].push(this.map[i][x]?.[y] ?? undefined);
         }
       }
     }

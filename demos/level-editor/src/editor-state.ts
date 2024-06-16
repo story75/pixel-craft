@@ -79,15 +79,12 @@ export class EditorState extends State {
   accessor showTools = false;
 
   @property
-  @persist()
   accessor showTilesetInspector = false;
 
   @property
-  @persist()
   accessor showMapSize = false;
 
   @property
-  @persist()
   accessor showSettings = false;
 
   accessor isRightMouseDown = false;

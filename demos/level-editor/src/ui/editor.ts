@@ -318,12 +318,7 @@ export class Editor extends LitElement {
       )}
       ${when(
         this.state.showSettings,
-        () =>
-          html`<pixel-craft-modal-settings
-            @reset=${this.state.closeSettings}
-            @save=${this.state.closeSettings}
-            @upload=${this.state.closeSettings}
-          ></pixel-craft-modal-settings>`,
+        () => html`<pixel-craft-modal-settings @close=${this.state.closeSettings}></pixel-craft-modal-settings>`,
       )}
     `;
   }

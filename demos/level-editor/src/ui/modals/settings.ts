@@ -42,17 +42,17 @@ export class Settings extends LitElement {
 
   private readonly onReset = () => {
     this.state.reset();
-    this.dispatchEvent(new CustomEvent('reset'));
+    this.dispatchEvent(new CustomEvent('close'));
   };
 
   private readonly onSave = async () => {
     await this.state.save();
-    this.dispatchEvent(new CustomEvent('save'));
+    this.dispatchEvent(new CustomEvent('close'));
   };
 
   private readonly onUpload = async () => {
     await this.state.upload();
-    this.dispatchEvent(new CustomEvent('upload'));
+    this.dispatchEvent(new CustomEvent('close'));
   };
 
   render() {

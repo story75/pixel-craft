@@ -39,8 +39,8 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     timer.update(now);
 
     const cameraBounds = {
-      x: state.width * state.tileSize,
-      y: (state.height * state.tileSize) / 4,
+      x: state.width * state.tileSize * cameraZoom,
+      y: ((state.height * state.tileSize) / 4) * cameraZoom,
     };
 
     cameraAnchor = cameraAnchor.add(input.direction.multiply(cameraSpeed * timer.deltaTime));

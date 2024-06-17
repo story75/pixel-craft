@@ -1,5 +1,17 @@
 # Release Notes
 
+## UNRELEASED
+
+### Features
+
+#### Add `connectRooms` and `jeskoCircle` functions to `@pixel-craft/grid`
+
+- `connectRooms`: Connect rooms in a 2D grid with corridors. Useful in conjunction with `getRegions`
+- `jeskoCircle`: Draw a circle in a 2D grid using the Jesko algorithm
+
+With this feature set you can now create dungeon maps with rooms and corridors.
+For an example look at the `dungeon-generator` demo and see how the parameters can be tweaked to create different maps.
+
 ## 0.9.4 (15.06.2024)
 
 ### Features

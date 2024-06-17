@@ -1,0 +1,23 @@
+{
+  "name": "@pixel-craft/demo-dungeon-generator",
+  "private": true,
+  "scripts": {
+    "check": "tsc",
+    "build": "pixel-craft bundle",
+    "watch": "pixel-craft bundle --watch"
+  },
+  "dependencies": {
+    "@pixel-craft/renderer": "workspace:*",
+    "@pixel-craft/tweening": "workspace:*",
+    "@pixel-craft/audio": "workspace:*",
+    "@pixel-craft/timer": "workspace:*",
+    "@pixel-craft/input": "workspace:*",
+    "@pixel-craft/math": "workspace:*",
+    "@pixel-craft/grid": "workspace:*",
+    "@pixel-craft/state": "workspace:*",
+    "lit": "^3.1.4"
+  },
+  "devDependencies": {
+    "@pixel-craft/cli": "workspace:*"
+  }
+}

@@ -36,11 +36,10 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const textureFile = await stringToFile(whitePixel);
   const texture = await textureLoader(textureFile);
 
-  const rng = random(state.seed);
-
   let sprites: Sprite[] = [];
 
   const generateMap = () => {
+    const rng = random(state.seed);
     const map = randomGrid({
       width: state.width,
       height: state.height,
@@ -55,25 +54,30 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       smoothGrid(map, 6, 3, 1);
     }
 
-    const regions = getRegions(map, 0);
-    const rooms: Room[] = [];
+    const connect = () => {
+      const regions = getRegions(map, 0);
+      const rooms: Room[] = [];
 
-    for (const region of regions) {
-      if (region.length < state.cullSize) {
-        for (const cell of region) {
-          map[cell.x][cell.y] = 1;
+      for (const region of regions) {
+        if (region.length < state.cullSize) {
+          for (const cell of region) {
+            map[cell.x][cell.y] = 1;
+          }
+          continue;
         }
-        continue;
+
+        rooms.push({
+          cells: region,
+          size: region.length,
+          connections: new Set(),
+        });
       }
 
-      rooms.push({
-        cells: region,
-        size: region.length,
-        connections: new Set(),
-      });
-    }
+      connectRooms(map, rooms);
+    };
 
-    connectRooms(map, rooms);
+    connect();
+    connect();
 
     sprites = [];
 

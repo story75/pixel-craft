@@ -1,10 +1,10 @@
-import { InputChangeEvent } from '@pixel-craft/demo-level-editor/dist/src/ui/components/input';
 import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { generatorState } from '../generator-state';
 import './components/button';
 import './components/icon';
 import './components/input';
+import { InputChangeEvent } from './components/input';
 import './components/inspector/inspector';
 import './components/inspector/inspector-column';
 import './components/inspector/inspector-row';

@@ -28,6 +28,8 @@ export type Room = {
  * @param grid - The grid you want to use
  * @param rooms - The rooms you want to connect
  * @param forceConnection - If true, all rooms will be connected
+ *
+ * TODO: forceConnection does not seem to work as expected. Dungeon generation currently requires two calls to connectRooms.
  */
 export function connectRooms(grid: BinaryGrid, rooms: Room[], forceConnection = false) {
   let shortestDistance = 0;

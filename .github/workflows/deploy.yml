@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
       # Normally you would use withastro/action@v2 instead, but it does not properly work with mono repos and bun
       # https://github.com/withastro/action/issues/32
-      - uses: oven-sh/setup-bun@v1
+      - uses: oven-sh/setup-bun@v2
       - run: bun install --frozen-lockfile
       - run: bun run build
       - uses: actions/upload-pages-artifact@v3

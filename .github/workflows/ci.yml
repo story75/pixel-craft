@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
+      - uses: oven-sh/setup-bun@v2
       # run scripts
       - run: bun install # renovate does not update the lockfile properly, so --frozen-lockfile would break dependency updates
       - run: bun run build # will run check, which must run before lint

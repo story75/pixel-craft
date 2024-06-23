@@ -23,21 +23,6 @@ export default defineConfig({
             { label: 'Features', link: '/overview/features/' },
           ],
         },
-        {
-          label: 'Guides',
-          items: [
-            { label: 'Getting started', link: '/guides/getting-started/' },
-            {
-              label: 'Advanced',
-              items: [
-                {
-                  label: 'Raw engine integration',
-                  link: '/guides/advanced/raw-integration',
-                },
-              ],
-            },
-          ],
-        },
       ],
     }),
   ],

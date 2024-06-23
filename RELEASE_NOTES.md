@@ -15,6 +15,18 @@ Please refer to the updated demos for pointers on how to update your code, if yo
 
 ### Features
 
+#### Add `@pixel-craft/ui` package
+
+Introducing the `@pixel-craft/ui` package. This package provides a simple UI system for creating UI elements in your projects.
+The UI system is built on top of Lit and uses web components. It offers generic UI elements like modal dialogs, options lists, sliders and more.
+It also offers specialized pages like a title screen.
+
+The UI system is purposefully not built in the engine, because working with the DOM is a lot more ergonomic and flexible than working with the canvas.
+The engine would basically have to built everything from scratch that the DOM already provides, so it makes more sense to use the DOM directly.
+
+The design is very opinionated and may not fit all use cases and designs, but it should be a good starting point for most projects.
+You are best off copying the code and modifying it to fit your needs for anything more complex.
+
 #### Add `connectRooms` and `jeskoCircle` functions to `@pixel-craft/grid`
 
 - `connectRooms`: Connect rooms in a 2D grid with corridors. Useful in conjunction with `getRegions`
@@ -22,6 +34,13 @@ Please refer to the updated demos for pointers on how to update your code, if yo
 
 With this feature set you can now create dungeon maps with rooms and corridors.
 For an example look at the `dungeon-generator` demo and see how the parameters can be tweaked to create different maps.
+
+### Fixes and improvements
+
+#### Mark dependencies as external when building libraries
+
+When building libraries, the dependencies are now marked as external. This should reduce the bundle size and improve performance.
+Also, this fixes a bug where singletons class would exist multiple times in the bundle and not work as expected.
 
 ## 0.9.4 (15.06.2024)
 

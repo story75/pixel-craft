@@ -1,0 +1,29 @@
+{
+  "name": "@pixel-craft/ui",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/story75/pixel-craft.git"
+  },
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "dist/esm.js",
+  "types": "dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/src/index.d.ts"
+    }
+  },
+  "scripts": {
+    "check": "tsc",
+    "watch": "pixel-craft build-library -w",
+    "build": "pixel-craft build-library",
+    "release": "pixel-craft-tooling release-package \"${PUBLISH_VERSION}\""
+  },
+  "dependencies": {
+    "@pixel-craft/math": "workspace:*",
+    "@pixel-craft/input": "workspace:*",
+    "lit": "^3.1.4"
+  }
+}

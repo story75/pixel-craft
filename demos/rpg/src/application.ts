@@ -1,182 +1,96 @@
-import { Animated, Animator, TransitionType } from '@pixel-craft/animator';
-import { composed } from '@pixel-craft/composer';
+import { AudioMixer } from '@pixel-craft/audio';
 import { InputManager } from '@pixel-craft/input';
-import { Vector2 } from '@pixel-craft/math';
-import {
-  RenderPass,
-  Sprite,
-  WebGPUContext,
-  createContext,
-  createTextureLoader,
-  pipeline,
-  sprite,
-} from '@pixel-craft/renderer';
-import { spriteParser } from '@pixel-craft/spritesheet';
-import { EntityStore } from '@pixel-craft/store';
-
-type Moveable = {
-  velocity: Vector2;
-  movementSpeed: number;
-};
-
-type Entity = Sprite & Partial<Animated<Sprite & Moveable>>;
-
-type TimeState = {
-  now: number;
-  frameTime: number;
-  deltaTime: number;
-  lastFrame: number;
-};
-type RendererState = { renderPass: RenderPass; context: WebGPUContext };
+import { Sprite, createContext, createTextureLoader, pipeline, sprite, tilingSprite } from '@pixel-craft/renderer';
+import { Timer } from '@pixel-craft/timer';
+import { Tween, easeInOutQuad } from '@pixel-craft/tweening';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
+  const _inputManager = new InputManager();
+  console.log(_inputManager);
+
+  const audioMixer = new AudioMixer();
+  const bgm = await audioMixer.load('assets/jrpg-piano/jrpg-piano.mp3');
+  bgm.loop = true;
+  audioMixer.play(bgm, 'bgm');
+
   const context = await createContext(canvas);
+
   const textureLoader = createTextureLoader(context.device);
-  const [atlas, atlasCharacters] = await Promise.all([
-    textureLoader('assets/0x72_DungeonTilesetII_v1.7/atlas_floor-16x16.png'),
-    textureLoader('assets/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7.png'),
+  const skyAssetPath = 'assets/free-sky-with-clouds-background-pixel-art-set/Clouds/clouds3';
+
+  const [logo, skyBackground, skyMoon, skyCloudsBackground, skyCloudsForeground] = await Promise.all([
+    textureLoader('assets/pixel-craft/pixel-prowlers.png'),
+    textureLoader(`${skyAssetPath}/1.png`),
+    textureLoader(`${skyAssetPath}/2.png`),
+    textureLoader(`${skyAssetPath}/3.png`),
+    textureLoader(`${skyAssetPath}/4.png`),
   ]);
 
-  const entityStore = new EntityStore<Entity>();
-  const spriteQuery = entityStore.with('texture');
-
-  const assertTimeState = (): TimeState => ({
-    now: 0,
-    frameTime: 0,
-    deltaTime: 0,
-    lastFrame: 0,
+  const skyBackgroundSprite = tilingSprite({
+    texture: skyBackground,
+    z: 0.1,
+    width: canvas.width,
+    height: canvas.height,
   });
 
-  const assertRendererState = (): RendererState => ({
-    renderPass: pipeline(context),
-    context,
+  const skyMoonSprite = tilingSprite({
+    texture: skyMoon,
+    z: 0.2,
+    width: canvas.width,
+    height: canvas.height,
+  });
+  skyMoonSprite.offset.x = 0.5;
+
+  const skyCloudsBackgroundSprite = tilingSprite({
+    texture: skyCloudsBackground,
+    z: 0.3,
+    width: canvas.width,
+    height: canvas.height,
   });
 
-  const state = composed([assertTimeState(), assertRendererState()]);
+  const skyCloudsForegroundSprite = tilingSprite({
+    texture: skyCloudsForeground,
+    z: 0.4,
+    width: canvas.width,
+    height: canvas.height,
+  });
 
-  const scaling = { x: 4, y: 4 };
-  context.camera.zoom(scaling);
-  const tileSize = 16;
+  const logoSprite = sprite({
+    texture: logo,
+    z: 0.5,
+    width: logo.width * 4,
+    height: logo.height * 4,
+  });
+  logoSprite.x = canvas.width / 2 - logoSprite.width / 2;
 
-  const tilesX = 50;
-  const tilesY = 50;
+  const tween = new Tween(logoSprite, { y: 50 }, easeInOutQuad, 4000, true, true);
 
-  for (let y = 0; y < tilesY; y++) {
-    for (let x = 0; x < tilesX; x++) {
-      entityStore.add(
-        sprite({
-          texture: atlas,
-          x: x * tileSize,
-          y: y * tileSize,
-          frame: {
-            x: 0,
-            y: 0,
-            height: tileSize,
-            width: tileSize,
-          },
-        }),
-      );
-    }
-  }
+  const renderPass = pipeline(context);
+  const sprites: Sprite[] = [
+    skyBackgroundSprite,
+    skyMoonSprite,
+    skyCloudsBackgroundSprite,
+    skyCloudsForegroundSprite,
+    logoSprite,
+  ];
 
-  const dino = spriteParser(
-    {
-      frameWidth: tileSize,
-      frameHeight: tileSize * 2,
-      x: 0,
-      y: 0,
-      z: 0.002,
-      atlas: atlasCharacters,
-      animations: [
-        {
-          name: 'idle',
-          row: 6,
-          frames: 4,
-          startFrame: 8,
-          speed: 5,
-          interruptible: false,
-          loop: true,
-        },
-        {
-          name: 'run',
-          row: 6,
-          frames: 4,
-          startFrame: 12,
-          speed: 5,
-          interruptible: false,
-          loop: true,
-        },
-        {
-          name: 'hit',
-          row: 6,
-          frames: 1,
-          startFrame: 16,
-          speed: 5,
-          interruptible: true,
-          loop: true,
-        },
-      ],
-      transitions: [
-        {
-          from: { type: TransitionType.Entry },
-          to: 'idle',
-          condition: () => true,
-        },
-        {
-          from: { type: TransitionType.Any },
-          to: 'idle',
-          condition: (state) => state.velocity.length() === 0,
-        },
-        {
-          from: { type: TransitionType.Any },
-          to: 'run',
-          condition: (state) => state.velocity.length() !== 0,
-        },
-      ],
-    },
-    {
-      velocity: new Vector2({ x: 0, y: 0 }),
-      movementSpeed: 1,
-    },
-  );
+  const timer = new Timer();
+  const backgroundSpeed = 0.001;
 
-  entityStore.add(dino);
+  const draw = function (now: number) {
+    timer.update(now);
 
-  const input = new InputManager();
+    tween.update(timer.frameTime);
 
-  const animator = new Animator();
+    skyBackgroundSprite.offset.x += (backgroundSpeed / 4) * timer.deltaTime;
+    skyMoonSprite.offset.x += (backgroundSpeed / 8) * timer.deltaTime;
+    skyCloudsBackgroundSprite.offset.x += (backgroundSpeed / 2) * timer.deltaTime;
+    skyCloudsForegroundSprite.offset.x += backgroundSpeed * timer.deltaTime;
 
-  const timeSystem = (state: TimeState) => {
-    state.frameTime = state.now - state.lastFrame;
-    state.deltaTime = state.frameTime * 0.06;
-    state.lastFrame = state.now;
+    renderPass(sprites);
+
+    requestAnimationFrame(draw);
   };
 
-  const renderSystem = (state: RendererState) => {
-    state.renderPass(spriteQuery);
-  };
-
-  const dinoSystem = (state: TimeState) => {
-    const velocity = input.direction.normal().multiply(dino.movementSpeed * state.deltaTime);
-    dino.velocity = velocity;
-    dino.x += velocity.x;
-    dino.y += velocity.y;
-
-    if (dino.velocity.x !== 0) {
-      dino.flip[0] = dino.velocity.x < 0;
-    }
-
-    animator.update(dino, dino, dino, state.deltaTime);
-  };
-
-  const systems = [timeSystem, dinoSystem, renderSystem];
-
-  const gameLoop = (now: number) => {
-    state.now = now;
-    systems.forEach((system) => system(state));
-
-    requestAnimationFrame(gameLoop);
-  };
-
-  gameLoop(performance.now());
+  draw(performance.now());
 }

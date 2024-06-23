@@ -1,5 +1,5 @@
 {
-  "name": "@pixel-craft/rpg-demo",
+  "name": "@pixel-craft/demo-rpg",
   "private": true,
   "scripts": {
     "check": "tsc",
@@ -7,12 +7,14 @@
     "watch": "pixel-craft bundle --watch"
   },
   "dependencies": {
-    "@pixel-craft/store": "workspace:*",
-    "@pixel-craft/composer": "workspace:*",
     "@pixel-craft/renderer": "workspace:*",
-    "@pixel-craft/spritesheet": "workspace:*",
-    "@pixel-craft/animator": "workspace:*",
-    "@pixel-craft/math": "workspace:*"
+    "@pixel-craft/tweening": "workspace:*",
+    "@pixel-craft/audio": "workspace:*",
+    "@pixel-craft/timer": "workspace:*",
+    "@pixel-craft/input": "workspace:*",
+    "@pixel-craft/math": "workspace:*",
+    "@pixel-craft/ui": "workspace:*",
+    "lit": "^3.1.4"
   },
   "devDependencies": {
     "@pixel-craft/cli": "workspace:*"

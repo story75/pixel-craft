@@ -23,6 +23,7 @@ export function buildLibrary(cli: ReturnType<typeof yargs>): void {
         entryPoints: ['src/index.ts'],
         outfile: files[format],
         bundle: true,
+        packages: 'external',
         platform: 'node',
         format,
         sourcemap: true,

@@ -1,8 +1,8 @@
 import { rectRect } from '@pixel-craft/collision';
 import { Composer } from '@pixel-craft/composer';
+import { InputManager } from '@pixel-craft/input';
 import { Vector2 } from '@pixel-craft/math';
 import { PhysicsBody, collide } from '@pixel-craft/physics';
-import { InputSystem } from '@pixel-craft/pixel-craft';
 import {
   RenderPass,
   Sprite,
@@ -29,8 +29,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const textureLoader = createTextureLoader(context.device);
   const texture = await textureLoader('assets/pixel-craft/pixel-prowlers.png');
 
-  const input = new InputSystem();
-  await input.createSystem();
+  const input = new InputManager();
 
   const spatialHashGrid = new SpatialHashGrid<Entity>();
   const entityStore = new EntityStore<Entity>();
@@ -154,7 +153,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       });
     },
     () => {
-      player.velocity = player.velocity.add(new Vector2({ x: input.x, y: input.y }));
+      player.velocity = player.velocity.add(input.direction);
       if (player.velocity.length() > 5) {
         player.velocity = player.velocity.normal().multiply(5);
       }

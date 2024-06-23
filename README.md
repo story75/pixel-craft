@@ -4,8 +4,8 @@ This is the workspace for Pixel Forge. It is an attempt to create a code focused
 
 <p align="center">
   <a href="https://story75.github.io/pixel-craft/">Website</a> |
-  <a href="http://localhost:4321/pixel-craft/guides/getting-started/">Getting started</a> |
-  <a href="http://localhost:4321/pixel-craft/overview/features/">Features</a>
+  <a href="https://story75.github.io/pixel-craft/overview/why/">Why Pixel Craft?</a> |
+  <a href="https://story75.github.io/pixel-craft/overview/features/">Features</a>
 </p>
 
 ## Why?

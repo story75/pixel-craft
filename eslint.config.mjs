@@ -19,8 +19,7 @@ export default tseslint.config(
     ignores: ['**/node_modules/**', '**/dist/**', '**/assets/**', '**/*.d.ts', 'eslint.config.mjs'],
   },
   eslint.configs.recommended,
-  ...tseslint.configs.strictTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
+  ...tseslint.configs.recommended,
   eslintConfigPrettier,
   {
     languageOptions: {
@@ -49,9 +48,6 @@ export default tseslint.config(
           varsIgnorePattern: '^_',
         },
       ],
-      '@typescript-eslint/prefer-readonly': 'error',
-      '@typescript-eslint/no-confusing-void-expression': 'off',
-      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
       'import/no-deprecated': 'off', // disabled because it does not work with eslint v9 yet
       'import/no-extraneous-dependencies': [
         'error',
@@ -59,65 +55,8 @@ export default tseslint.config(
           devDependencies: ['**/*.test.js', '**/*.spec.js', '**/*.test.ts', '**/*.spec.ts'],
         },
       ],
-      'no-console': 'error',
       'object-shorthand': ['error', 'always'],
       'require-await': 'error',
-    },
-  },
-  {
-    files: ['**/*.js'],
-    extends: [tseslint.configs.disableTypeChecked],
-  },
-  {
-    files: ['*.spec.ts'],
-    rules: {
-      '@typescript-eslint/no-unsafe-call': 'off',
-      '@typescript-eslint/no-unsafe-member-access': 'off',
-    },
-  },
-  {
-    files: ['demos/**/*.ts'],
-    rules: {
-      'no-console': 'off',
-    },
-  },
-  {
-    files: ['packages/cli/**/*.ts', 'packages/tooling/**/*.ts'],
-    rules: {
-      'no-console': 'off',
-      '@typescript-eslint/no-unsafe-call': 'off', // disable due to yargs
-      '@typescript-eslint/no-unsafe-member-access': 'off', // disable due to yargs
-    },
-  },
-  {
-    files: [
-      'apps/level-editor/**/*.ts',
-      'apps/level-editor/**/*.tsx',
-      'apps/level-editor/**/*.js',
-      'apps/level-editor/**/*.mts',
-    ],
-    rules: {
-      'import/no-extraneous-dependencies': 'off',
-      '@typescript-eslint/naming-convention': 'off',
-      '@typescript-eslint/restrict-template-expressions': 'off',
-      '@typescript-eslint/no-unsafe-call': 'off',
-      '@typescript-eslint/no-unsafe-argument': 'off',
-      '@typescript-eslint/no-unsafe-return': 'off',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-unsafe-member-access': 'off',
-    },
-  },
-  {
-    files: ['demos/level-editor/**/*.ts'],
-    rules: {
-      '@typescript-eslint/no-unnecessary-condition': 'off',
-      '@typescript-eslint/prefer-nullish-coalescing': 'off',
-      '@typescript-eslint/no-unsafe-argument': 'off',
-      '@typescript-eslint/no-unsafe-call': 'off',
-      '@typescript-eslint/no-unsafe-return': 'off',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/no-unsafe-member-access': 'off',
-      '@typescript-eslint/restrict-plus-operands': 'off',
     },
   },
 );

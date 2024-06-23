@@ -1,53 +1,24 @@
+import { Animator, TransitionType } from '@pixel-craft/animator';
+import { InputManager } from '@pixel-craft/input';
 import { Point2, Vector2 } from '@pixel-craft/math';
-import {
-  AnimatorSystem,
-  Application,
-  InputMovementSystem,
-  InputSystem,
-  Moveable,
-  RenderSystem,
-  System,
-  TimerSystem,
-  TransitionType,
-  spriteParser,
-} from '@pixel-craft/pixel-craft';
-import { Sprite, sprite } from '@pixel-craft/renderer';
+import { createContext, createTextureLoader, pipeline, Sprite, sprite } from '@pixel-craft/renderer';
+import { spriteParser } from '@pixel-craft/spritesheet';
+import { Timer } from '@pixel-craft/timer';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
-  const app = await Application.create(canvas);
-  const renderer = new RenderSystem();
-  const input = new InputSystem();
-  const timer = new TimerSystem();
-  const animator = new AnimatorSystem(timer);
-  const movement = new InputMovementSystem(input, timer);
-  const flipper = new (class implements System {
-    private readonly moveables: (Sprite & Moveable)[] = [];
+  const context = await createContext(canvas);
+  const textureLoader = createTextureLoader(context.device);
 
-    addGameObject(sprite: Record<string, unknown>) {
-      if ('velocity' in sprite && 'texture' in sprite) {
-        const moveable = sprite as Sprite & Moveable;
-        this.moveables.push(moveable);
-      }
-    }
+  const sprites: Sprite[] = [];
 
-    update() {
-      for (const moveable of this.moveables) {
-        if (moveable.velocity.x !== 0) {
-          moveable.flip[0] = moveable.velocity.x < 0;
-        }
-      }
-    }
-  })();
-  await app.addSystems(renderer, input, timer, movement, flipper, animator);
-
-  app.context.globalLight.intensity(0.2);
+  context.globalLight.intensity(0.2);
 
   const scaling: Point2 = { x: 4, y: 4 };
-  app.context.camera.zoom(scaling);
+  context.camera.zoom(scaling);
 
   const [atlasFloor, atlasCharacters] = await Promise.all([
-    app.loadTexture('assets/0x72_DungeonTilesetII_v1.7/atlas_floor-16x16.png'),
-    app.loadTexture('assets/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7.png'),
+    textureLoader('assets/0x72_DungeonTilesetII_v1.7/atlas_floor-16x16.png'),
+    textureLoader('assets/0x72_DungeonTilesetII_v1.7/0x72_DungeonTilesetII_v1.7.png'),
   ]);
 
   const tileSize = 16;
@@ -55,31 +26,31 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const tilesX = Math.ceil(canvas.width / tileSize / scaling.x);
   const tilesY = Math.ceil(canvas.height / tileSize / scaling.y);
 
-  const redLight = app.context.pointLight.addLight({
+  const redLight = context.pointLight.addLight({
     position: [100, 120],
     color: [1.0, 0.2, 0.2],
     intensity: 2,
     radius: 50,
   });
-  const greenLight = app.context.pointLight.addLight({
+  const greenLight = context.pointLight.addLight({
     position: [125, 120],
     color: [0.2, 1, 0.2],
     intensity: 2,
     radius: 50,
   });
-  const blueLight = app.context.pointLight.addLight({
+  const blueLight = context.pointLight.addLight({
     position: [120, 100],
     color: [0.2, 0.2, 1],
     intensity: 2,
     radius: 50,
   });
-  const playerLight = app.context.pointLight.addLight({
+  const playerLight = context.pointLight.addLight({
     position: [120, 120],
     color: [0.5, 0.5, 0.5],
     radius: 30,
     intensity: 2,
   });
-  const pulsingLight = app.context.pointLight.addLight({
+  const pulsingLight = context.pointLight.addLight({
     position: [400, 100],
     color: [0.5, 0.5, 0.5],
     radius: 100,
@@ -95,7 +66,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   for (let y = 0; y < tilesY; y++) {
     for (let x = 0; x < tilesX; x++) {
-      app.addGameObjects(
+      sprites.push(
         sprite({
           texture: atlasFloor,
           x: x * tileSize,
@@ -164,37 +135,57 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     {
       velocity: new Vector2({ x: 0, y: 0 }),
       movementSpeed: 1,
-    } satisfies Moveable,
+    },
   );
-  app.addGameObjects(dino);
+  sprites.push(dino);
 
-  await app.addSystems(
-    new (class implements System {
-      update() {
-        playerLight.position = [dino.x + dino.width / 2, dino.y + dino.height / 2 + 5];
-        app.context.pointLight.updateLight(playerLight);
+  const renderPass = pipeline(context);
 
-        pulsingLight.intensity = Math.sin(performance.now() / 1000) * 2;
-        app.context.pointLight.updateLight(pulsingLight);
+  const timer = new Timer();
+  const input = new InputManager();
+  const animator = new Animator();
 
-        const anchor = [100, 100] as const;
+  const gameLoop = (now: number) => {
+    timer.update(now);
 
-        redLight.position = [
-          anchor[0] + Math.sin(performance.now() / 1000) * 40,
-          anchor[1] + Math.cos(performance.now() / 1000) * 40,
-        ];
-        greenLight.position = [
-          anchor[0] + Math.sin(performance.now() / 1000 + Math.PI / 2) * 40,
-          anchor[1] + Math.cos(performance.now() / 1000 + Math.PI / 2) * 40,
-        ];
-        blueLight.position = [
-          anchor[0] + Math.sin(performance.now() / 1000 + Math.PI) * 40,
-          anchor[1] + Math.cos(performance.now() / 1000 + Math.PI) * 40,
-        ];
-        app.context.pointLight.updateLight(redLight);
-        app.context.pointLight.updateLight(greenLight);
-        app.context.pointLight.updateLight(blueLight);
-      }
-    })(),
-  );
+    const velocity = input.direction.normal().multiply(dino.movementSpeed * timer.deltaTime);
+    dino.velocity = velocity;
+    dino.x += velocity.x;
+    dino.y += velocity.y;
+
+    playerLight.position = [dino.x + dino.width / 2, dino.y + dino.height / 2 + 5];
+    context.pointLight.updateLight(playerLight);
+
+    pulsingLight.intensity = Math.sin(performance.now() / 1000) * 2;
+    context.pointLight.updateLight(pulsingLight);
+
+    const anchor = [100, 100] as const;
+
+    redLight.position = [
+      anchor[0] + Math.sin(performance.now() / 1000) * 40,
+      anchor[1] + Math.cos(performance.now() / 1000) * 40,
+    ];
+    greenLight.position = [
+      anchor[0] + Math.sin(performance.now() / 1000 + Math.PI / 2) * 40,
+      anchor[1] + Math.cos(performance.now() / 1000 + Math.PI / 2) * 40,
+    ];
+    blueLight.position = [
+      anchor[0] + Math.sin(performance.now() / 1000 + Math.PI) * 40,
+      anchor[1] + Math.cos(performance.now() / 1000 + Math.PI) * 40,
+    ];
+    context.pointLight.updateLight(redLight);
+    context.pointLight.updateLight(greenLight);
+    context.pointLight.updateLight(blueLight);
+
+    if (dino.velocity.x !== 0) {
+      dino.flip[0] = dino.velocity.x < 0;
+    }
+
+    animator.update(dino, dino, dino, timer.deltaTime);
+
+    renderPass(sprites);
+    requestAnimationFrame(gameLoop);
+  };
+
+  gameLoop(performance.now());
 }

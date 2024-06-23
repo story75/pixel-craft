@@ -58,7 +58,7 @@ export function persist<This, Value>(options: PersistOptions<Value> = {}) {
 /**
  * Load all persisted values from the local storage
  */
-export const loadPersistedValues = async (store: object) => {
+export const loadPersistedValues = async (store: object): Promise<void> => {
   const metadata = store.constructor[Symbol.metadata];
   const persisted = metadata?.[persistKey] as PersistMetadata[] | undefined;
   if (!persisted) {
@@ -88,7 +88,7 @@ export const loadPersistedValues = async (store: object) => {
 /**
  * Force persist all persist-able values
  */
-export const forcePersistValues = (store: object) => {
+export const forcePersistValues = (store: object): void => {
   const metadata = store.constructor[Symbol.metadata];
   const persisted = metadata?.[persistKey] as PersistMetadata[] | undefined;
   if (!persisted) {

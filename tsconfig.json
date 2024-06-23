@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "outDir": "${configDir}/dist",
     "lib": ["esnext", "dom", "dom.iterable"],
     "module": "esnext",
     "strict": true,
     "isolatedModules": true,
+    "isolatedDeclarations": true,
     "composite": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "preserveConstEnums": true,
     "noFallthroughCasesInSwitch": true,
     "noPropertyAccessFromIndexSignature": true,
     "moduleResolution": "bundler",
@@ -16,5 +17,7 @@
     "esModuleInterop": true,
     "emitDeclarationOnly": true,
     "declarationMap": true
-  }
+  },
+  "include": ["${configDir}/src"],
+  "exclude": ["${configDir}/node_modules", "${configDir}/dist"]
 }

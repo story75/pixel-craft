@@ -32,7 +32,7 @@ export class Translator {
    * @remarks
    * The observable will notify with the new language.
    */
-  public readonly languageChanged = new Observable<[language: string]>();
+  public readonly languageChanged: Observable<[language: string]> = new Observable<[language: string]>();
 
   constructor(
     private readonly translations: Record<string, Translation>,

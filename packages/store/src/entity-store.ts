@@ -62,7 +62,7 @@ class EntityQuery<T extends Record<IndexType, unknown>> extends Store<T> impleme
    *
    * @internal
    */
-  evaluate(entity: T, next = entity): void {
+  evaluate(entity: T, next: T = entity): void {
     const contains = this.has(entity);
     const matches = this.match(next);
 

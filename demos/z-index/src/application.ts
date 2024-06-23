@@ -1,24 +1,33 @@
-import { Application, RenderSystem } from '@pixel-craft/pixel-craft';
-import { sprite } from '@pixel-craft/renderer';
+import { createContext, createTextureLoader, pipeline, Sprite, sprite } from '@pixel-craft/renderer';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
-  const app = await Application.create(canvas);
-  const renderer = new RenderSystem();
-  await app.addSystems(renderer);
+  const context = await createContext(canvas);
+  const textureLoader = createTextureLoader(context.device);
 
-  app.context.camera.zoom({ x: 4, y: 4 });
+  context.camera.zoom({ x: 4, y: 4 });
 
-  const texture = await app.loadTexture('assets/pixel-craft/pixel-prowlers.png');
-  const sprites = 10;
+  const texture = await textureLoader('assets/pixel-craft/pixel-prowlers.png');
+  const spriteAmount = 10;
 
-  for (let i = 0; i < sprites; i++) {
-    app.addGameObjects(
+  const sprites: Sprite[] = [];
+
+  for (let i = 0; i < spriteAmount; i++) {
+    sprites.push(
       sprite({
         texture,
         x: i * 15,
         y: i * 15,
-        z: 0.01 + i / sprites,
+        z: 0.01 + i / spriteAmount,
       }),
     );
   }
+
+  const renderPass = pipeline(context);
+
+  const gameLoop = (now: number) => {
+    renderPass(sprites);
+    requestAnimationFrame(gameLoop);
+  };
+
+  gameLoop(performance.now());
 }

@@ -7,9 +7,12 @@
     "watch": "pixel-craft bundle --watch"
   },
   "dependencies": {
-    "@pixel-craft/pixel-craft": "workspace:*",
     "@pixel-craft/math": "workspace:*",
-    "@pixel-craft/renderer": "workspace:*"
+    "@pixel-craft/renderer": "workspace:*",
+    "@pixel-craft/spritesheet": "workspace:*",
+    "@pixel-craft/animator": "workspace:*",
+    "@pixel-craft/timer": "workspace:*",
+    "@pixel-craft/input": "workspace:*"
   },
   "devDependencies": {
     "@pixel-craft/cli": "workspace:*"

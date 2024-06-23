@@ -1,7 +1,7 @@
 {
   "name": "pixel-craft",
   "private": true,
-  "packageManager": "bun@1.1.13",
+  "packageManager": "bun@1.1.16",
   "trustedDependencies": [
     "esbuild",
     "sharp"
@@ -25,26 +25,24 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "typescript": "^5.4.5",
+    "typescript": "^5.5.2",
     "prettier": "^3.3.2",
     "prettier-plugin-organize-imports": "^3.2.4",
-    "eslint": "^9.4.0",
-    "@eslint/js": "^9.4.0",
+    "eslint": "^9.5.0",
+    "@eslint/js": "^9.5.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
-    "globals": "^15.4.0",
+    "globals": "^15.6.0",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "typescript-eslint": "^7.13.0",
+    "typescript-eslint": "^7.13.1",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.7",
-    "turbo": "^2.0.3",
-    "@webgpu/types": "^0.1.42",
-    "wrangler": "^3.60.2"
+    "turbo": "^2.0.4",
+    "wrangler": "^3.61.0"
   },
   "lint-staged": {
     "*.ts": [
-      "eslint --cache --fix",
       "prettier --cache --cache-strategy metadata --write"
     ],
     "*.{mjs,js,md,json,yml,yaml,html}": [

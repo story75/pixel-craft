@@ -7,8 +7,7 @@
     "watch": "pixel-craft bundle --watch"
   },
   "dependencies": {
-    "@pixel-craft/renderer": "workspace:*",
-    "@pixel-craft/pixel-craft": "workspace:*"
+    "@pixel-craft/renderer": "workspace:*"
   },
   "devDependencies": {
     "@pixel-craft/cli": "workspace:*"

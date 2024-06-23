@@ -2,6 +2,17 @@
 
 ## UNRELEASED
 
+### Breaking changes
+
+#### Remove `@pixel-craft/pixel-craft` package
+
+The `@pixel-craft/pixel-craft` package has been removed. The functionality of the package has been split into smaller packages for a few releases now.
+
+The package was meant to be a higher level package that would provide a more opinionated way to use the engine, but since the engine is still in development,
+it was not clear what the best way to use the engine would be yet. So the decision was made to remove the package for now and focus on the lower level packages.
+
+Please refer to the updated demos for pointers on how to update your code, if you were using the `@pixel-craft/pixel-craft` package.
+
 ### Features
 
 #### Add `connectRooms` and `jeskoCircle` functions to `@pixel-craft/grid`
@@ -114,6 +125,14 @@ The list of unsupported features should be very small, as Chrome 124 is a very m
 
 Nonetheless, this change ensures that the generated code transpiles decorators which are not supported natively yet.
 This for example enables frameworks like Lit and opens up the possibility to use decorators for the engine itself in the future.
+
+#### Disable rules which require type information
+
+This may be controversial, but ESLint does not play nice with ${configDir} which was introduced in TypeScript 5.5.
+Since a lot of these rules also caused performance issues in the editor as well as a lot of false positives while editing, they were disabled.
+
+This change does not rule out that these rules will be re-enabled in the future, but for now they are disabled.
+On the flip side this makes the linting rules a lot more relaxed so one has to be more careful when writing code.
 
 ## 0.9.3 (26.05.2024)
 

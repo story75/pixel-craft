@@ -31,7 +31,7 @@ export type Room = {
  *
  * TODO: forceConnection does not seem to work as expected. Dungeon generation currently requires two calls to connectRooms.
  */
-export function connectRooms(grid: BinaryGrid, rooms: Room[], forceConnection = false) {
+export function connectRooms(grid: BinaryGrid, rooms: Room[], forceConnection = false): void {
   let shortestDistance = 0;
   let bestCellA: Cell;
   let bestCellB: Cell;

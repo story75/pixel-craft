@@ -9,8 +9,7 @@
   "dependencies": {
     "@pixel-craft/store": "workspace:*",
     "@pixel-craft/composer": "workspace:*",
-    "@pixel-craft/renderer": "workspace:*",
-    "@pixel-craft/pixel-craft": "workspace:*"
+    "@pixel-craft/renderer": "workspace:*"
   },
   "devDependencies": {
     "@pixel-craft/cli": "workspace:*"

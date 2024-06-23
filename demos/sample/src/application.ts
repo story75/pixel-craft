@@ -1,23 +1,17 @@
 import {
-  AnimatorSystem,
-  Application,
-  InputCameraSystem,
-  InputSystem,
-  RenderSystem,
-  TimerSystem,
-} from '@pixel-craft/pixel-craft';
-import { Sprite, canvasText, createFontLoader, createTextureLoader, sprite, tilingSprite } from '@pixel-craft/renderer';
+  Sprite,
+  canvasText,
+  createContext,
+  createFontLoader,
+  createTextureLoader,
+  pipeline,
+  sprite,
+  tilingSprite,
+} from '@pixel-craft/renderer';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
-  const app = await Application.create(canvas);
-  const renderer = new RenderSystem();
-  const input = new InputSystem();
-  const timer = new TimerSystem();
-  const camera = new InputCameraSystem(input, timer);
-  const animator = new AnimatorSystem(timer);
-  await app.addSystems(renderer, input, timer, camera, animator);
-
-  const textureLoader = createTextureLoader(app.context.device);
+  const context = await createContext(canvas);
+  const textureLoader = createTextureLoader(context.device);
   const tex = await textureLoader('assets/pixel-craft/pixel-prowlers.png');
 
   const [x, y] = [canvas.width / 2 - tex.width / 2, canvas.height / 2 - tex.height / 2];
@@ -95,22 +89,14 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       font: '42px Monocraft',
       color: [0, 0, 0],
     },
-    app.context.device,
+    context.device,
   );
 
   // after the text is created, we know its width and height
   text.x = canvas.width / 2 - text.width / 2;
   text.y = 250;
 
-  const sceneSystem = {
-    update: () => {
-      for (const sprite of rotatingSprites) {
-        sprite.rotation += 0.01;
-      }
-    },
-  };
-  await app.addSystems(sceneSystem);
-  app.addGameObjects(
+  const sprites = [
     sprite({
       texture: tex,
       x: x - (tex.width + 20),
@@ -133,5 +119,18 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     ...rotatingSprites,
     text,
     ...offscreenSprites,
-  );
+  ];
+
+  const renderPass = pipeline(context);
+
+  const gameLoop = (now: number) => {
+    for (const sprite of rotatingSprites) {
+      sprite.rotation += 0.01;
+    }
+
+    renderPass(sprites);
+    requestAnimationFrame(gameLoop);
+  };
+
+  gameLoop(performance.now());
 }

@@ -1,3 +1,4 @@
+/// <reference types="@webgpu/types" />
 import { application } from './application';
 import { Editor } from './ui/editor';
 

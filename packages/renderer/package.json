@@ -24,6 +24,6 @@
   "dependencies": {
     "@pixel-craft/math": "workspace:*",
     "@pixel-craft/store": "workspace:*",
-    "@webgpu/types": "^0.1.42"
+    "@webgpu/types": "^0.1.43"
   }
 }

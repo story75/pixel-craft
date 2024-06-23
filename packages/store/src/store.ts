@@ -11,12 +11,12 @@ export class Store<T> implements Iterable<T> {
   /**
    * Observable that notifies when an entity is added to the store.
    */
-  public onAdd = new Observable<[entity: T]>();
+  public onAdd: Observable<[entity: T]> = new Observable<[entity: T]>();
 
   /**
    * Observable that notifies when an entity is removed from the store.
    */
-  public onRemove = new Observable<[entity: T]>();
+  public onRemove: Observable<[entity: T]> = new Observable<[entity: T]>();
 
   /**
    * Observable that notifies when an entity is shuffled in the store.
@@ -25,15 +25,16 @@ export class Store<T> implements Iterable<T> {
    * This happens when an entity is removed and the last entity is moved to the position of the removed entity.
    * The index is the new index of the entity in the store.
    */
-  public onShuffle = new Observable<[entity: T, index: number]>();
+  public onShuffle: Observable<[entity: T, index: number]> = new Observable<[entity: T, index: number]>();
 
   protected data: T[] = [];
-  protected indices = new Map<T, number>();
+  protected indices: Map<T, number> = new Map<T, number>();
 
   get size(): number {
     return this.data.length;
   }
 
+  // TODO: Re-enable --isolatedDeclarations once the issue is fixed https://github.com/microsoft/TypeScript/issues/58490
   [Symbol.iterator](): Iterator<T> {
     let index = this.data.length;
 

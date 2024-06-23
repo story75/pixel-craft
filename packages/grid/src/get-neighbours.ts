@@ -9,7 +9,7 @@ import { BinaryGrid } from './binary-grid';
  * @param outOfBoundsValue - The value to consider when a cell is out of bounds.
  * @returns The number of neighbours of the cell.
  */
-export function getNeighbours(grid: BinaryGrid, x: number, y: number, outOfBoundsValue: 0 | 1 = 0) {
+export function getNeighbours(grid: BinaryGrid, x: number, y: number, outOfBoundsValue: 0 | 1 = 0): number {
   let neighbours = 0;
 
   for (let cX = -1; cX <= 1; cX++) {

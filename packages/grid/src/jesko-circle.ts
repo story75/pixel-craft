@@ -16,7 +16,13 @@ import { BinaryGrid } from './binary-grid';
  * @param radius - The radius of the circle
  * @param fillType - The bit which should be written at the grid position. Defaults to 1.
  */
-export function jeskoCircle(grid: BinaryGrid, centerX: number, centerY: number, radius: number, fillType: 0 | 1 = 1) {
+export function jeskoCircle(
+  grid: BinaryGrid,
+  centerX: number,
+  centerY: number,
+  radius: number,
+  fillType: 0 | 1 = 1,
+): void {
   let y = 0;
   let x = radius;
   let t1 = radius >> 4;

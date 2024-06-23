@@ -1,7 +1,7 @@
 import { Animated, Animator, TransitionType } from '@pixel-craft/animator';
 import { composed } from '@pixel-craft/composer';
+import { InputManager } from '@pixel-craft/input';
 import { Vector2 } from '@pixel-craft/math';
-import { InputSystem } from '@pixel-craft/pixel-craft';
 import {
   RenderPass,
   Sprite,
@@ -142,8 +142,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   entityStore.add(dino);
 
-  const input = new InputSystem();
-  await input.createSystem();
+  const input = new InputManager();
 
   const animator = new Animator();
 
@@ -158,7 +157,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   };
 
   const dinoSystem = (state: TimeState) => {
-    const velocity = new Vector2(input).normal().multiply(dino.movementSpeed * state.deltaTime);
+    const velocity = input.direction.normal().multiply(dino.movementSpeed * state.deltaTime);
     dino.velocity = velocity;
     dino.x += velocity.x;
     dino.y += velocity.y;

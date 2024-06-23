@@ -1,7 +1,7 @@
 import { Animated, Animator, TransitionType } from '@pixel-craft/animator';
 import { composed } from '@pixel-craft/composer';
+import { InputManager } from '@pixel-craft/input';
 import { Vector2 } from '@pixel-craft/math';
-import { InputSystem } from '@pixel-craft/pixel-craft';
 import {
   RenderPass,
   Sprite,
@@ -184,8 +184,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   entityStore.add(character);
 
-  const input = new InputSystem();
-  await input.createSystem();
+  const input = new InputManager();
 
   const animator = new Animator();
 
@@ -200,7 +199,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   };
 
   const characterSystem = (state: TimeState) => {
-    const velocity = new Vector2(input).normal().multiply(character.movementSpeed * state.deltaTime);
+    const velocity = input.direction.normal().multiply(character.movementSpeed * state.deltaTime);
     character.velocity = velocity;
     character.x += velocity.x;
     character.y += velocity.y;

@@ -8,6 +8,6 @@
  * @param min - The minimum value.
  * @param max - The maximum value.
  */
-export function randomInRange(rng: () => number, min: number, max: number) {
+export function randomInRange(rng: () => number, min: number, max: number): number {
   return Math.floor(rng() * (max - min)) + min;
 }

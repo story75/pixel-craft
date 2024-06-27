@@ -23,6 +23,6 @@
   },
   "dependencies": {
     "@pixel-craft/math": "workspace:*",
-    "@pixel-craft/observable": "workspace:*"
+    "@pixel-craft/event-bus": "workspace:*"
   }
 }

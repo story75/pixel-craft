@@ -14,6 +14,7 @@ export type PropertyTransform<Value> = {
 type PersistMetadata = [propertyName: string, storageKey: string, transform?: PropertyTransform<unknown>];
 
 export type PersistOptions<Value> = {
+  store?: string;
   key?: string;
   transform?: PropertyTransform<Value>;
 };
@@ -26,7 +27,9 @@ export function persist<This, Value>(options: PersistOptions<Value> = {}) {
     target: ClassAccessorDecoratorTarget<This, Value>,
     context: ClassAccessorDecoratorContext<This, Value>,
   ): ClassAccessorDecoratorResult<This, Value> => {
-    const storageKey = options.key ?? String(context.name);
+    const propertyKey = options.key ?? String(context.name);
+    const storeKey = options.store ?? context.constructor.name;
+    const storageKey = `${storeKey}::${propertyKey}`;
     context.metadata[persistKey] ||= [];
     if (!Array.isArray(context.metadata[persistKey])) {
       throw new TypeError('Invalid "persist" metadata');

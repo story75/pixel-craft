@@ -13,7 +13,20 @@ it was not clear what the best way to use the engine would be yet. So the decisi
 
 Please refer to the updated demos for pointers on how to update your code, if you were using the `@pixel-craft/pixel-craft` package.
 
+#### `InputManager` no longer uses `Observable` but instead extends `EventBus`
+
+The `InputManager` class no longer uses the `Observable` class but instead extends the `EventBus` class.
+
+This was done to simplify the code on the integration side and to make the `InputManager` more flexible.
+This offers more control over the event handling e.g. handling multiple keys with the same listener or listening to any keys,
+without the need for a separate api like `onAnyKey`.
+
 ### Features
+
+#### Add `@pixel-craft/event-bus` package
+
+The `@pixel-craft/event-bus` package is a thin wrapper around EventTarget to add better type safety.
+`@pixel-craft/state` was updated to use the `EventBus` class instead of the native `EventTarget` class.
 
 #### Add `@pixel-craft/ui` package
 

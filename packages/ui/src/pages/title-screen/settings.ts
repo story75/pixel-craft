@@ -1,6 +1,5 @@
-import { InputManager } from '@pixel-craft/input';
 import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { customElement, property } from 'lit/decorators.js';
 import '../../components/modal';
 import '../../components/option';
 import '../../components/option-list';
@@ -109,8 +108,8 @@ export class TitleScreenSettings extends LitElement {
     }
   `;
 
-  @state()
-  private accessor settings: Setting[] = [
+  @property()
+  accessor settings: Setting[] = [
     {
       label: 'Language',
       type: 'option-list',
@@ -157,50 +156,37 @@ export class TitleScreenSettings extends LitElement {
     },
   ];
 
-  @state()
-  private accessor currentSetting = 0;
+  @property()
+  accessor currentSetting = 0;
 
-  connectedCallback() {
-    super.connectedCallback();
+  nextSetting() {
+    this.currentSetting = Math.min(this.currentSetting + 1, this.settings.length - 1);
+  }
 
-    if (!InputManager.Instance) {
-      console.log(InputManager);
-      throw new Error('InputManager not initialized!');
+  previousSetting() {
+    this.currentSetting = Math.max(this.currentSetting - 1, 0);
+  }
+
+  nextOption() {
+    const setting = this.settings[this.currentSetting];
+    if (setting.type === 'option-list') {
+      const index = setting.options.indexOf(setting.value);
+      setting.value = setting.options[(index + 1) % setting.options.length];
+    } else if (setting.type === 'slider') {
+      setting.value = Math.min(setting.value + setting.step, setting.max);
     }
+    this.requestUpdate();
+  }
 
-    InputManager.Instance.observables['up'].subscribe(() => {
-      this.currentSetting = Math.max(this.currentSetting - 1, 0);
-    });
-
-    InputManager.Instance.observables['down'].subscribe(() => {
-      this.currentSetting = Math.min(this.currentSetting + 1, this.settings.length - 1);
-    });
-
-    InputManager.Instance.observables['left'].subscribe(() => {
-      const setting = this.settings[this.currentSetting];
-      if (setting.type === 'option-list') {
-        const index = setting.options.indexOf(setting.value);
-        setting.value = setting.options[(index - 1 + setting.options.length) % setting.options.length];
-      } else if (setting.type === 'slider') {
-        setting.value = Math.max(setting.value - setting.step, setting.min);
-      }
-      this.requestUpdate();
-    });
-
-    InputManager.Instance.observables['right'].subscribe(() => {
-      const setting = this.settings[this.currentSetting];
-      if (setting.type === 'option-list') {
-        const index = setting.options.indexOf(setting.value);
-        setting.value = setting.options[(index + 1) % setting.options.length];
-      } else if (setting.type === 'slider') {
-        setting.value = Math.min(setting.value + setting.step, setting.max);
-      }
-      this.requestUpdate();
-    });
-
-    InputManager.Instance.observables['cancel'].subscribe(() => {
-      this.dispatchEvent(new CustomEvent('close'));
-    });
+  previousOption() {
+    const setting = this.settings[this.currentSetting];
+    if (setting.type === 'option-list') {
+      const index = setting.options.indexOf(setting.value);
+      setting.value = setting.options[(index - 1 + setting.options.length) % setting.options.length];
+    } else if (setting.type === 'slider') {
+      setting.value = Math.max(setting.value - setting.step, setting.min);
+    }
+    this.requestUpdate();
   }
 
   render() {

@@ -5,4 +5,6 @@ export { Pulse } from './components/pulse';
 export { Root } from './components/root';
 export { Slider } from './components/slider';
 export { Transition } from './components/transition';
-export { TitleScreen } from './pages/title-screen';
+export { TitleScreenMainMenu } from './pages/title-screen/main-menu';
+export { TitleScreenSettings } from './pages/title-screen/settings';
+export { TitleScreenWakeUpPrompt } from './pages/title-screen/wake-up-prompt';

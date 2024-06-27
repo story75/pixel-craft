@@ -3,10 +3,10 @@ import { InputManager } from '@pixel-craft/input';
 import { Sprite, createContext, createTextureLoader, pipeline, sprite, tilingSprite } from '@pixel-craft/renderer';
 import { Timer } from '@pixel-craft/timer';
 import { Tween, easeInOutQuad } from '@pixel-craft/tweening';
+import { Root, TitleScreenMainMenu, TitleScreenWakeUpPrompt } from '@pixel-craft/ui';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
-  const _inputManager = new InputManager();
-  console.log(_inputManager);
+  const inputManager = new InputManager();
 
   const audioMixer = new AudioMixer();
   const bgm = await audioMixer.load('assets/jrpg-piano/jrpg-piano.mp3');
@@ -76,6 +76,33 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   const timer = new Timer();
   const backgroundSpeed = 0.001;
+
+  Object.entries({
+    '--color-inverse': 'rgb(255, 255, 255)',
+    '--color-primary': 'rgb(0, 225, 255)',
+  }).forEach(([key, value]) => {
+    document.body.style.setProperty(key, value);
+  });
+
+  const root = new Root();
+  document.body.appendChild(root);
+
+  const titleScreenWakeUpPrompt = new TitleScreenWakeUpPrompt();
+  root.appendChild(titleScreenWakeUpPrompt);
+
+  inputManager.addEventListener(
+    'keydown',
+    () => {
+      root.removeChild(titleScreenWakeUpPrompt);
+
+      const titleScreenMainMenu = new TitleScreenMainMenu();
+      root.appendChild(titleScreenMainMenu);
+
+      inputManager.addEventListener('up', () => titleScreenMainMenu.previousOption());
+      inputManager.addEventListener('down', () => titleScreenMainMenu.nextOption());
+    },
+    { once: true },
+  );
 
   const draw = function (now: number) {
     timer.update(now);

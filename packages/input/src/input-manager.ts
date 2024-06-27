@@ -1,20 +1,20 @@
+import { EventBus } from '@pixel-craft/event-bus';
 import { Vector2 } from '@pixel-craft/math';
-import { Observable } from '@pixel-craft/observable';
 import { Actions } from './actions';
+
+type InputEventMap<CustomActions extends string> = {
+  [Action in Actions]: CustomEvent<{ action: Action }>;
+} & {
+  [Action in CustomActions]: CustomEvent<{ action: Action }>;
+} & {
+  keydown: CustomEvent<{ key: string }>;
+  keyup: CustomEvent<{ key: string }>;
+};
 
 /**
  * The input manager is responsible for tracking pressed keys and calculating input axes.
  */
-export class InputManager<CustomActions extends string = string> {
-  /**
-   * The singleton instance of the InputManager
-   *
-   * @remarks
-   * This property is set when the InputManager is instantiated the first time.
-   * New instances of the InputManager will overwrite the existing instance.
-   */
-  static Instance: InputManager | undefined;
-
+export class InputManager<CustomActions extends string = ''> extends EventBus<InputEventMap<CustomActions>> {
   /**
    * The keys that are currently pressed
    *
@@ -24,7 +24,23 @@ export class InputManager<CustomActions extends string = string> {
    *
    * @default []
    */
-  private _pressed: string[] = [];
+  #pressed: string[] = [];
+
+  /**
+   * The actions that are being tracked
+   *
+   * @remarks
+   * The actions are stored as an array of strings.
+   * The strings are the action names that are being tracked.
+   *
+   * @default []
+   */
+  readonly #actions: (Actions | CustomActions)[];
+
+  /**
+   * The mapping of all actions to actual key bindings
+   */
+  readonly #bindings: Record<Actions | CustomActions, string[]>;
 
   /**
    * The directional input vector
@@ -36,19 +52,14 @@ export class InputManager<CustomActions extends string = string> {
    * A positive y value means down, and a negative y value means up.
    * If no vertical direction key is pressed, the y value is 0.
    */
-  private readonly _direction = new Vector2({ x: 0, y: 0 });
+  readonly #direction = new Vector2({ x: 0, y: 0 });
 
-  /**
-   * Observables for each action
-   *
-   * @remarks
-   * The observable will notify when the action is pressed.
-   */
-  public readonly observables: Record<Actions | CustomActions, Observable>;
+  constructor(bindings: Partial<Record<Actions | CustomActions, string[]>> = {}, customActions: CustomActions[] = []) {
+    super();
 
-  constructor(
-    private readonly actions: (Actions | CustomActions)[] = Object.values(Actions),
-    private readonly bindings: Partial<Record<Actions | CustomActions, string[]>> = {
+    this.#actions = [...Object.values(Actions), ...customActions];
+
+    this.#bindings = {
       [Actions.Up]: ['ArrowUp', 'KeyW'],
       [Actions.Down]: ['ArrowDown', 'KeyS'],
       [Actions.Left]: ['ArrowLeft', 'KeyA'],
@@ -56,36 +67,31 @@ export class InputManager<CustomActions extends string = string> {
       [Actions.Menu]: ['Escape'],
       [Actions.Accept]: ['Enter'],
       [Actions.Cancel]: ['Escape', 'Backspace'],
-    } as Partial<Record<Actions | CustomActions, string[]>>,
-  ) {
-    /* eslint-disable @typescript-eslint/prefer-reduce-type-parameter */
-    this.observables = actions.reduce(
-      (observables, action) => ({
-        ...observables,
-        [action]: new Observable(),
-      }),
-      {} as Record<Actions | CustomActions, Observable>,
-    );
-    /* eslint-enable @typescript-eslint/prefer-reduce-type-parameter */
+      // not type safe here, but enforced by the for of loop below
+      ...(bindings as Record<CustomActions, string[]>),
+    };
 
-    document.addEventListener('keydown', this.keydown);
-    document.addEventListener('keyup', this.keyup);
+    for (const customAction of customActions) {
+      // make sure that all custom actions have an array of bindings
+      this.#bindings[customAction] = bindings[customAction] ?? [];
+    }
 
-    InputManager.Instance = this;
+    document.addEventListener('keydown', this.#keydown);
+    document.addEventListener('keyup', this.#keyup);
   }
 
   /**
    * {@inheritDoc InputManager._direction}
    */
   get direction(): Readonly<Vector2> {
-    return this._direction;
+    return this.#direction;
   }
 
   /**
    * {@inheritDoc InputManager._pressed}
    */
   get pressed(): readonly string[] {
-    return this._pressed;
+    return this.#pressed;
   }
 
   /**
@@ -95,48 +101,56 @@ export class InputManager<CustomActions extends string = string> {
    * This method will return false if no key is bound to the action.
    */
   isActionPressed(action: Actions | CustomActions): boolean {
-    const binding = this.bindings[action];
+    const binding = this.#bindings[action];
     if (!binding) {
       return false;
     }
 
-    return binding.some((key) => this._pressed.includes(key));
+    return binding.some((key) => this.#pressed.includes(key));
   }
 
-  private readonly keydown = (event: KeyboardEvent) => {
-    this._pressed.push(event.code);
-    this.updateDirection();
+  readonly #keydown = (event: KeyboardEvent) => {
+    this.#pressed.push(event.code);
+    this.#updateDirection();
 
-    for (const action of this.actions) {
+    for (const action of this.#actions) {
       if (this.isActionPressed(action)) {
-        this.observables[action].notify();
+        // action is enforced to be a valid action here
+        this.dispatchEvent(new CustomEvent(action, { detail: { action } }) as InputEventMap<CustomActions>[Actions]);
       }
     }
+
+    this.dispatchEvent(
+      new CustomEvent('keydown', { detail: { key: event.code } }) as InputEventMap<CustomActions>['keydown'],
+    );
   };
 
-  private readonly keyup = (event: KeyboardEvent) => {
-    this._pressed = this._pressed.filter((key) => key !== event.code);
-    this.updateDirection();
+  readonly #keyup = (event: KeyboardEvent) => {
+    this.#pressed = this.#pressed.filter((key) => key !== event.code);
+    this.#updateDirection();
+    this.dispatchEvent(
+      new CustomEvent('keyup', { detail: { key: event.code } }) as InputEventMap<CustomActions>['keyup'],
+    );
   };
 
-  private updateDirection() {
-    this._direction.x = 0;
-    this._direction.y = 0;
+  #updateDirection() {
+    this.#direction.x = 0;
+    this.#direction.y = 0;
 
     if (this.isActionPressed(Actions.Right)) {
-      this._direction.x += 1;
+      this.#direction.x += 1;
     }
 
     if (this.isActionPressed(Actions.Left)) {
-      this._direction.x -= 1;
+      this.#direction.x -= 1;
     }
 
     if (this.isActionPressed(Actions.Up)) {
-      this._direction.y -= 1;
+      this.#direction.y -= 1;
     }
 
     if (this.isActionPressed(Actions.Down)) {
-      this._direction.y += 1;
+      this.#direction.y += 1;
     }
   }
 }

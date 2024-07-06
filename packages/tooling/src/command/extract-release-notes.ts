@@ -1,6 +1,6 @@
 import { join } from 'node:path';
 import { cwd } from 'node:process';
-import yargs from 'yargs';
+import type yargs from 'yargs';
 
 export function extractReleaseNotes(cli: ReturnType<typeof yargs>): void {
   cli.command(
@@ -13,7 +13,7 @@ export function extractReleaseNotes(cli: ReturnType<typeof yargs>): void {
       });
     },
     async (args) => {
-      const version = args['version'] as string;
+      const version = args.version as string;
       const file = Bun.file(join(cwd(), 'RELEASE_NOTES.md'));
       const content = await file.text();
 

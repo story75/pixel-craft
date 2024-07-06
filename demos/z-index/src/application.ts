@@ -1,4 +1,4 @@
-import { createContext, createTextureLoader, pipeline, Sprite, sprite } from '@pixel-craft/renderer';
+import { type Sprite, createContext, createTextureLoader, pipeline, sprite } from '@pixel-craft/renderer';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const context = await createContext(canvas);

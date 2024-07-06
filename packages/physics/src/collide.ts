@@ -1,5 +1,5 @@
 import { Vector2 } from '@pixel-craft/math';
-import { PhysicsBody } from './body';
+import type { PhysicsBody } from './body';
 
 /**
  * Simulate a collision between two bodies.

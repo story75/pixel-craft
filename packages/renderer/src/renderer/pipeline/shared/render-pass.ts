@@ -1,4 +1,4 @@
-import { Sprite, TilingSprite } from '../../../sprite/sprite';
+import type { Sprite, TilingSprite } from '../../../sprite/sprite';
 
 /**
  * A render pass that renders a list of sprites.

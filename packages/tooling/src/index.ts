@@ -9,5 +9,7 @@ const cli = yargs(hideBin(Bun.argv)).scriptName('pixel-craft-tooling').wrap(120)
 
 const commands = [extractReleaseNotes, releasePackage, watch];
 
-commands.forEach((command) => command(cli));
+for (const command of commands) {
+  command(cli);
+}
 await cli.demandCommand().parse();

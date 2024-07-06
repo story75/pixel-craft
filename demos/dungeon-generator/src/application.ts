@@ -1,7 +1,7 @@
-import { connectRooms, getRegions, randomGrid, Room, smoothGrid } from '@pixel-craft/grid';
+import { type Room, connectRooms, getRegions, randomGrid, smoothGrid } from '@pixel-craft/grid';
 import { InputManager } from '@pixel-craft/input';
-import { random, Vector2 } from '@pixel-craft/math';
-import { createContext, createTextureLoader, pipeline, Sprite, sprite } from '@pixel-craft/renderer';
+import { Vector2, random } from '@pixel-craft/math';
+import { type Sprite, createContext, createTextureLoader, pipeline, sprite } from '@pixel-craft/renderer';
 import { stringToFile } from '@pixel-craft/state';
 import { Timer } from '@pixel-craft/timer';
 import { generatorState } from './generator-state';
@@ -100,7 +100,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   generateMap();
   state.addEventListener('change', generateMap);
 
-  const draw = function (now: number) {
+  const draw = (now: number) => {
     timer.update(now);
 
     const cameraBounds = {

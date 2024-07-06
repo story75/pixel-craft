@@ -1,6 +1,6 @@
-import { Vector2 } from '@pixel-craft/math';
 import { describe, expect, it } from 'bun:test';
-import { PhysicsBody } from './body';
+import { Vector2 } from '@pixel-craft/math';
+import type { PhysicsBody } from './body';
 import { collide } from './collide';
 
 describe('collide', () => {

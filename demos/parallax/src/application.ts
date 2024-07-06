@@ -1,5 +1,5 @@
 import { AudioMixer } from '@pixel-craft/audio';
-import { Sprite, createContext, createTextureLoader, pipeline, sprite, tilingSprite } from '@pixel-craft/renderer';
+import { type Sprite, createContext, createTextureLoader, pipeline, sprite, tilingSprite } from '@pixel-craft/renderer';
 import { Timer } from '@pixel-craft/timer';
 import { Tween, easeInOutQuad } from '@pixel-craft/tweening';
 import Stats from 'stats.js';
@@ -78,7 +78,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const timer = new Timer();
   const backgroundSpeed = 0.001;
 
-  const draw = function (now: number) {
+  const draw = (now: number) => {
     timer.update(now);
     stats.begin();
 

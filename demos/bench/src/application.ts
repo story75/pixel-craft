@@ -1,4 +1,4 @@
-import { Sprite, createContext, createTextureLoader, pipeline, sprite } from '@pixel-craft/renderer';
+import { type Sprite, createContext, createTextureLoader, pipeline, sprite } from '@pixel-craft/renderer';
 import Stats from 'stats.js';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
@@ -25,7 +25,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     );
   }
 
-  const draw = function () {
+  const draw = () => {
     stats.begin();
 
     for (let i = 0; i < amount; i++) {

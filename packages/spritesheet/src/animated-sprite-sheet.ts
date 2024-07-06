@@ -1,4 +1,4 @@
-import { Rect } from '@pixel-craft/math';
+import type { Rect } from '@pixel-craft/math';
 
 type Options = {
   /**

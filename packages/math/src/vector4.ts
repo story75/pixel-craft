@@ -1,4 +1,4 @@
-import { Mat4Like } from './mat4';
+import type { Mat4Like } from './mat4';
 
 export type Point4 = { x: number; y: number; z: number; w: number };
 export type Vector4Like = Vector4 | Point4;

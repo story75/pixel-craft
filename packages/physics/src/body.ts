@@ -1,4 +1,4 @@
-import { Point2, Vector2 } from '@pixel-craft/math';
+import type { Point2, Vector2 } from '@pixel-craft/math';
 
 export type PhysicsBody = Point2 & {
   /**

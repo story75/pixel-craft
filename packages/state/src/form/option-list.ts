@@ -1,4 +1,4 @@
-import { Option, OptionList } from './option';
+import type { Option, OptionList } from './option';
 
 export function getIndex<T extends Option>(optionList: OptionList<T>): number {
   return optionList.options.findIndex((option) => option.active);

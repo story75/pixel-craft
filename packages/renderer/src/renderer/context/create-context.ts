@@ -1,6 +1,6 @@
-import { Camera, createCamera } from '../camera/camera';
-import { GlobalLight, createGlobalLight } from '../lighting/global-light';
-import { PointLightSystem, createPointLight } from '../lighting/point-light';
+import { type Camera, createCamera } from '../camera/camera';
+import { type GlobalLight, createGlobalLight } from '../lighting/global-light';
+import { type PointLightSystem, createPointLight } from '../lighting/point-light';
 
 /**
  * Defines a WebGPU context.

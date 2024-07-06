@@ -1,7 +1,7 @@
 import { Animator, TransitionType } from '@pixel-craft/animator';
 import { InputManager } from '@pixel-craft/input';
-import { Point2, Vector2 } from '@pixel-craft/math';
-import { createContext, createTextureLoader, pipeline, Sprite, sprite } from '@pixel-craft/renderer';
+import { type Point2, Vector2 } from '@pixel-craft/math';
+import { type Sprite, createContext, createTextureLoader, pipeline, sprite } from '@pixel-craft/renderer';
 import { spriteParser } from '@pixel-craft/spritesheet';
 import { Timer } from '@pixel-craft/timer';
 

@@ -1,5 +1,5 @@
-import { Animated, Animation, Animator } from '@pixel-craft/animator';
-import { Sprite, sprite } from '@pixel-craft/renderer';
+import { type Animated, type Animation, Animator } from '@pixel-craft/animator';
+import { type Sprite, sprite } from '@pixel-craft/renderer';
 import { animatedSpriteSheet } from './animated-sprite-sheet';
 
 type Options<T extends Record<string, unknown>> = Pick<Partial<Sprite>, 'x' | 'y' | 'z'> &
@@ -86,18 +86,15 @@ export function spriteParser<T extends Record<string, unknown>>(
     animations: options.animations,
   });
 
-  const animations = options.animations.reduce<Record<string, Animation>>(
-    (acc, animation) => ({
-      ...acc,
-      [animation.name]: {
-        ...animation,
-        loop: animation.loop ?? false,
-        interruptible: animation.interruptible ?? false,
-        animationFrames: spriteSheet[animation.name],
-      },
-    }),
-    {},
-  );
+  const animations: Record<string, Animation> = {};
+  for (const animation of options.animations) {
+    animations[animation.name] = {
+      ...animation,
+      loop: animation.loop ?? false,
+      interruptible: animation.interruptible ?? false,
+      animationFrames: spriteSheet[animation.name],
+    };
+  }
 
   const animated = Animator.createAnimated<T & Sprite>({
     animations,

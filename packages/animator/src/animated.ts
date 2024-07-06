@@ -1,5 +1,5 @@
-import { Animation } from './animation';
-import { Transition } from './transition';
+import type { Animation } from './animation';
+import type { Transition } from './transition';
 
 /**
  * Defines a game object that is animated.

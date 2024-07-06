@@ -1,4 +1,4 @@
-import { BinaryGrid } from './binary-grid';
+import type { BinaryGrid } from './binary-grid';
 
 /**
  * Get the number of neighbours of a cell.

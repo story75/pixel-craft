@@ -1,5 +1,5 @@
 import {
-  Sprite,
+  type Sprite,
   canvasText,
   createContext,
   createFontLoader,

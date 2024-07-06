@@ -9,7 +9,9 @@ const MAGIC_BITS = [0x55555555, 0x33333333, 0x0f0f0f0f, 0x00ff00ff];
  * @remarks
  * This is about twice as fast as `${x}:${y}`.
  */
-export function mortonZOrder(x: number, y: number): number {
+export function mortonZOrder(inputX: number, inputY: number): number {
+  let x = inputX;
+  let y = inputY;
   x = (x | (x << SHIFTS[3])) & MAGIC_BITS[3];
   x = (x | (x << SHIFTS[2])) & MAGIC_BITS[2];
   x = (x | (x << SHIFTS[1])) & MAGIC_BITS[1];

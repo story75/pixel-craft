@@ -1,11 +1,11 @@
-import { Animated, Animator, TransitionType } from '@pixel-craft/animator';
+import { type Animated, Animator, TransitionType } from '@pixel-craft/animator';
 import { composed } from '@pixel-craft/composer';
 import { InputManager } from '@pixel-craft/input';
 import { Vector2 } from '@pixel-craft/math';
 import {
-  RenderPass,
-  Sprite,
-  WebGPUContext,
+  type RenderPass,
+  type Sprite,
+  type WebGPUContext,
   createContext,
   createTextureLoader,
   pipeline,
@@ -211,7 +211,9 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   const gameLoop = (now: number) => {
     state.now = now;
-    systems.forEach((system) => system(state));
+    for (const system of systems) {
+      system(state);
+    }
 
     requestAnimationFrame(gameLoop);
   };

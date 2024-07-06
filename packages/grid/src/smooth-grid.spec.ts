@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { BinaryGrid } from './binary-grid';
+import type { BinaryGrid } from './binary-grid';
 import { smoothGrid } from './smooth-grid';
 
 describe('smoothGrid', () => {

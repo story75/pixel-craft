@@ -1,8 +1,8 @@
 import { Composer } from '@pixel-craft/composer';
 import {
-  RenderPass,
-  Sprite,
-  WebGPUContext,
+  type RenderPass,
+  type Sprite,
+  type WebGPUContext,
   createContext,
   createTextureLoader,
   pipeline,
@@ -66,7 +66,9 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   const gameLoop = (now: number) => {
     state.now = now;
-    systems.forEach((system) => system(state));
+    for (const system of systems) {
+      system(state);
+    }
 
     requestAnimationFrame(gameLoop);
   };

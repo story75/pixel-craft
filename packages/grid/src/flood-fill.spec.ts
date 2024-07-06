@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { BinaryGrid } from './binary-grid';
+import type { BinaryGrid } from './binary-grid';
 import { getRegions } from './flood-fill';
 
 describe('floodFill', () => {

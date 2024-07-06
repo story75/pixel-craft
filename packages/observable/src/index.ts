@@ -77,7 +77,9 @@ export class Observable<T extends unknown[] = []> {
    */
   clear(): void {
     if (this.onUnsubscribe.hasObservers()) {
-      this.observers.forEach((observer) => this.onUnsubscribe.notify(observer));
+      for (const observer of this.observers) {
+        this.onUnsubscribe.notify(observer);
+      }
     }
 
     this.observers.clear();
@@ -87,7 +89,9 @@ export class Observable<T extends unknown[] = []> {
    * Notify all observers with the given data.
    */
   notify(...data: T): void {
-    this.observers.forEach((observer) => observer(...data));
+    for (const observer of this.observers) {
+      observer(...data);
+    }
   }
 
   private hasObservers(): boolean {

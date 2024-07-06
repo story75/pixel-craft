@@ -1,10 +1,10 @@
-import { Point2, Vector2 } from '@pixel-craft/math';
+import { type Point2, Vector2 } from '@pixel-craft/math';
 import { indexBufferAllocator } from '../../buffer/index-buffer-allocator';
 import { vertexBufferAllocator } from '../../buffer/vertex-buffer-allocator';
-import { WebGPUContext } from '../../context/create-context';
+import type { WebGPUContext } from '../../context/create-context';
 import { floatsPerSprite } from '../shared/constants';
 import { createIndices } from '../shared/create-indices';
-import { RenderPass } from '../shared/render-pass';
+import type { RenderPass } from '../shared/render-pass';
 import { linearSampler } from '../shared/sampler/linear-sampler';
 import { nearestSampler } from '../shared/sampler/nearest-sampler';
 import { cameraTransform } from '../shared/uniforms/camera-transform';

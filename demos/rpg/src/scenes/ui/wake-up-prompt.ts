@@ -1,5 +1,5 @@
-import { InputManager } from '@pixel-craft/input';
-import { Translator } from '@pixel-craft/translation';
+import type { InputManager } from '@pixel-craft/input';
+import type { Translator } from '@pixel-craft/translation';
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import '../../ui/components/pulse';
@@ -29,7 +29,7 @@ export class TitleScreenWakeUpPrompt extends LitElement {
   accessor translator!: Translator;
 
   @property()
-  accessor prompt: string = 'TITLE_SCREEN.WAKE_UP.PROMPT';
+  accessor prompt = 'TITLE_SCREEN.WAKE_UP.PROMPT';
 
   @property()
   accessor unlocked = false;

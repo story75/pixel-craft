@@ -1,4 +1,4 @@
-import { Slider } from './option';
+import type { Slider } from './option';
 
 export function incrementSlider(slider: Slider): void {
   slider.value = Math.min(slider.value + slider.step, slider.max);

@@ -2,11 +2,11 @@ import { rectRect } from '@pixel-craft/collision';
 import { Composer } from '@pixel-craft/composer';
 import { InputManager } from '@pixel-craft/input';
 import { Vector2 } from '@pixel-craft/math';
-import { PhysicsBody, collide } from '@pixel-craft/physics';
+import { type PhysicsBody, collide } from '@pixel-craft/physics';
 import {
-  RenderPass,
-  Sprite,
-  WebGPUContext,
+  type RenderPass,
+  type Sprite,
+  type WebGPUContext,
   createContext,
   createTextureLoader,
   pipeline,
@@ -131,7 +131,8 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
       for (const sprite of spriteQuery) {
         spatialHashGrid.update(sprite.x, sprite.y, sprite.width, sprite.height, sprite);
       }
-      spatialHashGrid.forEach((entities) => {
+
+      for (const entities of spatialHashGrid) {
         const length = entities.length;
         if (length < 2) {
           return;
@@ -150,7 +151,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
             }
           }
         }
-      });
+      }
     },
     () => {
       player.velocity = player.velocity.add(input.direction);
@@ -170,7 +171,9 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
 
   const gameLoop = (now: number) => {
     state.now = now;
-    systems.forEach((system) => system(state));
+    for (const system of systems) {
+      system(state);
+    }
 
     requestAnimationFrame(gameLoop);
   };

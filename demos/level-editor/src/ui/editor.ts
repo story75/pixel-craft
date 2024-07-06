@@ -5,7 +5,7 @@ import { map } from 'lit/directives/map.js';
 import { range } from 'lit/directives/range.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { when } from 'lit/directives/when.js';
-import { PaintMode, editorState } from '../editor-state';
+import { type PaintMode, editorState } from '../editor-state';
 import './components/icon';
 import './modals/map-size';
 import './modals/settings';

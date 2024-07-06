@@ -1,4 +1,4 @@
-import { Mat4, Vector2, Vector2Like, Vector3, Vector4 } from '@pixel-craft/math';
+import { Mat4, Vector2, type Vector2Like, Vector3, Vector4 } from '@pixel-craft/math';
 import { uniformBufferAllocator } from '../buffer/uniform-buffer-allocator';
 
 export type Camera = {

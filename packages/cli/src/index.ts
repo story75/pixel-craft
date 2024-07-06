@@ -8,5 +8,7 @@ const cli = yargs(hideBin(Bun.argv)).scriptName('pixel-craft').wrap(120).strict(
 
 const commands = [buildLibrary, bundle];
 
-commands.forEach((command) => command(cli));
+for (const command of commands) {
+  command(cli);
+}
 await cli.demandCommand().parse();

@@ -1,4 +1,4 @@
-import { State } from '../state';
+import type { State } from '../state';
 
 export function property<This extends State, Value>(
   target: ClassAccessorDecoratorTarget<This, Value>,

@@ -1,0 +1,70 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+    "defaultBranch": "main"
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 120,
+    "attributePosition": "auto",
+    "ignore": [
+      "**/Dockerfile",
+      "**/Makefile",
+      "**/LICENSE",
+      "**/public",
+      "**/assets",
+      "**/.*",
+      "**/*.xml",
+      "**/*.d.ts",
+      "**/*.info",
+      "**/*.map",
+      "**/*.sh",
+      "**/*.lock",
+      "**/*.snap",
+      "**/*.proto",
+      "**/*.patch",
+      "**/*.tsbuildinfo",
+      "**/*.gif",
+      "**/*.png",
+      "**/*.ico",
+      "**/*.txt",
+      "**/*.mpd",
+      "**/*.vtt",
+      "**/*.lockb",
+      "**/*.wgsl",
+      "**/*.svg",
+      "**/*.webp",
+      "**/*.otf",
+      "**/*.ttf",
+      "**/bunfig.toml"
+    ]
+  },
+  "organizeImports": { "enabled": true },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    },
+    "ignore": ["**/node_modules/**", "**/dist/**", "**/assets/**", "**/*.d.ts", "eslint.config.mjs"]
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "single",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "all",
+      "semicolons": "always",
+      "arrowParentheses": "always",
+      "bracketSpacing": true,
+      "bracketSameLine": true,
+      "quoteStyle": "single",
+      "attributePosition": "auto"
+    }
+  }
+}

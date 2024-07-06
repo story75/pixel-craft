@@ -1,5 +1,5 @@
 import { textureAllocator } from '../renderer/buffer/texture-allocator';
-import { sprite, Sprite } from '../sprite/sprite';
+import { type Sprite, sprite } from '../sprite/sprite';
 
 /**
  * An instance of text which can be rendered to a canvas

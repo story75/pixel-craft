@@ -1,4 +1,4 @@
-import { Vector3, Vector3Like } from './vector3';
+import { Vector3, type Vector3Like } from './vector3';
 
 export type Mat4Like =
   | Mat4
@@ -36,11 +36,23 @@ export class Mat4 extends Float32Array {
   static orthographic(left: number, right: number, bottom: number, top: number, near: number, far: number): Mat4 {
     // prettier-ignore
     return new Mat4([
-            2 / (right - left), 0, 0, 0,
-            0, 2 / (top - bottom), 0, 0,
-            0, 0, -2 / (far - near), 0,
-            -(right + left) / (right - left), -(top + bottom) / (top - bottom), -(far + near) / (far - near), 1
-        ]);
+      2 / (right - left),
+      0,
+      0,
+      0,
+      0,
+      2 / (top - bottom),
+      0,
+      0,
+      0,
+      0,
+      -2 / (far - near),
+      0,
+      -(right + left) / (right - left),
+      -(top + bottom) / (top - bottom),
+      -(far + near) / (far - near),
+      1,
+    ]);
   }
 
   /**
@@ -58,11 +70,23 @@ export class Mat4 extends Float32Array {
 
     // prettier-ignore
     return new Mat4([
-            rightVector.x, upVector.x, forwardVector.x, 0,
-            rightVector.y, upVector.y, forwardVector.y, 0,
-            rightVector.z, upVector.z, forwardVector.z, 0,
-            translation[0], translation[1], translation[2], 1,
-        ]);
+      rightVector.x,
+      upVector.x,
+      forwardVector.x,
+      0,
+      rightVector.y,
+      upVector.y,
+      forwardVector.y,
+      0,
+      rightVector.z,
+      upVector.z,
+      forwardVector.z,
+      0,
+      translation[0],
+      translation[1],
+      translation[2],
+      1,
+    ]);
   }
 
   /**
@@ -113,12 +137,7 @@ export class Mat4 extends Float32Array {
 
   translate(translation: Vector3Like): this {
     // prettier-ignore
-    return this.multiply([
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            translation.x, translation.y, translation.z, 1,
-        ]);
+    return this.multiply([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, translation.x, translation.y, translation.z, 1]);
   }
 
   /**

@@ -1,4 +1,4 @@
-import { Rect, Vector2Like } from '@pixel-craft/math';
+import type { Rect, Vector2Like } from '@pixel-craft/math';
 
 /**
  * An instance of a sprite which can be rendered to a canvas

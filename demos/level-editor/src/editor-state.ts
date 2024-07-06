@@ -1,5 +1,5 @@
 import { getRegion } from '@pixel-craft/grid';
-import { Rect } from '@pixel-craft/math';
+import type { Rect } from '@pixel-craft/math';
 import {
   State,
   fileToString,
@@ -20,7 +20,7 @@ export class EditorState extends State {
   accessor tilesetFile: File | undefined;
 
   @property
-  accessor tilesetImage: string = '';
+  accessor tilesetImage = '';
 
   @property
   @persist()
@@ -230,15 +230,19 @@ export class EditorState extends State {
   };
 
   readonly paintTile = (x: number, y: number, mode: PaintMode = 'auto') => {
+    let evaluatedMode: 'add' | 'remove';
+
     if (mode === 'auto') {
       if (!this.isMouseDown) {
         return;
       }
 
-      mode = this.isRightMouseDown ? 'remove' : 'add';
+      evaluatedMode = this.isRightMouseDown ? 'remove' : 'add';
+    } else {
+      evaluatedMode = mode;
     }
 
-    this.tools[this.selectedToolIndex].executor(x, y, mode);
+    this.tools[this.selectedToolIndex].executor(x, y, evaluatedMode);
   };
 
   readonly resizeMap = (width: number, height: number) => {

@@ -1,5 +1,5 @@
-import { build, BuildOptions, context } from 'esbuild';
-import yargs from 'yargs';
+import { type BuildOptions, build, context } from 'esbuild';
+import type yargs from 'yargs';
 import { ESBUILD_LOADER } from './esbuild-loader';
 
 export function bundle(cli: ReturnType<typeof yargs>): void {
@@ -14,7 +14,7 @@ export function bundle(cli: ReturnType<typeof yargs>): void {
       });
     },
     async (args) => {
-      const watch = args['w'] as boolean | undefined;
+      const watch = args.w as boolean | undefined;
 
       const options: BuildOptions = {
         entryPoints: ['src/index.ts'],

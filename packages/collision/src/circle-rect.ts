@@ -1,4 +1,4 @@
-import { Circle, clamp, Rect, Vector2Like } from '@pixel-craft/math';
+import { type Circle, type Rect, type Vector2Like, clamp } from '@pixel-craft/math';
 import { pointCircle } from './point-circle';
 
 /**

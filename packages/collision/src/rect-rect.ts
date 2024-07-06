@@ -1,4 +1,4 @@
-import { Rect } from '@pixel-craft/math';
+import type { Rect } from '@pixel-craft/math';
 
 /**
  * Checks if a rectangle is colliding with a rectangle.

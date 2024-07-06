@@ -1,7 +1,7 @@
-import { InputManager } from '@pixel-craft/input';
-import { getOption, nextOption, Option, OptionList, previousOption } from '@pixel-craft/state';
-import { Translator } from '@pixel-craft/translation';
-import { css, html, LitElement, unsafeCSS } from 'lit';
+import type { InputManager } from '@pixel-craft/input';
+import { type Option, type OptionList, getOption, nextOption, previousOption } from '@pixel-craft/state';
+import type { Translator } from '@pixel-craft/translation';
+import { LitElement, css, html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import icon from './pointer.png';

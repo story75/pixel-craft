@@ -9,14 +9,14 @@ import '../components/button';
 import '../components/checkerboard';
 import '../components/container';
 import '../components/file-upload';
-import { FileEvent } from '../components/file-upload';
+import type { FileEvent } from '../components/file-upload';
 import '../components/icon';
 import '../components/inspector/inspector';
 import '../components/inspector/inspector-column';
 import '../components/inspector/inspector-row';
 import '../components/layer';
 import '../components/select';
-import { SelectChangeEvent } from '../components/select';
+import type { SelectChangeEvent } from '../components/select';
 
 @customElement('pixel-craft-modal-tileset-editor')
 export class TilesetEditor extends LitElement {
@@ -176,14 +176,17 @@ export class TilesetEditor extends LitElement {
     return html`
       <pixel-craft-editor-layer>
         <pixel-craft-editor-container>
-          ${this.state.tilesetFile
-            ? nothing
-            : html` <pixel-craft-editor-file-upload
+          ${
+            this.state.tilesetFile
+              ? nothing
+              : html` <pixel-craft-editor-file-upload
                 @file=${(event: FileEvent) => this.onTilesetChange(event.detail.file)}
-              ></pixel-craft-editor-file-upload>`}
-          ${!this.state.tilesetFile
-            ? nothing
-            : html`
+              ></pixel-craft-editor-file-upload>`
+          }
+          ${
+            !this.state.tilesetFile
+              ? nothing
+              : html`
                 <pixel-craft-inspector>
                   <pixel-craft-inspector-row>
                     <pixel-craft-inspector-column>
@@ -264,7 +267,8 @@ export class TilesetEditor extends LitElement {
                     />
                   </pixel-craft-editor-checkerboard>
                 </div>
-              `}
+              `
+          }
         </pixel-craft-editor-container>
       </pixel-craft-editor-layer>
     `;

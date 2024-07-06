@@ -1,4 +1,4 @@
-import { Circle, Vector2, Vector2Like } from '@pixel-craft/math';
+import { type Circle, Vector2, type Vector2Like } from '@pixel-craft/math';
 
 /**
  * Checks if a point is colliding with a circle.

@@ -1,7 +1,7 @@
-import { Sprite } from '@pixel-craft/renderer';
-import { Animated } from './animated';
-import { Animation } from './animation';
-import { Transition, TransitionType } from './transition';
+import type { Sprite } from '@pixel-craft/renderer';
+import type { Animated } from './animated';
+import type { Animation } from './animation';
+import { type Transition, TransitionType } from './transition';
 
 /**
  * An animator system is responsible to change the frame of an animated sprite.

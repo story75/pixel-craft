@@ -15,10 +15,11 @@ function xmur3(seed: string): () => number {
     h = (h << 13) | (h >>> 19);
   }
 
-  return function () {
+  return () => {
     h = Math.imul(h ^ (h >>> 16), 2246822507);
     h = Math.imul(h ^ (h >>> 13), 3266489909);
-    return (h ^= h >>> 16) >>> 0;
+    h ^= h >>> 16;
+    return h >>> 0;
   };
 }
 
@@ -41,7 +42,7 @@ export function random(seed: string): () => number {
   let c = hasher();
   let d = hasher();
 
-  const rng = function () {
+  const rng = () => {
     a |= 0;
     b |= 0;
     c |= 0;

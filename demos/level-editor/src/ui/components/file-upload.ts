@@ -106,14 +106,16 @@ export class FileUpload extends LitElement {
     return html`<label class=${classMap({ 'file-upload': true, placeholder: !this.image })}>
         <input type="file" accept=".png" @change=${this.onFileInputChange} />
 
-        ${this.image
-          ? html`<img src="${this.image}" alt=${this.file?.name ?? ''} />`
-          : html`<span>${this.label}</span>`}
+        ${
+          this.image ? html`<img src="${this.image}" alt=${this.file?.name ?? ''} />` : html`<span>${this.label}</span>`
+        }
       </label>
-      ${this.image
-        ? html` <pixel-craft-editor-icon class="delete" @click=${() => this.onFileChange(undefined)}
+      ${
+        this.image
+          ? html` <pixel-craft-editor-icon class="delete" @click=${() => this.onFileChange(undefined)}
             >
           </pixel-craft-editor-icon>`
-        : ''} `;
+          : ''
+      } `;
   }
 }

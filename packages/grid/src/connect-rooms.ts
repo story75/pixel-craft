@@ -1,5 +1,5 @@
-import { BinaryGrid } from './binary-grid';
-import { Cell } from './flood-fill';
+import type { BinaryGrid } from './binary-grid';
+import type { Cell } from './flood-fill';
 
 export type Room = {
   cells: Cell[];
@@ -44,7 +44,9 @@ export function connectRooms(grid: BinaryGrid, rooms: Room[], forceConnection = 
       return;
     }
     room.canReachMain = true;
-    room.connections.forEach((r) => setReachable(r));
+    for (const r of room.connections) {
+      setReachable(r);
+    }
   };
 
   const createConnection = () => {
@@ -105,7 +107,7 @@ export function connectRooms(grid: BinaryGrid, rooms: Room[], forceConnection = 
     }
 
     const r = 2;
-    line.forEach((cell) => {
+    for (const cell of line) {
       for (let x = -r; x <= r; x++) {
         for (let y = -r; y <= r; y++) {
           const passageCell = grid[cell.x + x]?.[cell.y + y];
@@ -114,20 +116,20 @@ export function connectRooms(grid: BinaryGrid, rooms: Room[], forceConnection = 
           }
         }
       }
-    });
+    }
   };
 
   let listA: Room[] = [];
   let listB: Room[] = [];
 
   if (forceConnection) {
-    rooms.forEach((room) => {
+    for (const room of rooms) {
       if (room.canReachMain) {
         listB.push(room);
       } else {
         listA.push(room);
       }
-    });
+    }
   } else {
     listA = rooms;
     listB = rooms;
@@ -146,9 +148,9 @@ export function connectRooms(grid: BinaryGrid, rooms: Room[], forceConnection = 
         continue;
       }
 
-      roomA.cells.forEach((cellA) => {
-        roomB.cells.forEach((cellB) => {
-          const distance = Math.pow(cellA.x - cellB.x, 2) + Math.pow(cellA.y - cellB.y, 2);
+      for (const cellA of roomA.cells) {
+        for (const cellB of roomB.cells) {
+          const distance = (cellA.x - cellB.x) ** 2 + (cellA.y - cellB.y) ** 2;
 
           if (distance < shortestDistance || !foundConnection) {
             shortestDistance = distance;
@@ -158,8 +160,8 @@ export function connectRooms(grid: BinaryGrid, rooms: Room[], forceConnection = 
             bestRoomB = roomB;
             foundConnection = true;
           }
-        });
-      });
+        }
+      }
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

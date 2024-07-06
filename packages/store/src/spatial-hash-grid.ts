@@ -80,13 +80,15 @@ export class SpatialHashGrid<T> {
     }
 
     for (const [hash, index] of metadata.cells) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const cell = this.grid.get(hash)!;
+      const cell = this.grid.get(hash);
+      if (!cell) {
+        continue;
+      }
       const last = cell.at(-1) as T; // last is never undefined, because the list can never be empty here
       if (last !== entity) {
         cell[index] = last;
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        this.metadata.get(last)!.cells.set(hash, index);
+        this.metadata.get(last)?.cells.set(hash, index);
       }
       cell.pop();
     }
@@ -118,10 +120,9 @@ export class SpatialHashGrid<T> {
     return Array.from(entities);
   }
 
-  forEach(callback: (cell: T[]) => void): void {
-    this.grid.forEach(callback);
+  [Symbol.iterator](): Iterator<T[]> {
+    return this.grid.values();
   }
-
   private getCellBounds(
     x: number,
     y: number,

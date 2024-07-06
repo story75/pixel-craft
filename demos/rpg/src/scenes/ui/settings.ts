@@ -1,18 +1,18 @@
-import { InputManager } from '@pixel-craft/input';
+import type { InputManager } from '@pixel-craft/input';
 import {
+  type Option,
+  type OptionList,
+  type Slider,
   decrementSlider,
   getOption,
   incrementSlider,
   isOptionList,
   isSlider,
   nextOption,
-  Option,
-  OptionList,
   previousOption,
-  Slider,
 } from '@pixel-craft/state';
-import { Translator } from '@pixel-craft/translation';
-import { css, html, LitElement, unsafeCSS } from 'lit';
+import type { Translator } from '@pixel-craft/translation';
+import { LitElement, css, html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import '../../ui/components/modal';

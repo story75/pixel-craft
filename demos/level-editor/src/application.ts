@@ -1,6 +1,6 @@
 import { InputManager } from '@pixel-craft/input';
 import { Vector2 } from '@pixel-craft/math';
-import { Sprite, createContext, createTextureLoader, pipeline, sprite } from '@pixel-craft/renderer';
+import { type Sprite, createContext, createTextureLoader, pipeline, sprite } from '@pixel-craft/renderer';
 import { Timer } from '@pixel-craft/timer';
 import { editorState } from './editor-state';
 
@@ -35,7 +35,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     }
   });
 
-  const draw = function (now: number) {
+  const draw = (now: number) => {
     timer.update(now);
 
     const cameraBounds = {

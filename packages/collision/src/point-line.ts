@@ -1,4 +1,4 @@
-import { Line, Vector2, Vector2Like } from '@pixel-craft/math';
+import { type Line, Vector2, type Vector2Like } from '@pixel-craft/math';
 
 /**
  * Checks if a point is colliding with a line.

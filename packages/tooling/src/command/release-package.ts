@@ -1,8 +1,8 @@
-import { $ } from 'bun';
-import { findUp } from 'find-up';
 import { join } from 'node:path';
 import { cwd } from 'node:process';
-import yargs from 'yargs';
+import { $ } from 'bun';
+import { findUp } from 'find-up';
+import type yargs from 'yargs';
 
 type PublishConfig = {
   bin?: string;
@@ -32,7 +32,7 @@ export function releasePackage(cli: ReturnType<typeof yargs>): void {
       });
     },
     async (args) => {
-      const version = args['version'] as string;
+      const version = args.version as string;
       const workingDirectory = cwd();
 
       const file = Bun.file(join(workingDirectory, 'package.json'));

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { FillOptions, randomGrid } from './random-grid';
+import { type FillOptions, randomGrid } from './random-grid';
 
 describe('randomGrid', () => {
   it('should generate an empty grid', () => {

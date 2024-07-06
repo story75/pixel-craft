@@ -1,4 +1,4 @@
-import { IndexType, Query, QueryConfiguration, With, Without } from './query';
+import type { IndexType, Query, QueryConfiguration, With, Without } from './query';
 import { Store } from './store';
 
 /**
@@ -82,14 +82,18 @@ class EntityQuery<T extends Record<IndexType, unknown>> extends Store<T> impleme
 }
 
 export class EntityStore<T extends Record<IndexType, unknown>> extends Store<T> implements Query<T> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: we do not really care about the exact query type here, just that it is a query
   private readonly queries = new Set<EntityQuery<any>>();
 
   constructor() {
     super();
 
     this.onAdd.subscribe((entity) => this.evaluate(entity));
-    this.onRemove.subscribe((entity) => this.queries.forEach((query) => query.remove(entity)));
+    this.onRemove.subscribe((entity) => {
+      for (const query1 of this.queries) {
+        query1.remove(entity);
+      }
+    });
   }
 
   /**

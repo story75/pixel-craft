@@ -4,7 +4,7 @@ import { generatorState } from '../generator-state';
 import './components/button';
 import './components/icon';
 import './components/input';
-import { InputChangeEvent } from './components/input';
+import type { InputChangeEvent } from './components/input';
 import './components/inspector/inspector';
 import './components/inspector/inspector-column';
 import './components/inspector/inspector-row';

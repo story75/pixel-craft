@@ -1,6 +1,6 @@
-import { Sprite, sprite, tilingSprite } from '@pixel-craft/renderer';
-import { easeInOutQuad, Tween } from '@pixel-craft/tweening';
-import { State } from '../state';
+import { type Sprite, sprite, tilingSprite } from '@pixel-craft/renderer';
+import { Tween, easeInOutQuad } from '@pixel-craft/tweening';
+import type { State } from '../state';
 import { TitleScreenMainMenu } from './ui/main-menu';
 import { TitleScreenSettings } from './ui/settings';
 import { TitleScreenWakeUpPrompt } from './ui/wake-up-prompt';

@@ -19,5 +19,5 @@ export function easeLinear(t: number): number {
  * The value of t should be between 0 and 1.
  */
 export function easeInOutQuad(t: number): number {
-  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  return t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
 }

@@ -1,4 +1,4 @@
-import { BinaryGrid } from './binary-grid';
+import type { BinaryGrid } from './binary-grid';
 
 /**
  * Draw a circle outline in a tile grid.

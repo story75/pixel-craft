@@ -11,7 +11,6 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "noFallthroughCasesInSwitch": true,
-    "noPropertyAccessFromIndexSignature": true,
     "moduleResolution": "bundler",
     "target": "ES2021",
     "esModuleInterop": true,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { Observable, Observer } from './index';
+import { Observable, type Observer } from './index';
 
 type Payload = [foo: number, bar: string];
 

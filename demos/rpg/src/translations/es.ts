@@ -1,4 +1,4 @@
-import { Translation } from '@pixel-craft/translation';
+import type { Translation } from '@pixel-craft/translation';
 
 export const ES: Translation = {
   TITLE_SCREEN: {

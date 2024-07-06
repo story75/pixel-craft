@@ -21,10 +21,14 @@ type UnionToIntersection<U> = (U extends object ? (k: U) => void : never) extend
  * ```
  */
 export function composed<T extends object>(components: T[]): UnionToIntersection<T> {
-  return components.reduce((acc, component) => {
-    return {
-      ...acc,
-      ...component,
-    };
-  }, {}) as UnionToIntersection<T>;
+  const obj: Record<string | number | symbol, unknown> = {};
+
+  for (const component of components) {
+    const keys = Object.keys(component) as (keyof T)[];
+    for (const key of keys) {
+      obj[key] = component[key];
+    }
+  }
+
+  return obj as UnionToIntersection<T>;
 }

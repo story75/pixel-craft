@@ -1,4 +1,4 @@
-import { Translation } from '@pixel-craft/translation';
+import type { Translation } from '@pixel-craft/translation';
 import { DE } from './de';
 import { EN } from './en';
 import { ES } from './es';

@@ -60,7 +60,7 @@ describe('Vector3', () => {
     const result = vector.normal();
     expect(result.x).toBeCloseTo(0.424, 3);
     expect(result.y).toBeCloseTo(0.566, 3);
-    expect(result.z).toBeCloseTo(0.707, 3);
+    expect(result.z).toBeCloseTo(Math.SQRT1_2, 3);
   });
 
   it('should not normalize the vector if it has no length', () => {

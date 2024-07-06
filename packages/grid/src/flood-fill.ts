@@ -115,7 +115,9 @@ export function getRegions(grid: number[][], searchType: Cell['type']): Cell[][]
 
       const region = getRegion(grid, cell);
       regions.push(region);
-      region.forEach((c) => processed.add(cellIndex(c)));
+      for (const c of region) {
+        processed.add(cellIndex(c));
+      }
     }
   }
 

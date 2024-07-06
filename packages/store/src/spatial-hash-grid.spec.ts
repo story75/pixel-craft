@@ -45,9 +45,9 @@ describe('SpatialHashGrid', () => {
 
     // query by cells
     const cells: Entity[][] = [];
-    grid.forEach((cell) => {
+    for (const cell of grid) {
       cells.push(cell);
-    });
+    }
     expect(cells).toEqual([[a, b], [b], [b], [b], [c]]);
 
     // query by area
@@ -71,9 +71,9 @@ describe('SpatialHashGrid', () => {
 
     // re-query by cells
     const cellsAfterUpdate: Entity[][] = [];
-    grid.forEach((cell) => {
+    for (const cell of grid) {
       cellsAfterUpdate.push(cell);
-    });
+    }
     expect(cellsAfterUpdate.filter((c) => c.length)).toEqual([[a], [c, b], [b], [b], [b]]);
     // re-query by area
     const searchUpdatedCell0 = grid.query(0, 0, singleCellSize, singleCellSize);
@@ -89,9 +89,9 @@ describe('SpatialHashGrid', () => {
     grid.remove(b);
     // re-query by cells
     const cellsAfterRemove: Entity[][] = [];
-    grid.forEach((cell) => {
+    for (const cell of grid) {
       cellsAfterRemove.push(cell);
-    });
+    }
     expect(cellsAfterRemove.filter((c) => c.length)).toEqual([[a], [c]]);
     // re-query by area
     const searchRemovedCell0 = grid.query(0, 0, singleCellSize, singleCellSize);
@@ -107,9 +107,9 @@ describe('SpatialHashGrid', () => {
     grid.clear();
     // re-query by cells
     const cellsAfterClear: Entity[][] = [];
-    grid.forEach((cell) => {
+    for (const cell of grid) {
       cellsAfterClear.push(cell);
-    });
+    }
     expect(cellsAfterClear.filter((c) => c.length)).toEqual([]);
     // re-query by area
     const searchClearedCell0 = grid.query(0, 0, singleCellSize, singleCellSize);

@@ -1,4 +1,4 @@
-import { Vector2Like } from '@pixel-craft/math';
+import type { Vector2Like } from '@pixel-craft/math';
 
 /**
  * Checks if two points are colliding.

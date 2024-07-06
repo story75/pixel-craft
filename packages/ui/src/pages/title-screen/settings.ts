@@ -1,28 +1,12 @@
-import { LitElement, css, html, nothing, unsafeCSS } from 'lit';
+import { OptionList, Slider } from '@pixel-craft/state';
+import { LitElement, css, html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { map } from 'lit/directives/map.js';
 import '../../components/modal';
 import '../../components/option';
 import '../../components/option-list';
 import '../../components/slider';
 import icon from './pointer.png';
-
-type Setting = {
-  label: string;
-} & (OptionList<string> | Slider);
-
-type OptionList<T> = {
-  type: 'option-list';
-  value: T;
-  options: T[];
-};
-
-type Slider = {
-  type: 'slider';
-  value: number;
-  min: number;
-  max: number;
-  step: number;
-};
 
 @customElement('pixel-craft-page-title-screen-settings-setting')
 export class TitleScreenSettingsSetting extends LitElement {
@@ -37,6 +21,7 @@ export class TitleScreenSettingsSetting extends LitElement {
 
       > .label {
         margin: auto auto auto 0;
+        position: relative;
       }
     }
 
@@ -53,7 +38,7 @@ export class TitleScreenSettingsSetting extends LitElement {
       background: url('${unsafeCSS(icon)}') no-repeat;
       background-size: 1rem;
       margin-left: -1.5rem;
-      margin-top: 0.25rem;
+      bottom: 0;
       animation: point 2s ease-in-out infinite alternate;
     }
 
@@ -109,112 +94,79 @@ export class TitleScreenSettings extends LitElement {
   `;
 
   @property()
-  accessor settings: Setting[] = [
-    {
-      label: 'Language',
-      type: 'option-list',
-      value: 'English',
-      options: ['English', 'Spanish', 'German'],
-    },
-    {
-      label: 'Font Face',
-      type: 'option-list',
-      value: 'Monocraft',
-      options: ['Monocraft', 'Arial'],
-    },
-    {
-      label: 'Master Volume',
-      type: 'slider',
-      value: 100,
-      min: 0,
-      max: 100,
-      step: 1,
-    },
-    {
-      label: 'BGM Volume',
-      type: 'slider',
-      value: 100,
-      min: 0,
-      max: 100,
-      step: 1,
-    },
-    {
-      label: 'SFX Volume',
-      type: 'slider',
-      value: 100,
-      min: 0,
-      max: 100,
-      step: 1,
-    },
-    {
-      label: 'Voice Volume',
-      type: 'slider',
-      value: 100,
-      min: 0,
-      max: 100,
-      step: 1,
-    },
-  ];
+  accessor settings: OptionList<string | number> = new OptionList<string | number>({
+    label: 'Settings',
+    options: [
+      new OptionList({
+        label: 'Language',
+        options: [{ label: 'English', active: true }, { label: 'German' }, { label: 'Spanish' }],
+      }),
+      new OptionList({
+        label: 'Font Face',
+        options: [{ label: 'Monocraft', active: true }, { label: 'Arial' }],
+      }),
+      new Slider({
+        label: 'Master Volume',
+        value: 100,
+        min: 0,
+        max: 100,
+        step: 1,
+      }),
+      new Slider({
+        label: 'BGM Volume',
+        value: 100,
+        min: 0,
+        max: 100,
+        step: 1,
+      }),
+      new Slider({
+        label: 'SFX Volume',
+        value: 100,
+        min: 0,
+        max: 100,
+        step: 1,
+      }),
+      new Slider({
+        label: 'Voice Volume',
+        value: 100,
+        min: 0,
+        max: 100,
+        step: 1,
+      }),
+    ],
+  });
 
-  @property()
-  accessor currentSetting = 0;
-
-  nextSetting() {
-    this.currentSetting = Math.min(this.currentSetting + 1, this.settings.length - 1);
+  connectedCallback() {
+    super.connectedCallback();
+    this.settings.addEventListener('change', () => this.requestUpdate());
   }
-
-  previousSetting() {
-    this.currentSetting = Math.max(this.currentSetting - 1, 0);
-  }
-
-  nextOption() {
-    const setting = this.settings[this.currentSetting];
-    if (setting.type === 'option-list') {
-      const index = setting.options.indexOf(setting.value);
-      setting.value = setting.options[(index + 1) % setting.options.length];
-    } else if (setting.type === 'slider') {
-      setting.value = Math.min(setting.value + setting.step, setting.max);
-    }
-    this.requestUpdate();
-  }
-
-  previousOption() {
-    const setting = this.settings[this.currentSetting];
-    if (setting.type === 'option-list') {
-      const index = setting.options.indexOf(setting.value);
-      setting.value = setting.options[(index - 1 + setting.options.length) % setting.options.length];
-    } else if (setting.type === 'slider') {
-      setting.value = Math.max(setting.value - setting.step, setting.min);
-    }
-    this.requestUpdate();
-  }
-
   render() {
     return html`
       <pixel-craft-modal>
-        ${this.settings.map((setting, index) => {
-          const active = this.currentSetting === index || nothing;
+        ${map(this.settings.options, (setting) => {
           switch (setting.type) {
             case 'option-list':
+              const optionList = setting as OptionList;
               return html`
-                <pixel-craft-page-title-screen-settings-setting label=${setting.label} active=${active}>
+                <pixel-craft-page-title-screen-settings-setting label=${optionList.label} ?active=${optionList.active}>
                   <pixel-craft-option-list>
-                    ${setting.options.map((option) => {
+                    ${optionList.options.map((option) => {
                       return html`
-                        <pixel-craft-option text=${option} ?active=${setting.value === option}></pixel-craft-option>
+                        <pixel-craft-option text=${option.label} ?active=${option.active}></pixel-craft-option>
                       `;
                     })}
                   </pixel-craft-option-list>
                 </pixel-craft-page-title-screen-settings-setting>
               `;
             case 'slider':
+              const slider = setting as Slider;
               return html`
-                <pixel-craft-page-title-screen-settings-setting label=${setting.label} active=${active}>
+                <pixel-craft-page-title-screen-settings-setting label=${slider.label} ?active=${slider.active}>
                   <pixel-craft-slider
-                    value=${setting.value}
-                    min=${setting.min}
-                    max=${setting.max}
-                    step=${setting.step}
+                    value=${slider.value}
+                    min=${slider.min}
+                    max=${slider.max}
+                    step=${slider.step}
                   ></pixel-craft-slider>
                 </pixel-craft-page-title-screen-settings-setting>
               `;

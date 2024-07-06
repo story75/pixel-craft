@@ -5,6 +5,9 @@ import { customElement, property } from 'lit/decorators.js';
 export class Option extends LitElement {
   static styles = css`
     :host {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       background: rgba(0, 0, 0, 0.5);
       padding: 0.25rem 0.75rem;
       border-radius: 0.25rem;

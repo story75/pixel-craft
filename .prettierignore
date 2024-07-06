@@ -31,3 +31,4 @@ assets
 *.ttf
 
 !.eslintrc.js
+bunfig.toml

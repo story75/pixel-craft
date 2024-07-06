@@ -1,3 +1,4 @@
+import { OptionList } from '@pixel-craft/state';
 import { LitElement, css, html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
@@ -14,6 +15,7 @@ export class TitleScreenMainMenuOption extends LitElement {
       box-sizing: border-box;
       border-bottom: 0.05rem solid transparent;
       color: rgba(from var(--color-inverse) r g b / 0.1);
+      text-align: center;
       transition:
         color 0.2s ease-in-out,
         background 0.2s ease-in-out;
@@ -75,26 +77,22 @@ export class TitleScreenMainMenu extends LitElement {
   `;
 
   @property()
-  accessor options = ['New Game', 'Continue', 'Settings'];
+  accessor optionList: OptionList = new OptionList({
+    label: 'Main Menu',
+    options: [{ label: 'New Game', active: true }, { label: 'Continue' }, { label: 'Settings' }, { label: 'Quit' }],
+  });
 
-  @property()
-  accessor activeOption = 0;
-
-  nextOption() {
-    this.activeOption = Math.min(this.activeOption + 1, this.options.length - 1);
+  connectedCallback() {
+    super.connectedCallback();
+    this.optionList.addEventListener('change', () => this.requestUpdate());
   }
-
-  previousOption() {
-    this.activeOption = Math.max(this.activeOption - 1, 0);
-  }
-
   render() {
     return map(
-      this.options,
-      (option, index) =>
+      this.optionList.options,
+      (option) =>
         html` <pixel-craft-page-title-screen-main-menu-option
-          ?active=${index === this.activeOption}
-          text=${option}
+          ?active=${option.active}
+          text=${option.label}
         ></pixel-craft-page-title-screen-main-menu-option>`,
     );
   }

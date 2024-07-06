@@ -18,15 +18,6 @@ export type Translation = {
  */
 export class Translator {
   /**
-   * The singleton instance of the Translator
-   *
-   * @remarks
-   * This property is set when the Translator is instantiated the first time.
-   * New instances of the Translator will overwrite the existing instance.
-   */
-  static Instance: Translator | undefined;
-
-  /**
    * An observable that notifies when the language has changed.
    *
    * @remarks
@@ -37,9 +28,7 @@ export class Translator {
   constructor(
     private readonly translations: Record<string, Translation>,
     private _currentLanguage: string,
-  ) {
-    Translator.Instance = this;
-  }
+  ) {}
 
   /**
    * Get the current language.

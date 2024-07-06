@@ -28,18 +28,6 @@ without the need for a separate api like `onAnyKey`.
 The `@pixel-craft/event-bus` package is a thin wrapper around EventTarget to add better type safety.
 `@pixel-craft/state` was updated to use the `EventBus` class instead of the native `EventTarget` class.
 
-#### Add `@pixel-craft/ui` package
-
-Introducing the `@pixel-craft/ui` package. This package provides a simple UI system for creating UI elements in your projects.
-The UI system is built on top of Lit and uses web components. It offers generic UI elements like modal dialogs, options lists, sliders and more.
-It also offers specialized pages like a title screen.
-
-The UI system is purposefully not built in the engine, because working with the DOM is a lot more ergonomic and flexible than working with the canvas.
-The engine would basically have to built everything from scratch that the DOM already provides, so it makes more sense to use the DOM directly.
-
-The design is very opinionated and may not fit all use cases and designs, but it should be a good starting point for most projects.
-You are best off copying the code and modifying it to fit your needs for anything more complex.
-
 #### Add `connectRooms` and `jeskoCircle` functions to `@pixel-craft/grid`
 
 - `connectRooms`: Connect rooms in a 2D grid with corridors. Useful in conjunction with `getRegions`

@@ -13,7 +13,6 @@
     "@pixel-craft/timer": "workspace:*",
     "@pixel-craft/input": "workspace:*",
     "@pixel-craft/math": "workspace:*",
-    "@pixel-craft/ui": "workspace:*",
     "lit": "^3.1.4"
   },
   "devDependencies": {

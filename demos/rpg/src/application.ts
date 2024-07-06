@@ -3,9 +3,11 @@ import { InputManager } from '@pixel-craft/input';
 import { Sprite, createContext, createTextureLoader, pipeline } from '@pixel-craft/renderer';
 import { EntityStore } from '@pixel-craft/store';
 import { Timer } from '@pixel-craft/timer';
-import { Root } from '@pixel-craft/ui';
+import { Translator } from '@pixel-craft/translation';
 import { titleScreen } from './scenes/title-screen';
 import { State } from './state';
+import { TRANSLATIONS } from './translations/translations';
+import { Root } from './ui/components/root';
 
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const inputManager = new InputManager();
@@ -15,6 +17,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const renderPass = pipeline(context);
   const store = new EntityStore<Sprite>();
   const timer = new Timer();
+  const translator = new Translator(TRANSLATIONS, 'en');
 
   Object.entries({
     '--color-inverse': 'rgb(255, 255, 255)',
@@ -35,6 +38,7 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     timer,
     inputManager,
     audioMixer,
+    translator,
   };
 
   const sceneSystem = await titleScreen(state);

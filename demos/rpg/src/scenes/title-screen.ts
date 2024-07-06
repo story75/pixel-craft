@@ -1,11 +1,12 @@
 import { Sprite, sprite, tilingSprite } from '@pixel-craft/renderer';
-import { OptionList, Slider } from '@pixel-craft/state';
 import { easeInOutQuad, Tween } from '@pixel-craft/tweening';
-import { TitleScreenMainMenu, TitleScreenSettings, TitleScreenWakeUpPrompt } from '@pixel-craft/ui';
 import { State } from '../state';
+import { TitleScreenMainMenu } from './ui/main-menu';
+import { TitleScreenSettings } from './ui/settings';
+import { TitleScreenWakeUpPrompt } from './ui/wake-up-prompt';
 
 export async function titleScreen(state: State) {
-  const { textureLoader, canvas, root, audioMixer, inputManager, timer } = state;
+  const { textureLoader, canvas, root, audioMixer, inputManager, timer, translator } = state;
 
   const bgm = await audioMixer.load('assets/jrpg-piano/jrpg-piano.mp3');
   bgm.loop = true;
@@ -75,160 +76,35 @@ export async function titleScreen(state: State) {
   const backgroundSpeed = 0.001;
 
   const titleScreenWakeUpPrompt = new TitleScreenWakeUpPrompt();
+  titleScreenWakeUpPrompt.inputManager = inputManager;
+  titleScreenWakeUpPrompt.translator = translator;
   const titleScreenMainMenu = new TitleScreenMainMenu();
+  titleScreenMainMenu.inputManager = inputManager;
+  titleScreenMainMenu.translator = translator;
   const titleScreenSettings = new TitleScreenSettings();
+  titleScreenSettings.inputManager = inputManager;
+  titleScreenSettings.translator = translator;
 
-  let activeView: TitleScreenMainMenu | TitleScreenSettings = titleScreenMainMenu;
-  titleScreenMainMenu.optionList = new OptionList({
-    label: 'Main Menu',
-    options: [
-      { label: 'New Game', active: true },
-      { label: 'Continue' },
-      {
-        label: 'Settings',
-        accept: () => {
-          root.appendChild(titleScreenSettings);
-          activeView = titleScreenSettings;
-        },
-      },
-      { label: 'Quit' },
-    ],
+  titleScreenWakeUpPrompt.addEventListener(
+    'unlocked',
+    () => {
+      root.removeChild(titleScreenWakeUpPrompt);
+      root.appendChild(titleScreenMainMenu);
+    },
+    { once: true },
+  );
+
+  titleScreenMainMenu.addEventListener('settings', () => {
+    titleScreenMainMenu.active = false;
+    root.appendChild(titleScreenSettings);
   });
 
-  titleScreenSettings.settings = new OptionList<string | number>({
-    label: 'Settings',
-    options: [
-      new OptionList({
-        label: 'Language',
-        options: [{ label: 'English', active: true }, { label: 'German' }, { label: 'Spanish' }],
-      }),
-      new OptionList({
-        label: 'Font Face',
-        options: [
-          {
-            label: 'Monocraft',
-            active: true,
-            select: () => {
-              document.body.style.fontFamily = 'Monocraft';
-            },
-          },
-          {
-            label: 'Arial',
-            select: () => {
-              document.body.style.fontFamily = 'Arial';
-            },
-          },
-        ],
-      }),
-      new Slider({
-        label: 'Master Volume',
-        value: 100,
-        min: 0,
-        max: 100,
-        step: 1,
-      }),
-      new Slider({
-        label: 'BGM Volume',
-        value: 100,
-        min: 0,
-        max: 100,
-        step: 1,
-      }),
-      new Slider({
-        label: 'SFX Volume',
-        value: 100,
-        min: 0,
-        max: 100,
-        step: 1,
-      }),
-      new Slider({
-        label: 'Voice Volume',
-        value: 100,
-        min: 0,
-        max: 100,
-        step: 1,
-      }),
-    ],
+  titleScreenSettings.addEventListener('cancel', () => {
+    root.removeChild(titleScreenSettings);
+    titleScreenMainMenu.active = true;
   });
 
   root.appendChild(titleScreenWakeUpPrompt);
-  const onWakeUp = () => {
-    root.removeChild(titleScreenWakeUpPrompt);
-    root.appendChild(titleScreenMainMenu);
-
-    inputManager.addEventListener('up', () => {
-      switch (activeView) {
-        case titleScreenMainMenu:
-          titleScreenMainMenu.optionList.previous();
-          break;
-        case titleScreenSettings:
-          titleScreenSettings.settings.previous();
-          break;
-      }
-    });
-    inputManager.addEventListener('down', () => {
-      switch (activeView) {
-        case titleScreenMainMenu:
-          titleScreenMainMenu.optionList.next();
-          break;
-        case titleScreenSettings:
-          titleScreenSettings.settings.next();
-          break;
-      }
-    });
-    inputManager.addEventListener('left', () => {
-      switch (activeView) {
-        case titleScreenSettings:
-          const option = titleScreenSettings.settings.option;
-          switch (option.type) {
-            case 'slider':
-              const slider = option as Slider;
-              slider.decrement();
-              break;
-            case 'option-list':
-              const optionList = option as OptionList;
-              optionList.previous();
-              break;
-          }
-          titleScreenSettings.settings.change();
-          break;
-      }
-    });
-    inputManager.addEventListener('right', () => {
-      switch (activeView) {
-        case titleScreenSettings:
-          const option = titleScreenSettings.settings.option;
-          switch (option.type) {
-            case 'slider':
-              const slider = option as Slider;
-              slider.increment();
-              break;
-            case 'option-list':
-              const optionList = option as OptionList;
-              optionList.next();
-              break;
-          }
-          titleScreenSettings.settings.change();
-          break;
-      }
-    });
-    inputManager.addEventListener('accept', () => {
-      switch (activeView) {
-        case titleScreenMainMenu:
-          titleScreenMainMenu.optionList.option.accept?.();
-      }
-    });
-    inputManager.addEventListener('cancel', () => {
-      switch (activeView) {
-        case titleScreenSettings:
-          root.removeChild(titleScreenSettings);
-          activeView = titleScreenMainMenu;
-          break;
-      }
-    });
-  };
-
-  inputManager.addEventListener('keydown', onWakeUp, { once: true });
 
   return (now: number) => {
     tween.update(timer.frameTime);

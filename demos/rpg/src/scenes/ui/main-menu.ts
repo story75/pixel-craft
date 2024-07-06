@@ -1,5 +1,7 @@
-import { OptionList } from '@pixel-craft/state';
-import { LitElement, css, html, unsafeCSS } from 'lit';
+import { InputManager } from '@pixel-craft/input';
+import { getOption, nextOption, Option, OptionList, previousOption } from '@pixel-craft/state';
+import { Translator } from '@pixel-craft/translation';
+import { css, html, LitElement, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import icon from './pointer.png';
@@ -77,22 +79,93 @@ export class TitleScreenMainMenu extends LitElement {
   `;
 
   @property()
-  accessor optionList: OptionList = new OptionList({
+  accessor active = false;
+
+  @property()
+  accessor inputManager!: InputManager;
+
+  @property()
+  accessor translator!: Translator;
+
+  @property()
+  accessor optionList: OptionList<Option> = {
+    type: 'option-list',
     label: 'Main Menu',
-    options: [{ label: 'New Game', active: true }, { label: 'Continue' }, { label: 'Settings' }, { label: 'Quit' }],
-  });
+    options: [
+      {
+        label: 'TITLE_SCREEN.MAIN_MENU.NEW_GAME',
+        active: true,
+        accept: () => this.dispatchEvent(new CustomEvent('new-game')),
+      },
+      { label: 'TITLE_SCREEN.MAIN_MENU.CONTINUE', accept: () => this.dispatchEvent(new CustomEvent('continue')) },
+      { label: 'TITLE_SCREEN.MAIN_MENU.SETTINGS', accept: () => this.dispatchEvent(new CustomEvent('settings')) },
+      { label: 'TITLE_SCREEN.MAIN_MENU.QUIT', accept: () => this.dispatchEvent(new CustomEvent('quit')) },
+    ],
+  };
+
+  #subscriptions: (() => void)[] = [];
 
   connectedCallback() {
     super.connectedCallback();
-    this.optionList.addEventListener('change', () => this.requestUpdate());
+    this.active = true;
+
+    if (!this.inputManager) {
+      throw new Error('InputManager is required');
+    }
+
+    if (!this.translator) {
+      throw new Error('Translator is required');
+    }
+
+    this.#subscriptions.push(
+      this.inputManager.addEventListener('up', () => {
+        if (!this.active) {
+          return;
+        }
+
+        previousOption(this.optionList);
+        this.requestUpdate();
+      }),
+    );
+
+    this.#subscriptions.push(
+      this.inputManager.addEventListener('down', () => {
+        if (!this.active) {
+          return;
+        }
+
+        nextOption(this.optionList);
+        this.requestUpdate();
+      }),
+    );
+
+    this.#subscriptions.push(
+      this.inputManager.addEventListener('accept', () => {
+        if (!this.active) {
+          return;
+        }
+
+        getOption(this.optionList).accept?.();
+      }),
+    );
   }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.active = false;
+
+    for (const unsubscribe of this.#subscriptions) {
+      unsubscribe();
+    }
+  }
+
   render() {
     return map(
       this.optionList.options,
       (option) =>
         html` <pixel-craft-page-title-screen-main-menu-option
           ?active=${option.active}
-          text=${option.label}
+          text=${this.translator.translate(option.label)}
         ></pixel-craft-page-title-screen-main-menu-option>`,
     );
   }

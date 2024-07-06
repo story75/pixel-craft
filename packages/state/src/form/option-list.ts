@@ -1,86 +1,45 @@
-import { EventBus } from '@pixel-craft/event-bus';
-import { Option } from './option';
+import { Option, OptionList } from './option';
 
-type OptionListEventMap = {
-  change: CustomEvent<Option<unknown>>;
-};
+export function getIndex<T extends Option>(optionList: OptionList<T>): number {
+  return optionList.options.findIndex((option) => option.active);
+}
 
-export type OptionListOptions<T = string> = Option<T> & {
-  options: Option<T>[];
-  cycle?: boolean;
-};
+export function getOption<T extends Option>(optionList: OptionList<T>): T {
+  const index = getIndex(optionList);
+  return optionList.options[index];
+}
 
-export class OptionList<T = string> extends EventBus<OptionListEventMap> implements Option<T> {
-  public readonly type = 'option-list';
+function toggleOptions<T extends Option>(optionList: OptionList<T>, newIndex: number): void {
+  const oldIndex = getIndex(optionList);
+  optionList.options[oldIndex].active = false;
+  optionList.options[oldIndex].deselect?.();
+  optionList.options[newIndex].active = true;
+  optionList.options[newIndex].select?.();
+  optionList.change?.();
+}
 
-  #props: OptionListOptions<T>;
-  constructor(props: OptionListOptions<T>) {
-    super();
-    this.#props = props;
+export function nextOption<T extends Option>(optionList: OptionList<T>): void {
+  let newIndex: number;
+  const currentIndex = getIndex(optionList);
 
-    const activeIndex = this.index;
-    if (activeIndex === -1) {
-      this.options[0].active = true;
-    }
+  if (optionList.cycle) {
+    newIndex = (currentIndex + 1) % optionList.options.length;
+  } else {
+    newIndex = Math.min(currentIndex + 1, optionList.options.length - 1);
   }
 
-  get options(): Option<T>[] {
-    return this.#props.options;
+  toggleOptions(optionList, newIndex);
+}
+
+export function previousOption<T extends Option>(optionList: OptionList<T>): void {
+  let newIndex: number;
+  const currentIndex = getIndex(optionList);
+
+  if (optionList.cycle) {
+    newIndex = (currentIndex - 1 + optionList.options.length) % optionList.options.length;
+  } else {
+    newIndex = Math.max(currentIndex - 1, 0);
   }
 
-  get label(): string {
-    return this.#props.label;
-  }
-
-  get cycle(): boolean {
-    return this.#props.cycle ?? false;
-  }
-
-  get option(): Option<T> {
-    return this.options[this.index];
-  }
-
-  get index(): number {
-    return this.options.findIndex((option) => option.active);
-  }
-
-  get value(): T | undefined {
-    return this.option.value;
-  }
-
-  get active(): boolean {
-    return this.#props.active ?? false;
-  }
-
-  set active(active: boolean) {
-    this.#props.active = active;
-  }
-  #toggleActive(newActiveIndex: number): void {
-    const oldIndex = this.index;
-    this.options[oldIndex].active = false;
-    this.options[oldIndex].deselect?.();
-    this.options[newActiveIndex].active = true;
-    this.options[newActiveIndex].select?.();
-
-    this.dispatchEvent(new CustomEvent('change', { detail: this.option }));
-  }
-  next(): void {
-    const newActiveIndex = this.cycle
-      ? (this.index + 1) % this.options.length
-      : Math.min(this.index + 1, this.options.length - 1);
-
-    this.#toggleActive(newActiveIndex);
-  }
-
-  previous(): void {
-    const newActiveIndex = this.cycle
-      ? (this.index - 1 + this.options.length) % this.options.length
-      : Math.max(this.index - 1, 0);
-
-    this.#toggleActive(newActiveIndex);
-  }
-
-  change(): void {
-    this.dispatchEvent(new CustomEvent('change', { detail: this.option }));
-  }
+  toggleOptions(optionList, newIndex);
 }

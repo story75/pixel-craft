@@ -15,7 +15,7 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       # run scripts
       - run: bun install # renovate does not update the lockfile properly, so --frozen-lockfile would break dependency updates
-      - run: bun run build # will run check, which must run before lint
-#      - run: bun lint # TODO: Re-enable once ${configDir} is supported in ESLint with TypeScript 5.5
+      - run: bun run build
+      - run: bun lint
       - run: bun format
       - run: bun test

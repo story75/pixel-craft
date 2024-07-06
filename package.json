@@ -20,22 +20,10 @@
     "@biomejs/biome": "^1.8.3",
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "@eslint/js": "^9.5.0",
     "@types/bun": "latest",
-    "eslint": "^9.5.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "globals": "^15.6.0",
     "husky": "^9.0.11",
-    "lint-staged": "^15.2.7",
-    "prettier": "^3.3.2",
-    "prettier-plugin-organize-imports": "^3.2.4",
-    "turbo": "^2.0.5",
-    "typescript": "^5.5.2",
-    "typescript-eslint": "^7.14.1",
-    "wrangler": "^3.62.0"
-  },
-  "lint-staged": {
-    "*.{ts,mjs,js,md,json,yml,yaml,html}": ["biome check --write"]
+    "turbo": "^2.0.6",
+    "typescript": "^5.5.3",
+    "wrangler": "^3.63.1"
   }
 }

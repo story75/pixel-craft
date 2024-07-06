@@ -21,6 +21,11 @@ This was done to simplify the code on the integration side and to make the `Inpu
 This offers more control over the event handling e.g. handling multiple keys with the same listener or listening to any keys,
 without the need for a separate api like `onAnyKey`.
 
+#### Remove `Instance` property from `InputManager`, `AudioMixer`, `Translator` and `Timer`
+
+The `Instance` property has been removed from the `InputManager`, `AudioMixer`, `Translator` and `Timer` classes.
+This change was done in favor of a handling the instances in user-land code and decide there if a singleton is needed and how to handle it e.g. via a DI container.
+
 ### Features
 
 #### Add `@pixel-craft/event-bus` package
@@ -42,6 +47,22 @@ For an example look at the `dungeon-generator` demo and see how the parameters c
 
 When building libraries, the dependencies are now marked as external. This should reduce the bundle size and improve performance.
 Also, this fixes a bug where singletons class would exist multiple times in the bundle and not work as expected.
+
+#### UI demos
+
+Some of the demos have been updated to implement UIs via `lit`. This is a work in progress and will be expanded in the future.
+Initially, the plan was to create a separate package for UI components, but this was scrapped in favor of leaving this entirely up to the user.
+
+Due to the nature of the framework the best fit will be to leverage the DOM for most of your UI needs. You can use whatever framework you like for this,
+but `lit` is a good choice because it is lightweight and has a good developer experience, while also leveraging the web components standard.
+
+Since UIs are very specific to the project, a UI package could only sensibly provide very basic components, which would not be worth the effort.
+So if you just need something very basic, you can copy & paste the components from the demos, or create your own components.
+
+#### Switch to Biome
+
+The project now uses Biome instead of ESLint and Prettier. This should improve the performance of the editor and the build process.
+This also remedies the issue where ESLint would not work correctly with the new TypeScript 5.5 features, because Biome has its own parser.
 
 ## 0.9.4 (15.06.2024)
 

@@ -5,15 +5,6 @@
  */
 export class Timer {
   /**
-   * The singleton instance of the Timer
-   *
-   * @remarks
-   * This property is set when the Timer is instantiated the first time.
-   * New instances of the Timer will overwrite the existing instance.
-   */
-  static Instance: Timer | undefined;
-
-  /**
    * How much time has passed in relation to the target frame rate
    *
    * @remarks
@@ -37,9 +28,7 @@ export class Timer {
    */
   private lastFrame = performance.now();
 
-  constructor(private readonly targetFrameRate = 0.06) {
-    Timer.Instance = this;
-  }
+  constructor(private readonly targetFrameRate = 0.06) {}
 
   get deltaTime(): number {
     return this._deltaTime;

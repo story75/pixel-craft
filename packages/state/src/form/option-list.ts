@@ -11,11 +11,14 @@ export function getOption<T extends Option>(optionList: OptionList<T>): T {
 
 function toggleOptions<T extends Option>(optionList: OptionList<T>, newIndex: number): void {
   const oldIndex = getIndex(optionList);
-  optionList.options[oldIndex].active = false;
-  optionList.options[oldIndex].deselect?.();
-  optionList.options[newIndex].active = true;
-  optionList.options[newIndex].select?.();
-  optionList.change?.();
+  const oldOption = optionList.options[oldIndex];
+  const newOption = optionList.options[newIndex];
+
+  oldOption.active = false;
+  oldOption.deselect?.(oldOption);
+  newOption.active = true;
+  newOption.select?.(newOption);
+  optionList.change?.(newOption);
 }
 
 export function nextOption<T extends Option>(optionList: OptionList<T>): void {

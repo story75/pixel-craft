@@ -19,6 +19,7 @@ import '../../ui/components/modal';
 import '../../ui/components/option';
 import '../../ui/components/option-list';
 import '../../ui/components/slider';
+import type { AudioMixer } from '@pixel-craft/audio';
 import icon from './pointer.png';
 
 @customElement('pixel-craft-page-title-screen-settings-setting')
@@ -113,6 +114,9 @@ export class TitleScreenSettings extends LitElement {
   accessor inputManager!: InputManager;
 
   @property()
+  accessor audioMixer!: AudioMixer;
+
+  @property()
   accessor translator!: Translator;
 
   @property()
@@ -127,24 +131,21 @@ export class TitleScreenSettings extends LitElement {
         options: [
           {
             label: 'TITLE_SCREEN.SETTINGS.LANGUAGE.ENGLISH',
+            value: 'en',
             active: true,
-            select: () => {
-              this.translator.currentLanguage = 'en';
-            },
           },
           {
             label: 'TITLE_SCREEN.SETTINGS.LANGUAGE.GERMAN',
-            select: () => {
-              this.translator.currentLanguage = 'de';
-            },
+            value: 'de',
           },
           {
             label: 'TITLE_SCREEN.SETTINGS.LANGUAGE.SPANISH',
-            select: () => {
-              this.translator.currentLanguage = 'es';
-            },
+            value: 'es',
           },
         ],
+        change: (option) => {
+          this.translator.currentLanguage = (option?.value as string) || 'en';
+        },
       },
       {
         type: 'option-list',
@@ -152,18 +153,17 @@ export class TitleScreenSettings extends LitElement {
         options: [
           {
             label: 'Monocraft',
+            value: 'Monocraft',
             active: true,
-            select: () => {
-              document.body.style.fontFamily = 'Monocraft';
-            },
           },
           {
             label: 'Arial',
-            select: () => {
-              document.body.style.fontFamily = 'Arial';
-            },
+            value: 'Arial',
           },
         ],
+        change: (option) => {
+          document.body.style.fontFamily = (option?.value as string) || 'Monocraft';
+        },
       },
       {
         type: 'slider',
@@ -172,6 +172,10 @@ export class TitleScreenSettings extends LitElement {
         min: 0,
         max: 100,
         step: 1,
+        change: (masterVolume) => {
+          const volume = masterVolume?.value ?? 100;
+          this.audioMixer.masterVolume = volume / 100;
+        },
       },
       {
         type: 'slider',
@@ -180,6 +184,10 @@ export class TitleScreenSettings extends LitElement {
         min: 0,
         max: 100,
         step: 1,
+        change: (bgmVolume) => {
+          const volume = bgmVolume?.value ?? 100;
+          this.audioMixer.bgmVolume = volume / 100;
+        },
       },
       {
         type: 'slider',
@@ -188,6 +196,17 @@ export class TitleScreenSettings extends LitElement {
         min: 0,
         max: 100,
         step: 1,
+        change: (sfxVolume) => {
+          const volume = sfxVolume?.value ?? 100;
+          this.audioMixer.sfxVolume = volume / 100;
+
+          if (volume === 99 || volume % 5 === 0) {
+            this.dispatchEvent(new CustomEvent('play-sfx'));
+          }
+        },
+        accept: () => {
+          this.dispatchEvent(new CustomEvent('play-sfx'));
+        },
       },
       {
         type: 'slider',
@@ -196,6 +215,17 @@ export class TitleScreenSettings extends LitElement {
         min: 0,
         max: 100,
         step: 1,
+        change: (voiceVolume) => {
+          const volume = voiceVolume?.value ?? 100;
+          this.audioMixer.voiceVolume = volume / 100;
+
+          if (volume === 99 || volume % 10 === 0) {
+            this.dispatchEvent(new CustomEvent('play-voice'));
+          }
+        },
+        accept: () => {
+          this.dispatchEvent(new CustomEvent('play-voice'));
+        },
       },
     ],
   };
@@ -212,6 +242,10 @@ export class TitleScreenSettings extends LitElement {
 
     if (!this.translator) {
       throw new Error('Translator is required');
+    }
+
+    if (!this.audioMixer) {
+      throw new Error('AudioMixer is required');
     }
 
     this.#subscriptions.push(
@@ -281,6 +315,19 @@ export class TitleScreenSettings extends LitElement {
         }
 
         this.dispatchEvent(new CustomEvent('cancel'));
+      }),
+    );
+
+    this.#subscriptions.push(
+      this.inputManager.addEventListener('accept', () => {
+        if (!this.active) {
+          return;
+        }
+
+        const option = getOption(this.settings);
+        if (option.accept) {
+          option.accept(option);
+        }
       }),
     );
   }

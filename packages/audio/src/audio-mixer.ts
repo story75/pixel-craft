@@ -88,11 +88,18 @@ export class AudioMixer {
    *
    * @param url - The URL to load the audio source from.
    */
-  async load(url: string): Promise<AudioBufferSourceNode> {
+  async load(url: string): Promise<AudioBuffer> {
     const response = await fetch(url);
     const data = await response.arrayBuffer();
-    const audioBuffer = await this.audioContext.decodeAudioData(data);
+    return this.audioContext.decodeAudioData(data);
+  }
 
+  /**
+   * Create an audio source from an audio buffer.
+   *
+   * @param audioBuffer - The audio buffer to create the audio source from. Create this via `load()`.
+   */
+  createSource(audioBuffer: AudioBuffer): AudioBufferSourceNode {
     const source = this.audioContext.createBufferSource();
     source.buffer = audioBuffer;
 
@@ -102,7 +109,7 @@ export class AudioMixer {
   /**
    * Play an audio source on a specific channel.
    *
-   * @param source - The audio source to play. Create this via `load()`.
+   * @param source - The audio source to play. Create this via `createBufferSource()`.
    * @param channel - The channel to play the audio source on.
    */
   play(source: AudioBufferSourceNode, channel: 'bgm' | 'sfx' | 'voice'): void {

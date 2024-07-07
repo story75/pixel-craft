@@ -7,7 +7,8 @@ import Stats from 'stats.js';
 export async function application(canvas: HTMLCanvasElement): Promise<void> {
   const audioMixer = new AudioMixer();
 
-  const bgm = await audioMixer.load('assets/jrpg-piano/jrpg-piano.mp3');
+  const bgmBuffer = await audioMixer.load('assets/jrpg-piano/jrpg-piano.mp3');
+  const bgm = audioMixer.createSource(bgmBuffer);
   bgm.loop = true;
   audioMixer.play(bgm, 'bgm');
 

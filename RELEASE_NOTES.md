@@ -26,6 +26,13 @@ without the need for a separate api like `onAnyKey`.
 The `Instance` property has been removed from the `InputManager`, `AudioMixer`, `Translator` and `Timer` classes.
 This change was done in favor of a handling the instances in user-land code and decide there if a singleton is needed and how to handle it e.g. via a DI container.
 
+#### `AudioMixer.load` now returns an `AudioBuffer` instead of an `AudioBufferSourceNode`
+
+The `AudioBufferSourceNode`s can only be played once, so it was not a good idea to return them from the `load` function.
+Instead, the `load` function now returns an `AudioBuffer` which can be used to create multiple `AudioBufferSourceNode`s via the `createSource` function.
+
+A future version will likely introduce a higher level API to handle audio sources and buffers, but for now the mixer will stick to the lower level API.
+
 ### Features
 
 #### Add `@pixel-craft/event-bus` package

@@ -4,8 +4,7 @@ import type { Translator } from '@pixel-craft/translation';
 import { LitElement, css, html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import icon from './pointer.png';
-import './settings';
+import icon from '../../../ui/pointer.png';
 
 @customElement('pixel-craft-page-title-screen-main-menu-option')
 export class TitleScreenMainMenuOption extends LitElement {
@@ -145,7 +144,8 @@ export class TitleScreenMainMenu extends LitElement {
           return;
         }
 
-        getOption(this.optionList).accept?.();
+        const option = getOption(this.optionList);
+        option.accept?.(option);
       }),
     );
   }

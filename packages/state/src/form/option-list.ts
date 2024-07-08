@@ -9,6 +9,10 @@ export function getOption<T extends Option>(optionList: OptionList<T>): T {
   return optionList.options[index];
 }
 
+export function setOption<T extends Option>(optionList: OptionList<T>, option: T): void {
+  const index = optionList.options.findIndex((o) => o === option);
+  toggleOptions(optionList, index);
+}
 function toggleOptions<T extends Option>(optionList: OptionList<T>, newIndex: number): void {
   const oldIndex = getIndex(optionList);
   const oldOption = optionList.options[oldIndex];

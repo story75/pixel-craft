@@ -3,9 +3,10 @@ export type Option<T = unknown> = {
   label: string;
   value?: T;
   active?: boolean;
-  accept?: (option?: Option) => void;
-  select?: (option?: Option) => void;
-  deselect?: (option?: Option) => void;
+  init?: ((option: Option) => void) | (() => void);
+  accept?: ((option: Option) => void) | (() => void);
+  select?: ((option: Option) => void) | (() => void);
+  deselect?: ((option: Option) => void) | (() => void);
 };
 
 export type Slider = Option<number> & {
@@ -14,7 +15,7 @@ export type Slider = Option<number> & {
   min: number;
   max: number;
   step: number;
-  change?: (option?: Slider) => void;
+  change?: ((option: Slider) => void) | (() => void);
 };
 
 export function isSlider(option: Option): option is Slider {
@@ -27,7 +28,7 @@ export type OptionList<T extends Option, O = OptionType<T>> = Option<O> & {
   type: 'option-list';
   options: T[];
   cycle?: boolean;
-  change?: (option?: Option) => void;
+  change?: ((option: Option) => void) | (() => void);
 };
 
 export function isOptionList(option: Option): option is OptionList<Option> {

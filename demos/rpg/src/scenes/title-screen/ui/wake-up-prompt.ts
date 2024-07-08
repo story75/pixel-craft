@@ -2,7 +2,7 @@ import type { InputManager } from '@pixel-craft/input';
 import type { Translator } from '@pixel-craft/translation';
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import '../../ui/components/pulse';
+import '../../../ui/components/pulse';
 
 @customElement('pixel-craft-page-title-screen-wake-up-prompt')
 export class TitleScreenWakeUpPrompt extends LitElement {

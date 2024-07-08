@@ -10,20 +10,21 @@ import {
   isSlider,
   nextOption,
   previousOption,
+  setOption,
 } from '@pixel-craft/state';
 import type { Translator } from '@pixel-craft/translation';
 import { LitElement, css, html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
-import '../../ui/components/modal';
-import '../../ui/components/option';
-import '../../ui/components/option-list';
-import '../../ui/components/slider';
-import type { AudioMixer } from '@pixel-craft/audio';
-import icon from './pointer.png';
+import '../components/modal';
+import '../components/option';
+import '../components/option-list';
+import '../components/slider';
+import type { State } from '../../state';
+import icon from '../pointer.png';
 
-@customElement('pixel-craft-page-title-screen-settings-setting')
-export class TitleScreenSettingsSetting extends LitElement {
+@customElement('pixel-craft-modal-settings-setting')
+export class ModalSettingsSetting extends LitElement {
   static styles = css`
     :host {
       display: flex;
@@ -80,8 +81,8 @@ export class TitleScreenSettingsSetting extends LitElement {
   }
 }
 
-@customElement('pixel-craft-page-title-screen-settings')
-export class TitleScreenSettings extends LitElement {
+@customElement('pixel-craft-modal-settings')
+export class ModalSettings extends LitElement {
   static styles = css`
     :host {
       display: flex;
@@ -114,7 +115,7 @@ export class TitleScreenSettings extends LitElement {
   accessor inputManager!: InputManager;
 
   @property()
-  accessor audioMixer!: AudioMixer;
+  accessor state!: State;
 
   @property()
   accessor translator!: Translator;
@@ -143,8 +144,15 @@ export class TitleScreenSettings extends LitElement {
             value: 'es',
           },
         ],
+        init: (option) => {
+          const optionList = option as OptionList<Option>;
+          const activeLanguage = optionList.options.find((o) => o.value === this.state.language);
+          if (activeLanguage && activeLanguage.active !== true) {
+            setOption(optionList, activeLanguage);
+          }
+        },
         change: (option) => {
-          this.translator.currentLanguage = (option?.value as string) || 'en';
+          this.state.language = option.value as string;
         },
       },
       {
@@ -161,8 +169,15 @@ export class TitleScreenSettings extends LitElement {
             value: 'Arial',
           },
         ],
+        init: (option) => {
+          const optionList = option as OptionList<Option>;
+          const activeFont = optionList.options.find((o) => o.value === this.state.font);
+          if (activeFont && activeFont.active !== true) {
+            setOption(optionList, activeFont);
+          }
+        },
         change: (option) => {
-          document.body.style.fontFamily = (option?.value as string) || 'Monocraft';
+          this.state.font = option.value as string;
         },
       },
       {
@@ -172,9 +187,11 @@ export class TitleScreenSettings extends LitElement {
         min: 0,
         max: 100,
         step: 1,
+        init: (masterVolume) => {
+          masterVolume.value = this.state.masterVolume * 100;
+        },
         change: (masterVolume) => {
-          const volume = masterVolume?.value ?? 100;
-          this.audioMixer.masterVolume = volume / 100;
+          this.state.masterVolume = masterVolume.value / 100;
         },
       },
       {
@@ -184,9 +201,11 @@ export class TitleScreenSettings extends LitElement {
         min: 0,
         max: 100,
         step: 1,
+        init: (bgmVolume) => {
+          bgmVolume.value = this.state.bgmVolume * 100;
+        },
         change: (bgmVolume) => {
-          const volume = bgmVolume?.value ?? 100;
-          this.audioMixer.bgmVolume = volume / 100;
+          this.state.bgmVolume = bgmVolume.value / 100;
         },
       },
       {
@@ -196,11 +215,13 @@ export class TitleScreenSettings extends LitElement {
         min: 0,
         max: 100,
         step: 1,
+        init: (sfxVolume) => {
+          sfxVolume.value = this.state.sfxVolume * 100;
+        },
         change: (sfxVolume) => {
-          const volume = sfxVolume?.value ?? 100;
-          this.audioMixer.sfxVolume = volume / 100;
+          this.state.sfxVolume = sfxVolume.value / 100;
 
-          if (volume === 99 || volume % 5 === 0) {
+          if (sfxVolume.value === 99 || sfxVolume.value % 5 === 0) {
             this.dispatchEvent(new CustomEvent('play-sfx'));
           }
         },
@@ -215,11 +236,13 @@ export class TitleScreenSettings extends LitElement {
         min: 0,
         max: 100,
         step: 1,
+        init: (voiceVolume) => {
+          voiceVolume.value = this.state.voiceVolume * 100;
+        },
         change: (voiceVolume) => {
-          const volume = voiceVolume?.value ?? 100;
-          this.audioMixer.voiceVolume = volume / 100;
+          this.state.voiceVolume = voiceVolume.value / 100;
 
-          if (volume === 99 || volume % 10 === 0) {
+          if (voiceVolume.value === 99 || voiceVolume.value % 10 === 0) {
             this.dispatchEvent(new CustomEvent('play-voice'));
           }
         },
@@ -244,8 +267,14 @@ export class TitleScreenSettings extends LitElement {
       throw new Error('Translator is required');
     }
 
-    if (!this.audioMixer) {
-      throw new Error('AudioMixer is required');
+    if (!this.state) {
+      throw new Error('State is required');
+    }
+
+    for (const option of this.settings.options) {
+      if (option.init) {
+        option.init(option);
+      }
     }
 
     this.#subscriptions.push(
@@ -348,7 +377,7 @@ export class TitleScreenSettings extends LitElement {
           switch (true) {
             case isOptionList(setting):
               return html`
-                <pixel-craft-page-title-screen-settings-setting
+                <pixel-craft-modal-settings-setting
                   label=${this.translator.translate(setting.label)}
                   ?active=${setting.active}
                 >
@@ -362,11 +391,11 @@ export class TitleScreenSettings extends LitElement {
                       `,
                     )}
                   </pixel-craft-option-list>
-                </pixel-craft-page-title-screen-settings-setting>
+                </pixel-craft-modal-settings-setting>
               `;
             case isSlider(setting):
               return html`
-                <pixel-craft-page-title-screen-settings-setting
+                <pixel-craft-modal-settings-setting
                   label=${this.translator.translate(setting.label)}
                   ?active=${setting.active}
                 >
@@ -376,7 +405,7 @@ export class TitleScreenSettings extends LitElement {
                     max=${setting.max}
                     step=${setting.step}
                   ></pixel-craft-slider>
-                </pixel-craft-page-title-screen-settings-setting>
+                </pixel-craft-modal-settings-setting>
               `;
           }
         })}

@@ -48,6 +48,29 @@ The `@pixel-craft/event-bus` package is a thin wrapper around EventTarget to add
 With this feature set you can now create dungeon maps with rooms and corridors.
 For an example look at the `dungeon-generator` demo and see how the parameters can be tweaked to create different maps.
 
+#### Add `persistStoreIntoKey` and `loadStoreFromKey` functions to `@pixel-craft/store`
+
+The `persistStoreIntoKey` and `loadStoreFromKey` functions allow you to save and load the state of a store into local storage.
+The key difference is that the default mechanism is to store each individual property into a separate key, 
+which can be useful for debugging and development, but also for performance reasons to avoid serializing the entire store on each change.
+
+These new methods should be used to store copies of the store and load them back at a later time.
+You can e.g. use the store for autosaving the game state and use the new methods for your actual save slots.
+
+#### `forcePersistValues` now returns a Promise
+
+The `forcePersistValues` function now returns a Promise that resolves when the values have been persisted.
+This allows you to wait for the values to be persisted before continuing with other operations.
+Previously, the function would return `void` and the values would be persisted asynchronously.
+
+#### Add `@storeName` decorator to `@pixel-craft/store`
+
+The `@storeName` decorator allows you to set a custom name for a store. This can be used to change the default name of the store in the local storage.
+The new behaviour is as follows:
+- use `store` option of `@persist` to set the store name if set
+- (new) use `@storeName` to set the store name if set
+- just use property name if neither is set
+
 ### Fixes and improvements
 
 #### Mark dependencies as external when building libraries

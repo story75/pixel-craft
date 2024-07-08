@@ -1,14 +1,16 @@
 import { randomInRange } from '@pixel-craft/math';
 import { type Sprite, sprite, tilingSprite } from '@pixel-craft/renderer';
 import { Tween, easeInOutQuad } from '@pixel-craft/tweening';
-import type { State } from '../state';
-import { Transition } from '../ui/components/transition';
+import { createTransition } from '../../create-transition';
+import type { Singletons } from '../../singletons';
+import { Transition } from '../../ui/components/transition';
+import { ModalSaveStates } from '../../ui/modals/save-states';
+import { ModalSettings } from '../../ui/modals/settings';
 import { TitleScreenMainMenu } from './ui/main-menu';
-import { TitleScreenSettings } from './ui/settings';
 import { TitleScreenWakeUpPrompt } from './ui/wake-up-prompt';
 
-export async function titleScreen(state: State) {
-  const { textureLoader, canvas, root, audioMixer, inputManager, timer, translator } = state;
+export async function titleScreen(singletons: Singletons) {
+  const { textureLoader, canvas, root, audioMixer, inputManager, timer, translator, store, state } = singletons;
 
   const bgmBuffer = await audioMixer.load('assets/jrpg-piano/jrpg-piano.mp3');
   const bgm = audioMixer.createSource(bgmBuffer);
@@ -81,7 +83,7 @@ export async function titleScreen(state: State) {
   ];
 
   for (const sprite of sprites) {
-    state.store.add(sprite);
+    store.add(sprite);
   }
 
   const backgroundSpeed = 0.001;
@@ -92,10 +94,13 @@ export async function titleScreen(state: State) {
   const titleScreenMainMenu = new TitleScreenMainMenu();
   titleScreenMainMenu.inputManager = inputManager;
   titleScreenMainMenu.translator = translator;
-  const titleScreenSettings = new TitleScreenSettings();
+  const titleScreenSettings = new ModalSettings();
   titleScreenSettings.inputManager = inputManager;
   titleScreenSettings.translator = translator;
-  titleScreenSettings.audioMixer = audioMixer;
+  titleScreenSettings.state = state;
+  const titleScreenSaveStates = new ModalSaveStates();
+  titleScreenSaveStates.inputManager = inputManager;
+  titleScreenSaveStates.translator = translator;
 
   titleScreenWakeUpPrompt.addEventListener(
     'unlocked',
@@ -111,16 +116,24 @@ export async function titleScreen(state: State) {
     root.appendChild(titleScreenSettings);
   });
 
+  titleScreenMainMenu.addEventListener('continue', () => {
+    titleScreenMainMenu.active = false;
+    root.appendChild(titleScreenSaveStates);
+  });
+
   titleScreenMainMenu.addEventListener('quit', () => {
-    const transition = new Transition();
-    transition.addEventListener('transitionend', () => {
+    createTransition(root, () => {
       window.location.reload();
     });
-    root.appendChild(transition);
   });
 
   titleScreenSettings.addEventListener('cancel', () => {
     root.removeChild(titleScreenSettings);
+    titleScreenMainMenu.active = true;
+  });
+
+  titleScreenSaveStates.addEventListener('cancel', () => {
+    root.removeChild(titleScreenSaveStates);
     titleScreenMainMenu.active = true;
   });
 

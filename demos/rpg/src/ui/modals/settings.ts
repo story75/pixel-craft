@@ -160,9 +160,13 @@ export class ModalSettings extends LitElement {
         label: 'TITLE_SCREEN.SETTINGS.FONT.LABEL',
         options: [
           {
+            label: 'Open Sans',
+            value: 'Open Sans',
+            active: true,
+          },
+          {
             label: 'Monocraft',
             value: 'Monocraft',
-            active: true,
           },
           {
             label: 'Arial',

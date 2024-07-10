@@ -5,6 +5,7 @@ import { loadPersistedValues } from '@pixel-craft/state';
 import { EntityStore } from '@pixel-craft/store';
 import { Timer } from '@pixel-craft/timer';
 import { Translator } from '@pixel-craft/translation';
+import { battle } from './scenes/battle/battle';
 import { titleScreen } from './scenes/title-screen/title-screen';
 import type { Singletons } from './singletons';
 import { State } from './state';
@@ -47,8 +48,8 @@ export async function application(canvas: HTMLCanvasElement): Promise<void> {
     state,
   };
 
-  const sceneSystem = await titleScreen(singletons);
-
+  // const sceneSystem = await titleScreen(singletons);
+  const sceneSystem = await battle(singletons);
   const draw = (now: number) => {
     timer.update(now);
     sceneSystem(now);

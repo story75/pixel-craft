@@ -23,7 +23,7 @@ export class State extends Store {
 
   @property
   @persist()
-  accessor font = 'Monocraft';
+  accessor font = 'Open Sans';
 
   @property
   @persist()

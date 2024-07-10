@@ -3,7 +3,6 @@ import { type Sprite, sprite, tilingSprite } from '@pixel-craft/renderer';
 import { Tween, easeInOutQuad } from '@pixel-craft/tweening';
 import { createTransition } from '../../create-transition';
 import type { Singletons } from '../../singletons';
-import { Transition } from '../../ui/components/transition';
 import { ModalSaveStates } from '../../ui/modals/save-states';
 import { ModalSettings } from '../../ui/modals/settings';
 import { TitleScreenMainMenu } from './ui/main-menu';

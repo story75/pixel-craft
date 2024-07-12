@@ -1,7 +1,7 @@
 import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-@customElement('pixel-craft-option-list')
+@customElement('x-option-list')
 export class OptionList extends LitElement {
   static styles = css`
     :host {
@@ -9,7 +9,7 @@ export class OptionList extends LitElement {
       flex-direction: row;
     }
 
-    ::slotted(pixel-craft-option) {
+    ::slotted(x-option) {
       margin-left: 0.5rem;
 
       &:first-child {

@@ -1,4 +1,4 @@
-import { Observable } from '@pixel-craft/observable';
+import { EventBus } from '@pixel-craft/event-bus';
 
 /**
  * A translation object containing all strings for a specific language.
@@ -13,36 +13,36 @@ export type Translation = {
   [key: string]: Translation | string;
 };
 
+type EventMap = {
+  languageChanged: CustomEvent<{ language: string }>;
+};
+
 /**
  * The Translator is responsible for translating keys into strings.
  */
-export class Translator {
-  /**
-   * An observable that notifies when the language has changed.
-   *
-   * @remarks
-   * The observable will notify with the new language.
-   */
-  public readonly languageChanged: Observable<[language: string]> = new Observable<[language: string]>();
+export class Translator extends EventBus<EventMap> {
+  readonly #translations: Record<string, Translation>;
+  #language: string;
 
-  constructor(
-    private readonly translations: Record<string, Translation>,
-    private _currentLanguage: string,
-  ) {}
+  constructor(translations: Record<string, Translation>, language: string) {
+    super();
+    this.#language = language;
+    this.#translations = translations;
+  }
 
   /**
    * Get the current language.
    */
-  get currentLanguage(): string {
-    return this._currentLanguage;
+  get language(): string {
+    return this.#language;
   }
 
   /**
    * Set the current language.
    */
-  set currentLanguage(language: string) {
-    this._currentLanguage = language;
-    this.languageChanged.notify(language);
+  set language(language: string) {
+    this.#language = language;
+    this.dispatchEvent(new CustomEvent('languageChanged', { detail: { language } }));
   }
 
   /**
@@ -55,7 +55,7 @@ export class Translator {
    */
   translate(key: string): string {
     const parts = key.includes('.') ? key.split('.') : [key];
-    let current: string | Translation = this.translations[this._currentLanguage];
+    let current: string | Translation = this.#translations[this.language];
 
     for (const part of parts) {
       if (typeof current === 'object' && part in current) {

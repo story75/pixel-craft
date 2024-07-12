@@ -4,7 +4,6 @@ import type { Sprite, TextureLoader, WebGPUContext } from '@pixel-craft/renderer
 import type { EntityStore } from '@pixel-craft/store';
 import type { Timer } from '@pixel-craft/timer';
 import type { Translator } from '@pixel-craft/translation';
-import type { State } from './state';
 import type { Root } from './ui/components/root';
 
 export type Singletons = {
@@ -17,5 +16,10 @@ export type Singletons = {
   inputManager: InputManager;
   audioMixer: AudioMixer;
   translator: Translator;
-  state: State;
 };
+
+declare global {
+  interface Window {
+    pixelCraft: Singletons;
+  }
+}

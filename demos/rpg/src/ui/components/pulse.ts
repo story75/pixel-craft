@@ -2,7 +2,7 @@ import { clamp } from '@pixel-craft/math';
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-@customElement('pixel-craft-pulse')
+@customElement('x-pulse')
 export class Pulse extends LitElement {
   static styles = css`
     :host {

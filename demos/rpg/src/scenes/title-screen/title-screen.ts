@@ -2,17 +2,15 @@ import { randomInRange } from '@pixel-craft/math';
 import { type Sprite, sprite, tilingSprite } from '@pixel-craft/renderer';
 import { Tween, easeInOutQuad } from '@pixel-craft/tweening';
 import { createTransition } from '../../create-transition';
-import type { Singletons } from '../../singletons';
-import { ModalSaveStates } from '../../ui/modals/save-states';
-import { ModalSettings } from '../../ui/modals/settings';
+// import { ModalSaveStates } from './ui/save-states';
 import { TitleScreenMainMenu } from './ui/main-menu';
+import { TitleScreenSettings } from './ui/settings';
 import { TitleScreenWakeUpPrompt } from './ui/wake-up-prompt';
 
-export async function titleScreen(singletons: Singletons) {
-  const { textureLoader, canvas, root, audioMixer, inputManager, timer, translator, store, state } = singletons;
+export async function titleScreen() {
+  const { textureLoader, canvas, root, audioMixer, inputManager, timer, store } = window.pixelCraft;
 
-  const bgmBuffer = await audioMixer.load('assets/jrpg-piano/jrpg-piano.mp3');
-  const bgm = audioMixer.createSource(bgmBuffer);
+  const bgm = await audioMixer.load('assets/jrpg-piano/jrpg-piano.mp3');
   bgm.loop = true;
   audioMixer.play(bgm, 'bgm');
 
@@ -88,18 +86,11 @@ export async function titleScreen(singletons: Singletons) {
   const backgroundSpeed = 0.001;
 
   const titleScreenWakeUpPrompt = new TitleScreenWakeUpPrompt();
-  titleScreenWakeUpPrompt.inputManager = inputManager;
-  titleScreenWakeUpPrompt.translator = translator;
   const titleScreenMainMenu = new TitleScreenMainMenu();
-  titleScreenMainMenu.inputManager = inputManager;
-  titleScreenMainMenu.translator = translator;
-  const titleScreenSettings = new ModalSettings();
-  titleScreenSettings.inputManager = inputManager;
-  titleScreenSettings.translator = translator;
-  titleScreenSettings.state = state;
-  const titleScreenSaveStates = new ModalSaveStates();
-  titleScreenSaveStates.inputManager = inputManager;
-  titleScreenSaveStates.translator = translator;
+  const titleScreenSettings = new TitleScreenSettings();
+  // const titleScreenSaveStates = new ModalSaveStates();
+  // titleScreenSaveStates.inputManager = inputManager;
+  // titleScreenSaveStates.translator = translator;
 
   titleScreenWakeUpPrompt.addEventListener(
     'unlocked',
@@ -111,14 +102,14 @@ export async function titleScreen(singletons: Singletons) {
   );
 
   titleScreenMainMenu.addEventListener('settings', () => {
-    titleScreenMainMenu.active = false;
+    root.removeChild(titleScreenMainMenu);
     root.appendChild(titleScreenSettings);
   });
 
-  titleScreenMainMenu.addEventListener('continue', () => {
-    titleScreenMainMenu.active = false;
-    root.appendChild(titleScreenSaveStates);
-  });
+  // titleScreenMainMenu.addEventListener('continue', () => {
+  //   titleScreenMainMenu.active = false;
+  //   root.appendChild(titleScreenSaveStates);
+  // });
 
   titleScreenMainMenu.addEventListener('quit', () => {
     createTransition(root, () => {
@@ -128,44 +119,43 @@ export async function titleScreen(singletons: Singletons) {
 
   titleScreenSettings.addEventListener('cancel', () => {
     root.removeChild(titleScreenSettings);
-    titleScreenMainMenu.active = true;
+    root.appendChild(titleScreenMainMenu);
   });
 
-  titleScreenSaveStates.addEventListener('cancel', () => {
-    root.removeChild(titleScreenSaveStates);
-    titleScreenMainMenu.active = true;
-  });
-
-  let voicePlaying = false;
-  titleScreenSettings.addEventListener('play-voice', () => {
-    if (voicePlaying) {
-      return;
-    }
-
-    const buffer = Math.random() < 0.5 ? realmSyncVoice1Buffer : realmSyncVoice2Buffer;
-    const source = audioMixer.createSource(buffer);
-    source.addEventListener('ended', () => {
-      voicePlaying = false;
-    });
-    audioMixer.play(source, 'voice');
-    voicePlaying = true;
-  });
-
-  let sfxPlaying = false;
-  titleScreenSettings.addEventListener('play-sfx', () => {
-    if (sfxPlaying) {
-      return;
-    }
-
-    const sound = randomInRange(Math.random, 0, 3);
-    const buffer = [sfxConfirmBuffer, sfxSelectBuffer, sfxSwitchBuffer, sfxToggleBuffer][sound];
-    const source = audioMixer.createSource(buffer);
-    source.addEventListener('ended', () => {
-      sfxPlaying = false;
-    });
-    audioMixer.play(source, 'sfx');
-    sfxPlaying = true;
-  });
+  //
+  // titleScreenSaveStates.addEventListener('cancel', () => {
+  //   root.removeChild(titleScreenSaveStates);
+  //   titleScreenMainMenu.active = true;
+  // });
+  //
+  // let voicePlaying = false;
+  // titleScreenSettings.addEventListener('play-voice', () => {
+  //   if (voicePlaying) {
+  //     return;
+  //   }
+  //
+  //   const sound = Math.random() < 0.5 ? realmSyncVoice1Buffer : realmSyncVoice2Buffer;
+  //   sound.addEventListener('ended', () => {
+  //       voicePlaying = false;
+  //   }, { once: true});
+  //   audioMixer.play(sound, 'voice');
+  //   voicePlaying = true;
+  // });
+  //
+  // let sfxPlaying = false;
+  // titleScreenSettings.addEventListener('play-sfx', () => {
+  //   if (sfxPlaying) {
+  //     return;
+  //   }
+  //
+  //   const soundIndex = randomInRange(Math.random, 0, 3);
+  //   const sound = [sfxConfirmBuffer, sfxSelectBuffer, sfxSwitchBuffer, sfxToggleBuffer][soundIndex];
+  //   sound.addEventListener('ended', () => {
+  //     voicePlaying = false;
+  //   }, { once: true});
+  //   audioMixer.play(sound, 'sfx');
+  //   sfxPlaying = true;
+  // });
 
   root.appendChild(titleScreenWakeUpPrompt);
 

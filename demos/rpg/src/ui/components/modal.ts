@@ -1,7 +1,7 @@
 import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-@customElement('pixel-craft-modal')
+@customElement('x-modal')
 export class Modal extends LitElement {
   static styles = css`
     :host {

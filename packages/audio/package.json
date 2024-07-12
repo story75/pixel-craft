@@ -20,5 +20,8 @@
     "watch": "pixel-craft build-library -w",
     "build": "pixel-craft build-library",
     "release": "pixel-craft-tooling release-package \"${PUBLISH_VERSION}\""
+  },
+  "dependencies": {
+    "@pixel-craft/event-bus": "workspace:*"
   }
 }

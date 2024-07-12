@@ -1,60 +1,59 @@
-import type { InputManager } from '@pixel-craft/input';
-import { type Option, type OptionList, getOption, nextOption, previousOption } from '@pixel-craft/state';
-import type { Translator } from '@pixel-craft/translation';
 import { LitElement, css, html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
+import { InputController, bindInput } from '../../../ui/controllers/input-controller';
+import { type Option, acceptOption, nextOption, previousOption } from '../../../ui/option';
 import icon from '../../../ui/pointer.png';
+import { translate } from '../../../ui/translate';
 
-@customElement('pixel-craft-page-title-screen-main-menu-option')
-export class TitleScreenMainMenuOption extends LitElement {
+@customElement('x-title-screen-main-menu-option')
+class MenuOption extends LitElement {
   static styles = css`
-    :host {
-      position: relative;
-      margin-bottom: 0.5rem;
-      padding: 0.5rem 5rem;
-      box-sizing: border-box;
-      border-bottom: 0.05rem solid transparent;
-      color: rgba(from var(--color-inverse) r g b / 0.1);
-      text-align: center;
-      transition:
-        color 0.2s ease-in-out,
-        background 0.2s ease-in-out;
-    }
+        :host {
+            position: relative;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 5rem;
+            box-sizing: border-box;
+            border-bottom: 0.05rem solid transparent;
+            color: rgba(from var(--color-inverse) r g b / 0.1);
+            text-align: center;
+            transition: color 0.2s ease-in-out,
+            background 0.2s ease-in-out;
+        }
 
-    :host([active]) {
-      color: var(--color-inverse);
-      background: radial-gradient(
-        ellipse at bottom center,
-        rgba(from var(--color-primary) r g b / 0.2) 0%,
-        rgba(0, 0, 0, 0) 60%
-      );
-      border-bottom: 0.05rem solid;
-      border-image: linear-gradient(90deg, transparent 15%, var(--color-inverse) 50%, transparent 85%) 30;
+        :host([active]) {
+            color: var(--color-inverse);
+            background: radial-gradient(
+                    ellipse at bottom center,
+                    rgba(from var(--color-primary) r g b / 0.2) 0%,
+                    rgba(0, 0, 0, 0) 60%
+            );
+            border-bottom: 0.05rem solid;
+            border-image: linear-gradient(90deg, transparent 15%, var(--color-inverse) 50%, transparent 85%) 30;
 
-      &:before {
-        content: '';
-        display: inline-block;
-        position: absolute;
-        width: 1rem;
-        height: 1rem;
-        background: url('${unsafeCSS(icon)}') no-repeat;
-        background-size: 1rem;
-        margin-left: -2.5rem;
-        margin-top: 0.25rem;
-        animation: point 2s ease-in-out infinite alternate;
-      }
-    }
+            &:before {
+                content: '';
+                display: inline-block;
+                position: absolute;
+                width: 1rem;
+                height: 1rem;
+                background: url('${unsafeCSS(icon)}') no-repeat;
+                background-size: 1rem;
+                margin-left: -2.5rem;
+                margin-top: 0.25rem;
+                animation: point 2s ease-in-out infinite alternate;
+            }
+        }
 
-    @keyframes point {
-      0% {
-        margin-left: -2.5rem;
-      }
-      100% {
-        margin-left: -1.5rem;
-      }
-    }
-  `;
+        @keyframes point {
+            0% {
+                margin-left: -2.5rem;
+            }
+            100% {
+                margin-left: -1.5rem;
+            }
+        }
+    `;
 
   @property()
   accessor text = '';
@@ -67,106 +66,71 @@ export class TitleScreenMainMenuOption extends LitElement {
   }
 }
 
-@customElement('pixel-craft-page-title-screen-main-menu')
+@customElement('x-title-screen-main-menu')
 export class TitleScreenMainMenu extends LitElement {
   static styles = css`
-    :host {
-      display: flex;
-      flex-direction: column;
-      margin: auto auto 10dvh;
-    }
-  `;
+        :host {
+            display: flex;
+            flex-direction: column;
+            margin: auto auto 10dvh;
+        }
+    `;
 
-  @property()
-  accessor active = false;
+  inputController = new InputController(this);
 
-  @property()
-  accessor inputManager!: InputManager;
-
-  @property()
-  accessor translator!: Translator;
-
-  @property()
-  accessor optionList: OptionList<Option> = {
-    type: 'option-list',
-    label: 'Main Menu',
-    options: [
-      {
-        label: 'TITLE_SCREEN.MAIN_MENU.NEW_GAME',
-        active: true,
-        accept: () => this.dispatchEvent(new CustomEvent('new-game')),
+  accessor options = [
+    {
+      label: 'TITLE_SCREEN.MAIN_MENU.NEW_GAME',
+      accept: () => {
+        this.dispatchEvent(new CustomEvent('new-game'));
       },
-      { label: 'TITLE_SCREEN.MAIN_MENU.CONTINUE', accept: () => this.dispatchEvent(new CustomEvent('continue')) },
-      { label: 'TITLE_SCREEN.MAIN_MENU.SETTINGS', accept: () => this.dispatchEvent(new CustomEvent('settings')) },
-      { label: 'TITLE_SCREEN.MAIN_MENU.QUIT', accept: () => this.dispatchEvent(new CustomEvent('quit')) },
-    ],
-  };
+      active: true,
+    },
+    {
+      label: 'TITLE_SCREEN.MAIN_MENU.CONTINUE',
+      accept: () => {
+        this.dispatchEvent(new CustomEvent('continue'));
+      },
+    },
+    {
+      label: 'TITLE_SCREEN.MAIN_MENU.SETTINGS',
+      accept: () => {
+        this.dispatchEvent(new CustomEvent('settings'));
+      },
+    },
+    {
+      label: 'TITLE_SCREEN.MAIN_MENU.QUIT',
+      accept: () => {
+        this.dispatchEvent(new CustomEvent('quit'));
+      },
+    },
+  ] satisfies Option[];
 
-  #subscriptions: (() => void)[] = [];
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.active = true;
-
-    if (!this.inputManager) {
-      throw new Error('InputManager is required');
-    }
-
-    if (!this.translator) {
-      throw new Error('Translator is required');
-    }
-
-    this.#subscriptions.push(
-      this.inputManager.addEventListener('up', () => {
-        if (!this.active) {
-          return;
-        }
-
-        previousOption(this.optionList);
-        this.requestUpdate();
-      }),
-    );
-
-    this.#subscriptions.push(
-      this.inputManager.addEventListener('down', () => {
-        if (!this.active) {
-          return;
-        }
-
-        nextOption(this.optionList);
-        this.requestUpdate();
-      }),
-    );
-
-    this.#subscriptions.push(
-      this.inputManager.addEventListener('accept', () => {
-        if (!this.active) {
-          return;
-        }
-
-        const option = getOption(this.optionList);
-        option.accept?.(option);
-      }),
-    );
+  @bindInput('up')
+  previousOption() {
+    previousOption(this.options);
+    this.requestUpdate();
   }
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.active = false;
+  @bindInput('down')
+  nextOption() {
+    nextOption(this.options);
+    this.requestUpdate();
+  }
 
-    for (const unsubscribe of this.#subscriptions) {
-      unsubscribe();
-    }
+  @bindInput('accept')
+  acceptOption() {
+    acceptOption(this.options);
   }
 
   render() {
     return map(
-      this.optionList.options,
+      this.options,
       (option) =>
-        html` <pixel-craft-page-title-screen-main-menu-option
-          ?active=${option.active}
-          text=${this.translator.translate(option.label)}
-        ></pixel-craft-page-title-screen-main-menu-option>`,
+        html`<x-title-screen-main-menu-option
+                            ?active=${option.active}
+                            text=${translate(option.label)}
+                    ></x-title-screen-main-menu-option>`,
     );
   }
 }

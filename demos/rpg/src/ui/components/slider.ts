@@ -2,7 +2,7 @@ import { clamp } from '@pixel-craft/math';
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-@customElement('pixel-craft-slider')
+@customElement('x-slider')
 export class Slider extends LitElement {
   static styles = css`
     :host {

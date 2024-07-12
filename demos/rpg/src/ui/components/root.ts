@@ -1,7 +1,7 @@
 import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 
-@customElement('pixel-craft-root')
+@customElement('x-root')
 export class Root extends LitElement {
   static styles = css`
     :host {

@@ -146,7 +146,7 @@ export const forcePersistValues = async (store: object): Promise<void> => {
 /**
  * Persist all persist-able values as a single local storage key
  */
-export const persistStoreIntoKey = async (store: object, key: string): Promise<void> => {
+export const persistStoreIntoKey = async (store: object, key: string): Promise<Record<string, string>> => {
   const metadata = store.constructor[Symbol.metadata];
   const persisted = metadata?.[persistSymbol] as PersistMetadata[] | undefined;
   if (!persisted) {
@@ -160,6 +160,7 @@ export const persistStoreIntoKey = async (store: object, key: string): Promise<v
   }
 
   localStorage.setItem(key, JSON.stringify(serialized));
+  return serialized;
 };
 
 /**

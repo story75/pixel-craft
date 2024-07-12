@@ -29,4 +29,12 @@ export const EN: Translation = {
       },
     },
   },
+  BATTLE: {
+    ACTIONS: {
+      ATTACK: 'Attack',
+      SKILL: 'Skill',
+      ITEM: 'Item',
+      ESCAPE: 'Escape',
+    },
+  },
 };

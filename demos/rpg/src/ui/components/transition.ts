@@ -2,7 +2,7 @@ import { clamp } from '@pixel-craft/math';
 import { LitElement, css } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 
-@customElement('pixel-craft-transition')
+@customElement('x-transition')
 export class Transition extends LitElement {
   static styles = css`
     :host {

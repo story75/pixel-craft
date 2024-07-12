@@ -21,19 +21,35 @@ This was done to simplify the code on the integration side and to make the `Inpu
 This offers more control over the event handling e.g. handling multiple keys with the same listener or listening to any keys,
 without the need for a separate api like `onAnyKey`.
 
+#### `Translator` no longer uses `Observable` but instead extends `EventBus`
+
+The `Translator` class no longer uses the `Observable` class but instead extends the `EventBus` class.
+The reason for this change is the same as for the `InputManager`. It simplifies the code on the integration side and makes the `Translator` more flexible.
+
 #### Remove `Instance` property from `InputManager`, `AudioMixer`, `Translator` and `Timer`
 
 The `Instance` property has been removed from the `InputManager`, `AudioMixer`, `Translator` and `Timer` classes.
 This change was done in favor of a handling the instances in user-land code and decide there if a singleton is needed and how to handle it e.g. via a DI container.
 
-#### `AudioMixer.load` now returns an `AudioBuffer` instead of an `AudioBufferSourceNode`
+#### `AudioMixer.load` now returns an `Sound` instead of an `AudioBufferSourceNode`
 
 The `AudioBufferSourceNode`s can only be played once, so it was not a good idea to return them from the `load` function.
-Instead, the `load` function now returns an `AudioBuffer` which can be used to create multiple `AudioBufferSourceNode`s via the `createSource` function.
+Instead, the `load` function now returns a `Sound` which can internally handles the playback of the audio source.
+This should make it easier to work with the audio system and also allows for more control over the audio playback.
 
-A future version will likely introduce a higher level API to handle audio sources and buffers, but for now the mixer will stick to the lower level API.
+A sound also has events for `play`, `stop` and `ended` which can be used to react to the audio playback.
+The sound also has a `playing` property that indicates if the sound is currently playing.
+A sound can be looped by setting the `loop` property to `true` before calling `play`.
+A sound can be stacked by setting the `stack` property to `true` before calling `play`. This will create a new instance of the sound for each call to `play`.
+
+Keep in mind that you should not call `play` and `stop` on the Sound yourself, but instead use the `AudioMixer` to control the playback of the sounds.
 
 ### Features
+
+#### Add `volumeChanged` event to `AudioMixer`
+
+The `AudioMixer` now emits a `volumeChanged` event whenever the volume of the mixer is changed. 
+This is emitted for every change and includes the new volume as well as the channel that was changed.
 
 #### Add `@pixel-craft/event-bus` package
 

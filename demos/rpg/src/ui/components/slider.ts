@@ -53,12 +53,6 @@ export class Slider extends LitElement {
     }
   `;
 
-  @property()
-  accessor min = 0;
-
-  @property()
-  accessor max = 100;
-
   private _value = 100;
 
   get value() {
@@ -67,8 +61,7 @@ export class Slider extends LitElement {
 
   @property()
   set value(v: number | string) {
-    this._value = clamp(Number(v), this.min, this.max);
-
+    this._value = Number(v);
     this.style.setProperty('--value', `${this._value}%`);
     this.style.setProperty('--scale', String(this._value / 100));
   }

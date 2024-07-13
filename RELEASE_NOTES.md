@@ -44,6 +44,11 @@ A sound can be stacked by setting the `stack` property to `true` before calling 
 
 Keep in mind that you should not call `play` and `stop` on the Sound yourself, but instead use the `AudioMixer` to control the playback of the sounds.
 
+#### `AudioMixer` volume scale now uses 0 - 100 instead of 0 - 1
+
+The `AudioMixer` now uses a scale of 0 - 100, which should make it a little easier to reason about.
+This hopefully also cuts down on needed conversions e.g. in CSS.
+
 ### Features
 
 #### Add `volumeChanged` event to `AudioMixer`

@@ -2,7 +2,8 @@ import { LitElement, css, html, unsafeCSS } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { map } from 'lit/directives/map.js';
 import { InputController, bindInput } from '../../../ui/controllers/input-controller';
-import { type Option, acceptOption, nextOption, previousOption } from '../../../ui/option';
+import { Option } from '../../../ui/form/option';
+import { Select } from '../../../ui/form/select';
 import icon from '../../../ui/pointer.png';
 import { translate } from '../../../ui/translate';
 
@@ -78,54 +79,57 @@ export class TitleScreenMainMenu extends LitElement {
 
   inputController = new InputController(this);
 
-  accessor options = [
-    {
-      label: 'TITLE_SCREEN.MAIN_MENU.NEW_GAME',
-      accept: () => {
-        this.dispatchEvent(new CustomEvent('new-game'));
-      },
-      active: true,
-    },
-    {
-      label: 'TITLE_SCREEN.MAIN_MENU.CONTINUE',
-      accept: () => {
-        this.dispatchEvent(new CustomEvent('continue'));
-      },
-    },
-    {
-      label: 'TITLE_SCREEN.MAIN_MENU.SETTINGS',
-      accept: () => {
-        this.dispatchEvent(new CustomEvent('settings'));
-      },
-    },
-    {
-      label: 'TITLE_SCREEN.MAIN_MENU.QUIT',
-      accept: () => {
-        this.dispatchEvent(new CustomEvent('quit'));
-      },
-    },
-  ] satisfies Option[];
+  accessor select = new Select({
+    label: '',
+    options: [
+      new Option({
+        label: 'TITLE_SCREEN.MAIN_MENU.NEW_GAME',
+        onAccept: () => {
+          this.dispatchEvent(new CustomEvent('new-game'));
+        },
+        active: true,
+      }),
+      new Option({
+        label: 'TITLE_SCREEN.MAIN_MENU.CONTINUE',
+        onAccept: () => {
+          this.dispatchEvent(new CustomEvent('continue'));
+        },
+      }),
+      new Option({
+        label: 'TITLE_SCREEN.MAIN_MENU.SETTINGS',
+        onAccept: () => {
+          this.dispatchEvent(new CustomEvent('settings'));
+        },
+      }),
+      new Option({
+        label: 'TITLE_SCREEN.MAIN_MENU.QUIT',
+        onAccept: () => {
+          this.dispatchEvent(new CustomEvent('quit'));
+        },
+      }),
+    ],
+  });
 
   @bindInput('up')
   previousOption() {
-    previousOption(this.options);
+    this.select.previous();
     this.requestUpdate();
   }
 
   @bindInput('down')
   nextOption() {
-    nextOption(this.options);
+    this.select.next();
     this.requestUpdate();
   }
 
   @bindInput('accept')
   acceptOption() {
-    acceptOption(this.options);
+    this.select.option?.accept();
   }
 
   render() {
     return map(
-      this.options,
+      this.select.options,
       (option) =>
         html`<x-title-screen-main-menu-option
                             ?active=${option.active}

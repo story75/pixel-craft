@@ -1,3 +1,4 @@
+import type { Sound } from '@pixel-craft/audio';
 import { randomInRange } from '@pixel-craft/math';
 import { type Sprite, sprite, tilingSprite } from '@pixel-craft/renderer';
 import { Tween, easeInOutQuad } from '@pixel-craft/tweening';
@@ -8,19 +9,23 @@ import { TitleScreenSettings } from './ui/settings';
 import { TitleScreenWakeUpPrompt } from './ui/wake-up-prompt';
 
 export async function titleScreen() {
-  const { textureLoader, canvas, root, audioMixer, inputManager, timer, store } = window.pixelCraft;
+  const { textureLoader, canvas, root, audioMixer, timer, store } = window.pixelCraft;
 
   const bgm = await audioMixer.load('assets/jrpg-piano/jrpg-piano.mp3');
   bgm.loop = true;
   audioMixer.play(bgm, 'bgm');
 
-  const realmSyncVoice1Buffer = await audioMixer.load('assets/elevenlabs/sally_realm_sync_1.mp3');
-  const realmSyncVoice2Buffer = await audioMixer.load('assets/elevenlabs/sally_realm_sync_2.mp3');
+  const voiceSounds = await Promise.all([
+    audioMixer.load('assets/elevenlabs/sally_realm_sync_1.mp3'),
+    audioMixer.load('assets/elevenlabs/sally_realm_sync_2.mp3'),
+  ]);
 
-  const sfxConfirmBuffer = await audioMixer.load('assets/kenney_interface-sounds/Audio/confirmation_003.ogg');
-  const sfxSelectBuffer = await audioMixer.load('assets/kenney_interface-sounds/Audio/select_005.ogg');
-  const sfxSwitchBuffer = await audioMixer.load('assets/kenney_interface-sounds/Audio/switch_002.ogg');
-  const sfxToggleBuffer = await audioMixer.load('assets/kenney_interface-sounds/Audio/toggle_003.ogg');
+  const sfxSounds = await Promise.all([
+    audioMixer.load('assets/kenney_interface-sounds/Audio/confirmation_003.ogg'),
+    audioMixer.load('assets/kenney_interface-sounds/Audio/select_005.ogg'),
+    audioMixer.load('assets/kenney_interface-sounds/Audio/switch_002.ogg'),
+    audioMixer.load('assets/kenney_interface-sounds/Audio/toggle_003.ogg'),
+  ]);
 
   const skyAssetPath = 'assets/free-sky-with-clouds-background-pixel-art-set/Clouds/clouds3';
 
@@ -128,34 +133,32 @@ export async function titleScreen() {
   //   titleScreenMainMenu.active = true;
   // });
   //
-  // let voicePlaying = false;
-  // titleScreenSettings.addEventListener('play-voice', () => {
-  //   if (voicePlaying) {
-  //     return;
-  //   }
-  //
-  //   const sound = Math.random() < 0.5 ? realmSyncVoice1Buffer : realmSyncVoice2Buffer;
-  //   sound.addEventListener('ended', () => {
-  //       voicePlaying = false;
-  //   }, { once: true});
-  //   audioMixer.play(sound, 'voice');
-  //   voicePlaying = true;
-  // });
-  //
-  // let sfxPlaying = false;
-  // titleScreenSettings.addEventListener('play-sfx', () => {
-  //   if (sfxPlaying) {
-  //     return;
-  //   }
-  //
-  //   const soundIndex = randomInRange(Math.random, 0, 3);
-  //   const sound = [sfxConfirmBuffer, sfxSelectBuffer, sfxSwitchBuffer, sfxToggleBuffer][soundIndex];
-  //   sound.addEventListener('ended', () => {
-  //     voicePlaying = false;
-  //   }, { once: true});
-  //   audioMixer.play(sound, 'sfx');
-  //   sfxPlaying = true;
-  // });
+  const playSound = (sounds: Sound[], channel: 'voice' | 'sfx', force = false) => {
+    if (!force) {
+      const anySoundPlaying = sounds.some((sound) => sound.playing);
+      if (anySoundPlaying) {
+        return;
+      }
+    }
+
+    for (const sound of sounds) {
+      sound.stop();
+    }
+
+    const soundIndex = randomInRange(Math.random, 0, sounds.length - 1);
+    const sound = sounds[soundIndex];
+    audioMixer.play(sound, channel);
+  };
+
+  titleScreenSettings.addEventListener('play-voice', (event) => {
+    const e = event as CustomEvent<{ force?: boolean }>;
+    playSound(voiceSounds, 'voice', e.detail?.force);
+  });
+
+  titleScreenSettings.addEventListener('play-sfx', (event) => {
+    const e = event as CustomEvent<{ force?: boolean }>;
+    playSound(sfxSounds, 'sfx', e.detail?.force);
+  });
 
   root.appendChild(titleScreenWakeUpPrompt);
 

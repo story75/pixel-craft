@@ -6,6 +6,9 @@ import '../../../ui/components/option';
 import '../../../ui/components/option-list';
 import '../../../ui/components/slider';
 import { InputController, bindInput } from '../../../ui/controllers/input-controller';
+import { Option } from '../../../ui/form/option';
+import { Select } from '../../../ui/form/select';
+import { Slider } from '../../../ui/form/slider';
 import {
   type OptionTypes,
   changeOption,
@@ -108,142 +111,140 @@ export class TitleScreenSettings extends LitElement {
   inputController = new InputController(this);
 
   @property()
-  accessor settings = [
-    {
-      type: 'option-list',
-      label: 'TITLE_SCREEN.SETTINGS.LANGUAGE.LABEL',
-      active: true,
-      options: [
-        {
-          label: 'TITLE_SCREEN.SETTINGS.LANGUAGE.ENGLISH',
-          value: 'en',
-          active: true,
+  accessor settings = new Select({
+    label: '',
+    cycle: true,
+    options: [
+      new Select({
+        label: 'TITLE_SCREEN.SETTINGS.LANGUAGE.LABEL',
+        active: true,
+        binding: [window.pixelCraft.translator, 'language'],
+        options: [
+          new Option({
+            label: 'TITLE_SCREEN.SETTINGS.LANGUAGE.ENGLISH',
+            value: 'en',
+            active: true,
+          }),
+          new Option({
+            label: 'TITLE_SCREEN.SETTINGS.LANGUAGE.GERMAN',
+            value: 'de',
+          }),
+          new Option({
+            label: 'TITLE_SCREEN.SETTINGS.LANGUAGE.SPANISH',
+            value: 'es',
+          }),
+        ],
+      }),
+      new Select({
+        label: 'TITLE_SCREEN.SETTINGS.FONT.LABEL',
+        binding: [document.body.style, 'fontFamily'],
+        options: [
+          new Option({
+            label: 'Open Sans',
+            value: 'Open Sans',
+            active: true,
+          }),
+          new Option({
+            label: 'Monocraft',
+            value: 'Monocraft',
+          }),
+          new Option({
+            label: 'Arial',
+            value: 'Arial',
+          }),
+        ],
+      }),
+      new Slider({
+        label: 'TITLE_SCREEN.SETTINGS.VOLUME.MASTER',
+        binding: [window.pixelCraft.audioMixer, 'masterVolume'],
+        min: 0,
+        max: 100,
+        step: 1,
+      }),
+      new Slider({
+        label: 'TITLE_SCREEN.SETTINGS.VOLUME.BGM',
+        binding: [window.pixelCraft.audioMixer, 'bgmVolume'],
+        min: 0,
+        max: 100,
+        step: 1,
+      }),
+      new Slider({
+        label: 'TITLE_SCREEN.SETTINGS.VOLUME.SFX',
+        binding: [window.pixelCraft.audioMixer, 'sfxVolume'],
+        min: 0,
+        max: 100,
+        step: 1,
+        onChange: (sfxVolume) => {
+          if (sfxVolume.value === 99 || sfxVolume.value % 5 === 0) {
+            this.dispatchEvent(new CustomEvent('play-sfx'));
+          }
         },
-        {
-          label: 'TITLE_SCREEN.SETTINGS.LANGUAGE.GERMAN',
-          value: 'de',
+        onAccept: () => {
+          this.dispatchEvent(new CustomEvent('play-sfx', { detail: { force: true } }));
         },
-        {
-          label: 'TITLE_SCREEN.SETTINGS.LANGUAGE.SPANISH',
-          value: 'es',
+      }),
+      new Slider({
+        label: 'TITLE_SCREEN.SETTINGS.VOLUME.VOICE',
+        binding: [window.pixelCraft.audioMixer, 'voiceVolume'],
+        min: 0,
+        max: 100,
+        step: 1,
+        onChange: (voiceVolume) => {
+          if (voiceVolume.value === 99 || voiceVolume.value % 10 === 0) {
+            this.dispatchEvent(new CustomEvent('play-voice'));
+          }
         },
-      ],
-    },
-    {
-      type: 'option-list',
-      label: 'TITLE_SCREEN.SETTINGS.FONT.LABEL',
-      options: [
-        {
-          label: 'Open Sans',
-          value: 'Open Sans',
-          active: true,
+        onAccept: () => {
+          this.dispatchEvent(new CustomEvent('play-voice', { detail: { force: true } }));
         },
-        {
-          label: 'Monocraft',
-          value: 'Monocraft',
-        },
-        {
-          label: 'Arial',
-          value: 'Arial',
-        },
-      ],
-    },
-    {
-      type: 'slider',
-      label: 'TITLE_SCREEN.SETTINGS.VOLUME.MASTER',
-      value: 100,
-      min: 0,
-      max: 100,
-      step: 1,
-    },
-    {
-      type: 'slider',
-      label: 'TITLE_SCREEN.SETTINGS.VOLUME.BGM',
-      value: 100,
-      min: 0,
-      max: 100,
-      step: 1,
-    },
-    {
-      type: 'slider',
-      label: 'TITLE_SCREEN.SETTINGS.VOLUME.SFX',
-      value: 100,
-      min: 0,
-      max: 100,
-      step: 1,
-      change: (sfxVolume) => {
-        if (sfxVolume.value === 99 || sfxVolume.value % 5 === 0) {
-          this.dispatchEvent(new CustomEvent('play-sfx'));
-        }
-      },
-      accept: () => {
-        this.dispatchEvent(new CustomEvent('play-sfx'));
-      },
-    },
-    {
-      type: 'slider',
-      label: 'TITLE_SCREEN.SETTINGS.VOLUME.VOICE',
-      value: 100,
-      min: 0,
-      max: 100,
-      step: 1,
-      change: (voiceVolume) => {
-        if (voiceVolume.value === 99 || voiceVolume.value % 10 === 0) {
-          this.dispatchEvent(new CustomEvent('play-voice'));
-        }
-      },
-      accept: () => {
-        this.dispatchEvent(new CustomEvent('play-voice'));
-      },
-    },
-  ] satisfies OptionTypes[];
+      }),
+    ],
+  });
 
   @bindInput('up')
   previousSetting() {
-    previousOption(this.settings, true);
+    this.settings.previous();
     this.requestUpdate();
   }
 
   @bindInput('down')
   nextSetting() {
-    nextOption(this.settings, true);
+    this.settings.next();
     this.requestUpdate();
   }
 
   @bindInput('left')
   decrementSlider() {
-    const slider = getOption(this.settings);
-    if (slider && isSlider(slider)) {
-      decrementSlider(slider);
+    const slider = this.settings.option;
+    if (slider && slider instanceof Slider) {
+      slider.decrement();
       this.requestUpdate();
     }
   }
 
   @bindInput('right')
   incrementSlider() {
-    const slider = getOption(this.settings);
-    if (slider && isSlider(slider)) {
-      incrementSlider(slider);
+    const slider = this.settings.option;
+    if (slider && slider instanceof Slider) {
+      slider.increment();
       this.requestUpdate();
     }
   }
 
   @bindInput('left')
   previousOption() {
-    const optionList = getOption(this.settings);
-    if (optionList && isOptionList(optionList)) {
-      previousOption(optionList.options);
-      changeOption(optionList);
+    const select = this.settings.option;
+    if (select && select instanceof Select) {
+      select.previous();
       this.requestUpdate();
     }
   }
 
   @bindInput('right')
   nextOption() {
-    const optionList = getOption(this.settings);
-    if (optionList && isOptionList(optionList)) {
-      nextOption(optionList.options);
-      changeOption(optionList);
+    const select = this.settings.option;
+    if (select && select instanceof Select) {
+      select.next();
       this.requestUpdate();
     }
   }
@@ -253,119 +254,17 @@ export class TitleScreenSettings extends LitElement {
     this.dispatchEvent(new CustomEvent('cancel'));
   }
 
-  // connectedCallback() {
-  //   super.connectedCallback();
-  //   this.active = true;
-  //
-  //   if (!this.inputManager) {
-  //     throw new Error('InputManager is required');
-  //   }
-  //
-  //   if (!this.translator) {
-  //     throw new Error('Translator is required');
-  //   }
-  //
-  //   if (!this.state) {
-  //     throw new Error('State is required');
-  //   }
-  //
-  //   for (const option of this.settings) {
-  //     if (option.init) {
-  //       // biome-ignore lint/suspicious/noExplicitAny: TS cannot infer that option is the type we expect
-  //       option.init(option as any);
-  //     }
-  //   }
-  //
-  //   this.#subscriptions.push(
-  //     this.inputManager.addEventListener('up', () => {
-  //       if (!this.active) {
-  //         return;
-  //       }
-  //
-  //       previousOption(this.settings);
-  //       this.requestUpdate();
-  //     }),
-  //   );
-  //
-  //   this.#subscriptions.push(
-  //     this.inputManager.addEventListener('down', () => {
-  //       if (!this.active) {
-  //         return;
-  //       }
-  //
-  //       nextOption(this.settings);
-  //       this.requestUpdate();
-  //     }),
-  //   );
-  //
-  //   this.#subscriptions.push(
-  //     this.inputManager.addEventListener('left', () => {
-  //       if (!this.active) {
-  //         return;
-  //       }
-  //
-  //       const option = getOption(this.settings);
-  //       switch (true) {
-  //         case isSlider(option):
-  //           decrementSlider(option);
-  //           break;
-  //         case isOptionList(option):
-  //           previousOption(option);
-  //           break;
-  //       }
-  //       this.requestUpdate();
-  //     }),
-  //   );
-  //
-  //   this.#subscriptions.push(
-  //     this.inputManager.addEventListener('right', () => {
-  //       if (!this.active) {
-  //         return;
-  //       }
-  //
-  //       const option = getOption(this.settings);
-  //       switch (true) {
-  //         case isSlider(option):
-  //           incrementSlider(option);
-  //           break;
-  //         case isOptionList(option):
-  //           nextOption(option);
-  //           break;
-  //       }
-  //       this.requestUpdate();
-  //     }),
-  //   );
-  //
-  //   this.#subscriptions.push(
-  //     this.inputManager.addEventListener('cancel', () => {
-  //       if (!this.active) {
-  //         return;
-  //       }
-  //
-  //       this.dispatchEvent(new CustomEvent('cancel'));
-  //     }),
-  //   );
-  //
-  //   this.#subscriptions.push(
-  //     this.inputManager.addEventListener('accept', () => {
-  //       if (!this.active) {
-  //         return;
-  //       }
-  //
-  //       const option = getOption(this.settings);
-  //       if (option.accept) {
-  //         option.accept(option);
-  //       }
-  //     }),
-  //   );
-  // }
+  @bindInput('accept')
+  accept() {
+    this.settings.option?.accept();
+  }
 
   render() {
     return html`
       <x-modal>
-        ${map(this.settings, (setting) => {
+        ${map(this.settings.options, (setting) => {
           switch (true) {
-            case isOptionList(setting):
+            case setting instanceof Select:
               return html`
                 <x-title-screen-settings-setting
                   label=${translate(setting.label)}
@@ -383,18 +282,13 @@ export class TitleScreenSettings extends LitElement {
                   </x-option-list>
                 </x-title-screen-settings-setting>
               `;
-            case isSlider(setting):
+            case setting instanceof Slider:
               return html`
                 <x-title-screen-settings-setting
                   label=${translate(setting.label)}
                   ?active=${setting.active}
                 >
-                  <x-slider
-                    value=${setting.value}
-                    min=${setting.min}
-                    max=${setting.max}
-                    step=${setting.step}
-                  ></x-slider>
+                  <x-slider value=${setting.value}></x-slider>
                 </x-title-screen-settings-setting>
               `;
           }

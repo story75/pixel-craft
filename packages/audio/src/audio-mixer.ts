@@ -50,38 +50,39 @@ export class AudioMixer extends EventBus<EventMap> {
   }
 
   get masterVolume(): number {
-    return this.#masterGain.gain.value;
+    return Math.round(this.#masterGain.gain.value * 100);
   }
 
   set masterVolume(volume: number) {
-    this.#masterGain.gain.value = volume;
+    this.#masterGain.gain.value = volume / 100;
     this.dispatchEvent(new CustomEvent('volumeChanged', { detail: { channel: 'master', volume } }));
   }
 
   get bgmVolume(): number {
-    return this.#bgmGain.gain.value;
+    return Math.round(this.#bgmGain.gain.value * 100);
   }
 
   set bgmVolume(volume: number) {
-    this.#bgmGain.gain.value = volume;
+    this.#bgmGain.gain.value = volume / 100;
+    console.log(this.#bgmGain.gain.value);
     this.dispatchEvent(new CustomEvent('volumeChanged', { detail: { channel: 'bgm', volume } }));
   }
 
   get sfxVolume(): number {
-    return this.#sfxGain.gain.value;
+    return Math.round(this.#sfxGain.gain.value * 100);
   }
 
   set sfxVolume(volume: number) {
-    this.#sfxGain.gain.value = volume;
+    this.#sfxGain.gain.value = volume / 100;
     this.dispatchEvent(new CustomEvent('volumeChanged', { detail: { channel: 'sfx', volume } }));
   }
 
   get voiceVolume(): number {
-    return this.#voiceGain.gain.value;
+    return Math.round(this.#voiceGain.gain.value * 100);
   }
 
   set voiceVolume(volume: number) {
-    this.#voiceGain.gain.value = volume;
+    this.#voiceGain.gain.value = volume / 100;
     this.dispatchEvent(new CustomEvent('volumeChanged', { detail: { channel: 'voice', volume } }));
   }
 

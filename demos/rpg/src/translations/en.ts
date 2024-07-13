@@ -30,6 +30,14 @@ export const EN: Translation = {
     },
   },
   BATTLE: {
+    GAME_SPEED: 'Game Speed',
+    LIMIT_BAR: {
+      STATE: {
+        BOOTING: 'BOOTING',
+        SYNCHRONIZED: 'SYNCHRONIZED',
+        OVERCHARGED: 'OVERCHARGED',
+      },
+    },
     ACTIONS: {
       ATTACK: 'Attack',
       SKILL: 'Skill',

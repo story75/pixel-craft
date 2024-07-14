@@ -8,11 +8,21 @@ export type ElementalStats = {
   breakResistance: number;
 };
 
-export type StatModification = {
+type Modification = {
   source: string;
+  type: 'add' | 'increase' | 'multiply';
   change: number;
   turns?: number;
-} & ({ stat: keyof CharacterStats } | { stat: keyof ElementalStats; element: Elements });
+};
+
+export type StatModification = Modification & {
+  stat: keyof CharacterStats;
+};
+
+export type ElementModification = Modification & {
+  stat: keyof ElementalStats;
+  element: Elements;
+};
 
 export type EffectTrigger =
   | 'startOfTurn'
@@ -37,9 +47,7 @@ export type CharacterEffect = {
     characters: Character[],
     trigger: {
       trigger: EffectTrigger;
-      caster: Character | undefined;
-      target: Character[];
-    },
+    } & ({ source?: undefined } | { source: Character; target: Character[]; skillEffect: SkillEffect }),
   ) => void;
 };
 
@@ -50,31 +58,50 @@ export type CharacterStats = {
   currentSp: number;
   maxEnergy: number;
   currentEnergy: number;
-  maxShield: number;
-  currentShield: number;
+  shield: number;
+  taunt: number;
   attack: number;
   defense: number;
   speed: number;
   action: number;
+  stun: number;
   toughness: number;
   criticalChance: number;
   criticalDamage: number;
   breakEffectiveness: number;
   breakResistance: number;
+  damageBoost: number;
+  damageReduction: number;
   healingBoost: number;
   effectHitChance: number;
   effectResistance: number;
-  statModifications: StatModification[];
-  effects: CharacterEffect[];
-} & { [key in Elements]: ElementalStats };
+};
+
+export type EvolutionStage = 'baby' | 'novice' | 'champion' | 'master' | 'ultimate';
 
 export type Character = {
   id: string;
   name: string;
-  stats: CharacterStats;
+  level: number;
+  evolutionStage: EvolutionStage;
+  inital: {
+    stats: CharacterStats;
+    elementalStats: {
+      [element in Elements]: ElementalStats;
+    };
+  };
+  calculated: {
+    stats: CharacterStats;
+    elementalStats: {
+      [element in Elements]: ElementalStats;
+    };
+  };
   skills: Skill[];
   alligence: 'party' | 'enemy';
-  lastTarget: Character | undefined;
+  lastTarget?: Character;
+  statModifications: StatModification[];
+  elementModifications: ElementModification[];
+  effects: CharacterEffect[];
 };
 
 export type SkillEffect = {
@@ -82,9 +109,11 @@ export type SkillEffect = {
   type: 'damage' | 'heal' | 'buff' | 'debuff';
   element: Elements;
   power: number;
+  stat: keyof CharacterStats;
   target: 'party' | 'enemy';
   singleTarget: boolean;
   allowTargetChange: boolean;
+  defensePenetration: number;
   execute: (source: Character, targets: Character[], characters: Character[]) => void;
 };
 
@@ -93,4 +122,23 @@ export type Skill = {
   spCost: number;
   energyCost: number;
   effects: SkillEffect[];
+};
+
+export type Battle = {
+  characters: Character[];
+  turn: number;
+};
+
+export type CharacterTemplate = {
+  id: string;
+  level: number;
+  evolutionStage: EvolutionStage;
+  stats: CharacterStats;
+  elementalStats: {
+    [element in Elements]: ElementalStats;
+  };
+  skills: { id: string }[];
+  effects: { id: string }[];
+  statModifications: StatModification[];
+  elementModifications: ElementModification[];
 };

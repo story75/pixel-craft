@@ -1,25 +1,46 @@
 export type Elements = 'physical' | 'fire' | 'ice' | 'lightning' | 'earth' | 'wind' | 'light' | 'dark';
 
 export type ElementalStats = {
-  [key in Elements]: {
-    damageBoost: number;
-    resistance: number;
-    penetration: number;
-  };
+  damageBoost: number;
+  resistance: number;
+  penetration: number;
+  breakEffectiveness: number;
+  breakResistance: number;
 };
 
 export type StatModification = {
   source: string;
-  stat: keyof CharacterStats;
   change: number;
   turns?: number;
-};
+} & ({ stat: keyof CharacterStats } | { stat: keyof ElementalStats; element: Elements });
+
+export type EffectTrigger =
+  | 'startOfTurn'
+  | 'endOfTurn'
+  | 'startOfBattle'
+  | 'endOfBattle'
+  | 'onAttack'
+  | 'onDamage'
+  | 'onHeal'
+  | 'onShield'
+  | 'onCritical'
+  | 'onBreak'
+  | 'onDeath';
 
 export type CharacterEffect = {
   id: string;
   source: string;
   turns?: number;
-  execute: (source: CharacterStats) => void;
+  trigger: EffectTrigger;
+  execute: (
+    source: Character,
+    characters: Character[],
+    trigger: {
+      trigger: EffectTrigger;
+      caster: Character | undefined;
+      target: Character[];
+    },
+  ) => void;
 };
 
 export type CharacterStats = {
@@ -27,6 +48,10 @@ export type CharacterStats = {
   currentHp: number;
   maxSp: number;
   currentSp: number;
+  maxEnergy: number;
+  currentEnergy: number;
+  maxShield: number;
+  currentShield: number;
   attack: number;
   defense: number;
   speed: number;
@@ -41,7 +66,16 @@ export type CharacterStats = {
   effectResistance: number;
   statModifications: StatModification[];
   effects: CharacterEffect[];
-} & ElementalStats;
+} & { [key in Elements]: ElementalStats };
+
+export type Character = {
+  id: string;
+  name: string;
+  stats: CharacterStats;
+  skills: Skill[];
+  alligence: 'party' | 'enemy';
+  lastTarget: Character | undefined;
+};
 
 export type SkillEffect = {
   id: string;
@@ -51,11 +85,12 @@ export type SkillEffect = {
   target: 'party' | 'enemy';
   singleTarget: boolean;
   allowTargetChange: boolean;
-  execute: (source: CharacterStats, targets: CharacterStats[]) => void;
+  execute: (source: Character, targets: Character[], characters: Character[]) => void;
 };
 
 export type Skill = {
   id: string;
   spCost: number;
+  energyCost: number;
   effects: SkillEffect[];
 };

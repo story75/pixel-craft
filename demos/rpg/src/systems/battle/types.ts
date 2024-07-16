@@ -129,16 +129,14 @@ export type Battle = {
   turn: number;
 };
 
-export type CharacterTemplate = {
-  id: string;
-  level: number;
-  evolutionStage: EvolutionStage;
+export type CharacterTemplate = Pick<
+  Character,
+  'id' | 'name' | 'alligence' | 'level' | 'evolutionStage' | 'statModifications' | 'elementModifications'
+> & {
   stats: CharacterStats;
   elementalStats: {
     [element in Elements]: ElementalStats;
   };
-  skills: { id: string }[];
-  effects: { id: string }[];
-  statModifications: StatModification[];
-  elementModifications: ElementModification[];
+  skills: string[];
+  effects: string[];
 };

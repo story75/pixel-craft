@@ -1,4 +1,5 @@
 import { clamp } from '@pixel-craft/math';
+import type { Character } from './types';
 
 export const action = (speed: number) => 10000 / speed;
 
@@ -12,7 +13,7 @@ export const damageBoost = (elementalBoost: number, genericBoost: number) => 1 +
 
 export const defenseMultiplier = (attackerLevel: number, defense: number, penetration: number) => {
   const appliedDefense = defense * (1 - clamp(penetration, 0, 1));
-  return 1 - (appliedDefense / appliedDefense + 200 + 10 * attackerLevel);
+  return 1 - appliedDefense / (appliedDefense + 200 + 10 * attackerLevel);
 };
 
 export const resistanceMultiplier = (resistance: number, penetration: number) =>
@@ -36,3 +37,12 @@ export const damage = (
   resistanceMultiplier *
   (1 - damageReduction) *
   breakMultiplier;
+
+export const advanceTurn = (characters: Character[]) => {
+  characters.sort((a, b) => a.calculated.stats.action - b.calculated.stats.action);
+  const actionDelay = characters[0].calculated.stats.action;
+
+  for (const character of characters) {
+    character.calculated.stats.action -= actionDelay;
+  }
+};

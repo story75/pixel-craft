@@ -118,7 +118,7 @@ export class TitleScreenSettings extends LitElement {
       new Select({
         label: 'TITLE_SCREEN.SETTINGS.LANGUAGE.LABEL',
         active: true,
-        binding: [window.pixelCraft.translator, 'language'],
+        binding: [window.pixelCraft.translator.language, 'value'],
         options: [
           new Option({
             label: 'TITLE_SCREEN.SETTINGS.LANGUAGE.ENGLISH',
@@ -156,21 +156,21 @@ export class TitleScreenSettings extends LitElement {
       }),
       new Slider({
         label: 'TITLE_SCREEN.SETTINGS.VOLUME.MASTER',
-        binding: [window.pixelCraft.audioMixer, 'masterVolume'],
+        binding: [window.pixelCraft.audioMixer.masterVolume, 'value'],
         min: 0,
         max: 100,
         step: 1,
       }),
       new Slider({
         label: 'TITLE_SCREEN.SETTINGS.VOLUME.BGM',
-        binding: [window.pixelCraft.audioMixer, 'bgmVolume'],
+        binding: [window.pixelCraft.audioMixer.bgmVolume, 'value'],
         min: 0,
         max: 100,
         step: 1,
       }),
       new Slider({
         label: 'TITLE_SCREEN.SETTINGS.VOLUME.SFX',
-        binding: [window.pixelCraft.audioMixer, 'sfxVolume'],
+        binding: [window.pixelCraft.audioMixer.sfxVolume, 'value'],
         min: 0,
         max: 100,
         step: 1,
@@ -185,7 +185,7 @@ export class TitleScreenSettings extends LitElement {
       }),
       new Slider({
         label: 'TITLE_SCREEN.SETTINGS.VOLUME.VOICE',
-        binding: [window.pixelCraft.audioMixer, 'voiceVolume'],
+        binding: [window.pixelCraft.audioMixer.voiceVolume, 'value'],
         min: 0,
         max: 100,
         step: 1,

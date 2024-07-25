@@ -8,9 +8,9 @@ import { textureAllocator } from '../renderer/buffer/texture-allocator';
  * The cache key is the path.
  *
  * @param path:string - The path to load the asset from. Can either be relative from the host or a full url.
- * @param path:File - A file to convert to a texture. This will not be cached.
+ * @param path:ImageBitmapSource - A ImageBitmapSource to convert to a texture. This will not be cached.
  */
-export type TextureLoader = (path: string | File) => Promise<GPUTexture>;
+export type TextureLoader = (path: string | ImageBitmapSource) => Promise<GPUTexture>;
 
 /**
  * Create a texture loader with a given GPUDevice.
@@ -25,7 +25,7 @@ export function createTextureLoader(device: GPUDevice): TextureLoader {
   const allocator = textureAllocator(device);
 
   return async (path) => {
-    if (path instanceof File) {
+    if (typeof path !== 'string') {
       const imageBitmap = await createImageBitmap(path);
       return allocator(imageBitmap);
     }

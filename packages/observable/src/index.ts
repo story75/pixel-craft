@@ -17,7 +17,7 @@ export class Observable<T extends unknown[] = []> {
    * @privateRemarks
    * This has to be lazy initialized to avoid circular dependencies with the Observable class.
    */
-  private _onSubscribe?: Observable<[observer: Observer<T>]>;
+  #onSubscribe?: Observable<[observer: Observer<T>]>;
 
   /**
    * Observable that notifies when an observer unsubscribes.
@@ -28,43 +28,52 @@ export class Observable<T extends unknown[] = []> {
    * @privateRemarks
    * This has to be lazy initialized to avoid circular dependencies with the Observable class.
    */
-  private _onUnsubscribe?: Observable<[observer: Observer<T>]>;
+  #onUnsubscribe?: Observable<[observer: Observer<T>]>;
 
-  private readonly observers = new Set<Observer<T>>();
+  /**
+   * Set of observers that are subscribed to this observable.
+   */
+  readonly #observers = new Set<Observer<T>>();
 
+  /**
+   * Observable that notifies when an observer subscribes.
+   */
   get onSubscribe(): Observable<[observer: Observer<T>]> {
-    if (!this._onSubscribe) {
-      this._onSubscribe = new Observable<[observer: Observer<T>]>();
+    if (!this.#onSubscribe) {
+      this.#onSubscribe = new Observable<[observer: Observer<T>]>();
     }
 
-    return this._onSubscribe;
+    return this.#onSubscribe;
   }
 
+  /**
+   * Observable that notifies when an observer unsubscribes.
+   */
   get onUnsubscribe(): Observable<[observer: Observer<T>]> {
-    if (!this._onUnsubscribe) {
-      this._onUnsubscribe = new Observable<[observer: Observer<T>]>();
+    if (!this.#onUnsubscribe) {
+      this.#onUnsubscribe = new Observable<[observer: Observer<T>]>();
     }
 
-    return this._onUnsubscribe;
+    return this.#onUnsubscribe;
   }
 
   /**
    * Listen to data emitted by the observable.
    */
   subscribe(observer: Observer<T>): () => void {
-    this.observers.add(observer);
-    if (this.onSubscribe.hasObservers()) {
+    this.#observers.add(observer);
+    if (this.onSubscribe.#hasObservers()) {
       this.onSubscribe.notify(observer);
     }
-    return () => this.observers.delete(observer);
+    return () => this.unsubscribe(observer);
   }
 
   /**
    * Stop listening to data emitted by the observable.
    */
   unsubscribe(observer: Observer<T>): void {
-    this.observers.delete(observer);
-    if (this.onUnsubscribe.hasObservers()) {
+    this.#observers.delete(observer);
+    if (this.onUnsubscribe.#hasObservers()) {
       this.onUnsubscribe.notify(observer);
     }
   }
@@ -76,25 +85,46 @@ export class Observable<T extends unknown[] = []> {
    * This method should be used as a cleanup mechanism to avoid memory leaks.
    */
   clear(): void {
-    if (this.onUnsubscribe.hasObservers()) {
-      for (const observer of this.observers) {
+    if (this.onUnsubscribe.#hasObservers()) {
+      for (const observer of this.#observers) {
         this.onUnsubscribe.notify(observer);
       }
     }
 
-    this.observers.clear();
+    this.#observers.clear();
   }
 
   /**
    * Notify all observers with the given data.
    */
   notify(...data: T): void {
-    for (const observer of this.observers) {
+    for (const observer of this.#observers) {
       observer(...data);
     }
   }
 
-  private hasObservers(): boolean {
-    return this.observers.size > 0;
+  #hasObservers(): boolean {
+    return this.#observers.size > 0;
+  }
+}
+
+/**
+ * Observable class that stores a single value and notifies observers when it changes.
+ */
+export class ValueObservable<T> extends Observable<[value: T]> {
+  #value: T;
+
+  constructor(value: T) {
+    super();
+    this.#value = value;
+  }
+
+  get value(): T {
+    return this.#value;
+  }
+
+  set value(value: T) {
+    this.#value = value;
+    this.notify(value);
   }
 }

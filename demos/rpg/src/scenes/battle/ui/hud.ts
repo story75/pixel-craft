@@ -7,8 +7,6 @@ import { InputController, bindInput } from '../../../ui/controllers/input-contro
 import { Option } from '../../../ui/form/option';
 import { Select } from '../../../ui/form/select';
 import { translate } from '../../../ui/translate';
-import healingIcon from './healing_spell.png';
-import characterSprite from './story75-Recovered.png';
 
 type Actor = {
   id: string;
@@ -575,7 +573,7 @@ export class BattleHUD extends LitElement {
     {
       id: 'player-1',
       name: 'Omegamon',
-      sprite: characterSprite,
+      sprite: '',
       spriteSize: [48, 96],
       spriteOffset: [20, 5],
       hp: {
@@ -591,7 +589,7 @@ export class BattleHUD extends LitElement {
     {
       id: 'player-2',
       name: 'Imperialdramon PM',
-      sprite: characterSprite,
+      sprite: '',
       spriteSize: [48, 96],
       spriteOffset: [20, 5],
       hp: {
@@ -607,7 +605,7 @@ export class BattleHUD extends LitElement {
     {
       id: 'enemy-1',
       name: 'MachineDramon',
-      sprite: characterSprite,
+      sprite: '',
       spriteSize: [48, 96],
       spriteOffset: [20, 5],
       hp: {
@@ -623,7 +621,7 @@ export class BattleHUD extends LitElement {
     {
       id: 'enemy-2',
       name: 'Myotismon',
-      sprite: characterSprite,
+      sprite: '',
       spriteSize: [48, 96],
       spriteOffset: [20, 5],
       hp: {
@@ -689,7 +687,7 @@ export class BattleHUD extends LitElement {
             </div>
             <div class="limit-bar">
                 <x-battle-limit-bar
-                    .icon=${healingIcon}
+                    .icon=${''}
                     .progress=${50}
                     .nextProgress=${75}
                 ></x-battle-limit-bar>

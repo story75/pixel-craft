@@ -21,10 +21,9 @@ This was done to simplify the code on the integration side and to make the `Inpu
 This offers more control over the event handling e.g. handling multiple keys with the same listener or listening to any keys,
 without the need for a separate api like `onAnyKey`.
 
-#### `Translator` no longer uses `Observable` but instead extends `EventBus`
+#### `Translator` now uses `ValueObservable`
 
-The `Translator` class no longer uses the `Observable` class but instead extends the `EventBus` class.
-The reason for this change is the same as for the `InputManager`. It simplifies the code on the integration side and makes the `Translator` more flexible.
+The `Translator` class now uses the new `ValueObservable` class to store the language instead of an `Observable` for the language change and a seperate property for the current value.
 
 #### Remove `Instance` property from `InputManager`, `AudioMixer`, `Translator` and `Timer`
 
@@ -49,7 +48,16 @@ Keep in mind that you should not call `play` and `stop` on the Sound yourself, b
 The `AudioMixer` now uses a scale of 0 - 100, which should make it a little easier to reason about.
 This hopefully also cuts down on needed conversions e.g. in CSS.
 
+#### `AudioMixer` now uses `ValueObservable` for volume properties
+
+The `AudioMixer` now uses the new `ValueObservable` class to store the different channel volumes.
+THis should make it easier to subscribe to different channels and their changes.
+
 ### Features
+
+#### Add `ValueObservable` to `@pixel-craft/observable` package
+
+A `ValueObservable` is like an `Observable` but additonally stores the value and allows easy mutation with notifications for the change.
 
 #### Add `volumeChanged` event to `AudioMixer`
 

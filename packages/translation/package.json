@@ -22,6 +22,6 @@
     "release": "pixel-craft-tooling release-package \"${PUBLISH_VERSION}\""
   },
   "dependencies": {
-    "@pixel-craft/event-bus": "workspace:*"
+    "@pixel-craft/observable": "workspace:*"
   }
 }

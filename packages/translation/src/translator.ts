@@ -1,4 +1,4 @@
-import { EventBus } from '@pixel-craft/event-bus';
+import { ValueObservable } from '@pixel-craft/observable';
 
 /**
  * A translation object containing all strings for a specific language.
@@ -13,36 +13,16 @@ export type Translation = {
   [key: string]: Translation | string;
 };
 
-type EventMap = {
-  languageChanged: CustomEvent<{ language: string }>;
-};
-
 /**
  * The Translator is responsible for translating keys into strings.
  */
-export class Translator extends EventBus<EventMap> {
+export class Translator {
   readonly #translations: Record<string, Translation>;
-  #language: string;
+  readonly language: ValueObservable<string>;
 
   constructor(translations: Record<string, Translation>, language: string) {
-    super();
-    this.#language = language;
+    this.language = new ValueObservable(language);
     this.#translations = translations;
-  }
-
-  /**
-   * Get the current language.
-   */
-  get language(): string {
-    return this.#language;
-  }
-
-  /**
-   * Set the current language.
-   */
-  set language(language: string) {
-    this.#language = language;
-    this.dispatchEvent(new CustomEvent('languageChanged', { detail: { language } }));
   }
 
   /**
@@ -55,7 +35,7 @@ export class Translator extends EventBus<EventMap> {
    */
   translate(key: string): string {
     const parts = key.includes('.') ? key.split('.') : [key];
-    let current: string | Translation = this.#translations[this.language];
+    let current: string | Translation = this.#translations[this.language.value];
 
     for (const part of parts) {
       if (typeof current === 'object' && part in current) {

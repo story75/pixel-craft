@@ -100,6 +100,11 @@ The new behaviour is as follows:
 - (new) use `@storeName` to set the store name if set
 - just use property name if neither is set
 
+#### `TextureLoader` now accepts `ImageBitmapSource` instead of just `File`
+
+The texture loader can now handle `string | ImageBitmapSource` instead of just `string | File`.
+This enabled the use of other Canvas objects to generate textures on the fly. 
+
 ### Fixes and improvements
 
 #### Mark dependencies as external when building libraries

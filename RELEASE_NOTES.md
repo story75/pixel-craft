@@ -107,6 +107,11 @@ This enabled the use of other Canvas objects to generate textures on the fly.
 
 ### Fixes and improvements
 
+#### Multiply tint color with alpha in fragment shader
+
+The tint color is now multiplied with the alpha value provided before being applied to the sprite.
+This will fix issues where the tint color would not be applied correctly, especially for the default "white" tint, or if the alpha value was not 1.
+
 #### Mark dependencies as external when building libraries
 
 When building libraries, the dependencies are now marked as external. This should reduce the bundle size and improve performance.

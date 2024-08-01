@@ -26,14 +26,6 @@ export async function battle() {
   width = tilesX * tileSize;
   height = tilesY * tileSize;
 
-  const background = store.add(
-    sprite({
-      texture: backgroundTexture,
-      width,
-      height,
-    }),
-  );
-
   const tempCanvas = new OffscreenCanvas(tileSize, tileSize);
   const ctx = tempCanvas.getContext('2d');
   if (!ctx) {
@@ -51,6 +43,7 @@ export async function battle() {
           texture: gridCell,
           x: x * tileSize,
           y: y * tileSize,
+          z: 0.002,
           width: tileSize,
           height: tileSize,
         }),
@@ -70,7 +63,8 @@ export async function battle() {
       y: 0,
       width: tileSize,
       height: tileSize,
-      alpha: 0.02,
+      z: 0.003,
+      alpha: 0.3,
     }),
   );
 
@@ -80,6 +74,14 @@ export async function battle() {
     highlight.x = x;
     highlight.y = y;
   });
+
+  const background = store.add(
+    sprite({
+      texture: backgroundTexture,
+      width,
+      height,
+    }),
+  );
 
   return (now: number) => {};
 }

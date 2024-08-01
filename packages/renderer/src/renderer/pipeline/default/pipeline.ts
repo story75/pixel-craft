@@ -95,7 +95,7 @@ export function pipeline({
       width: context.canvas.width,
       height: context.canvas.height,
     },
-    format: 'bgra8unorm',
+    format: presentationFormat,
     usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
     label: 'gBuffer',
   });
@@ -146,6 +146,18 @@ export function pipeline({
         targets: [
           {
             format: gBuffer.format,
+            blend: {
+              color: {
+                srcFactor: 'one',
+                dstFactor: 'one-minus-src-alpha',
+                operation: 'add',
+              },
+              alpha: {
+                srcFactor: 'one',
+                dstFactor: 'one-minus-src-alpha',
+                operation: 'add',
+              },
+            },
           },
         ],
       },

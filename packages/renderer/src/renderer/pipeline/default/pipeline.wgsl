@@ -33,7 +33,7 @@ fn vs_main(
 @fragment
 fn fs_main(output: VertexOutput) -> @location(0) vec4f {
   var texture_color = textureSample(texture, texture_sampler, output.uv);
-  var final_color = texture_color * output.color;
+  var final_color = texture_color * vec4f(output.color.rgb * output.color.a, output.color.a);
   if (final_color.a < 0.01) {
     discard;
   }
@@ -44,7 +44,7 @@ fn fs_main(output: VertexOutput) -> @location(0) vec4f {
 @fragment
 fn fs_repeating(output: VertexOutput) -> @location(0) vec4f {
   var texture_color = textureSample(texture, texture_sampler, fract(output.uv));
-  var final_color = texture_color * output.color;
+  var final_color = texture_color * vec4f(output.color.rgb * output.color.a, output.color.a);
   if (final_color.a < 0.01) {
     discard;
   }

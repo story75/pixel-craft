@@ -15,7 +15,7 @@
   "dependencies": {
     "yargs": "^17.7.2",
     "find-up": "^7.0.0",
-    "chokidar": "^3.6.0",
+    "chokidar": "^4.0.0",
     "browser-sync": "^3.0.2"
   },
   "devDependencies": {

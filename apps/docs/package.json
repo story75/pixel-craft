@@ -13,7 +13,7 @@
     "@astrojs/starlight": "0.25.0",
     "astro": "4.11.5",
     "sharp": "0.33.4",
-    "@astrojs/check": "0.7.0",
+    "@astrojs/check": "0.9.4",
     "@expressive-code/plugin-line-numbers": "0.35.3",
     "@expressive-code/plugin-collapsible-sections": "0.35.3"
   }

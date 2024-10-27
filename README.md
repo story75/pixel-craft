@@ -1,6 +1,14 @@
+# Archive notice
+
+This project will no longer be updated. It will remain archived for people interested in a 2D WebGPU renderer and related features.
+
+Developing the engine is one thing, making a game with it is another. Going too far into the 2D and code route was not feasible. Some creative features just work much better with a custom editor, and some 3d techniques can make working in 2d a lot easier.
+
+For these reasons, the current approach fell short. The goal is still to continue at a later date, but with a different path and a different approach.
+
 # Pixel Craft
 
-This is the workspace for Pixel Forge. It is an attempt to create a code focused game engine that is specifically tailored to 2D pixel art RPGs.
+This is the workspace for Pixel Craft. It is an attempt to create a code focused game engine that is specifically tailored to 2D pixel art RPGs.
 
 <p align="center">
   <a href="https://story75.github.io/pixel-craft/">Website</a> |
